@@ -4,7 +4,9 @@ import sqlite3
 app = Flask(__name__)
 
 # Database setup
-DATABASE = './database/articles.db'
+DATABASE = 'C:/Users/turne/comp486/database/articles.db'
+
+
 
 def get_db():
     """Connect to SQLite database."""
