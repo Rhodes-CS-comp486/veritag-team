@@ -1,1 +1,1 @@
-print("VeriTag")
+print("VeriTag!")
