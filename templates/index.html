@@ -44,13 +44,29 @@
             width: 100%;
             bottom: 0;
         }
+        img {
+            max-width: 100%; /* Ensures the image fits the container */
+            height: auto;   /* Maintains aspect ratio */
+            border-radius: 8px; /* Optional: add rounded corners to the image */
+            margin-top: 20px; /* Adds some space above the image */
+        }
     </style>
 </head>
 <body>
-    <h1>VeriTag</h1>
+    <header>
+        <h1>VeriTag</h1>
+    </header>
+
+    <!-- Image display -->
+    <img src="{{ url_for('static', filename='image.jpg') }}" alt="VeriTag Image">
+
     <nav>
         <a href="/">Home</a> | 
         <a href="/browse">Browse Articles</a>
     </nav>
+
+    <footer>
+        <p>&copy; 2025 VeriTag</p>
+    </footer>
 </body>
 </html>
