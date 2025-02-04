@@ -7,9 +7,14 @@
 </head>
 <body>
     <h1>VeriTag</h1>
+    
+    <!-- Navigation links -->
     <nav>
         <a href="/">Home</a> | 
         <a href="/browse">Browse Articles</a>
     </nav>
+
+    <!-- Add the image to the homepage -->
+    <img src="{{ url_for('static', filename='image.jpg') }}" alt="VeriTag Image" style="max-width: 100%; height: auto;">
 </body>
 </html>
