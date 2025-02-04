@@ -1,10 +1,14 @@
+import os
 from flask import Flask, render_template, g
 import sqlite3
 
 app = Flask(__name__)
 
 # Database setup
-DATABASE = 'C:/Users/turne/comp486/database/articles.db'
+# Path relative to the script location, no matter where the script is run from
+DATABASE = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'database.db')
+db = sqlite3.connect(DATABASE)
+
 
 
 
