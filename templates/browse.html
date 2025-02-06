@@ -3,14 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Browse Articles</title>
+    <title>Articles Page</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #1e3a8a;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #4b5563;
+            font-size: 0.875rem;
+        }
+
+        select, input {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            min-width: 120px;
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .article-card {
+            height: 300px;
+            perspective: 1000px;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .article-card:hover .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .card-front {
+            background-position: center;
+            background-size: cover;
+            background-color: #1e3a8a;
+        }
+
+        .card-front::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7));
+            border-radius: 12px;
+        }
+
+        .card-title {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            right: 1.5rem;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 600;
+            z-index: 1;
+        }
+
+        .card-back {
+            background: white;
+            transform: rotateY(180deg);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: #dbeafe;
+            color: #1e40af;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .article-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            color: #4b5563;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .loading {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            background: #e5e7eb;
+            border-radius: 12px;
+            height: 300px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+    </style>
 </head>
 <body>
-    <h1>Browse Articles</h1>
-    <ul>
-        {% for article in articles %}
-            <li><a href="/article/{{ article.id }}">{{ article.title }}</a> - {{ article.source }}</li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <h1>Featured Articles</h1>
+        
+        <div class="filter-container">
+            <div class="filter-group">
+                <label for="length-filter">Length</label>
+                <select id="length-filter">
+                    <option value="">All</option>
+                    <option value="short">Short</option>
+                    <option value="long">Long</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="category-filter">Category</label>
+                <select id="category-filter">
+                    <option value="">All</option>
+                    <option value="tech">Tech</option>
+                    <option value="health">Health</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="rating-filter">Minimum Rating</label>
+                <input type="number" id="rating-filter" min="1" max="5" placeholder="Any rating">
+            </div>
+        </div>
+
+        <div id="articles-container" class="articles-grid">
+            <!-- Loading placeholders will be inserted here -->
+        </div>
+    </div>
+
+    <script>
+        function createLoadingPlaceholders() {
+            const container = document.getElementById('articles-container');
+            container.innerHTML = Array(32).fill('<div class="loading"></div>').join('');
+        }
+
+        function createArticleCard(article) {
+            const randomImage = `/api/placeholder/${400}/${300}`;
+            return `
+                <div class="article-card" data-category="${article.category}" data-length="${article.length}" data-rating="${article.rating}">
+                    <div class="card-inner">
+                        <div class="card-front" style="background-image: url('${randomImage}')">
+                            <h2 class="card-title">${article.title}</h2>
+                        </div>
+                        <div class="card-back">
+                            <div>
+                                <span class="category-badge">${article.category}</span>
+                                <h3>${article.title}</h3>
+                            </div>
+                            <div class="article-info">
+                                <div class="info-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span>${article.length} read</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-star" style="color: #fbbf24;"></i>
+                                    <span>${article.rating} / 5</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function filterArticles() {
+            const lengthFilter = document.getElementById('length-filter').value;
+            const categoryFilter = document.getElementById('category-filter').value;
+            const ratingFilter = document.getElementById('rating-filter').value;
+
+            const cards = document.querySelectorAll('.article-card');
+            
+            cards.forEach(card => {
+                const matchesLength = !lengthFilter || card.dataset.length === lengthFilter;
+                const matchesCategory = !categoryFilter || card.dataset.category === categoryFilter;
+                const matchesRating = !ratingFilter || parseFloat(card.dataset.rating) >= parseFloat(ratingFilter);
+                
+                card.style.display = (matchesLength && matchesCategory && matchesRating) ? 'block' : 'none';
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            createLoadingPlaceholders();
+
+            // Add filter event listeners
+            document.getElementById('length-filter').addEventListener('change', filterArticles);
+            document.getElementById('category-filter').addEventListener('change', filterArticles);
+            document.getElementById('rating-filter').addEventListener('input', filterArticles);
+
+            // Simulate loading delay
+            setTimeout(() => {
+                const articles = [];
+                
+                // Generate article data
+                for (let i = 1; i <= 32; i++) {
+                    articles.push({
+                        id: i,
+                        title: `Discover Amazing Article ${i}`,
+                        length: i % 2 === 0 ? 'long' : 'short',
+                        category: i % 3 === 0 ? 'health' : 'tech',
+                        rating: (Math.floor(Math.random() * 4) + 2)
+                    });
+                }
+                
+                // Render articles
+                const container = document.getElementById("articles-container");
+                container.innerHTML = articles.map(article => createArticleCard(article)).join('');
+            }, 2000);
+        });
+    </script>
 </body>
 </html>
