@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VeriTag - Create Account</title>
+    <style>
+        body {
+            font-family: 'Orbitron', 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            text-align: center;
+            background: linear-gradient(to right, rgba(173, 216, 230, 0.5), #ffffff, rgba(216, 191, 255, 0.5));
+            height: 100vh;
+            overflow: hidden;
+        }
+        header {
+            color: #1a1a1a;
+            padding: 1.5rem;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-weight: 500;
+            background: linear-gradient(to right, #b3e0ff, #d8bfff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(204, 204, 204, 0.3);
+            box-shadow: 0 5px 15px rgba(204, 204, 204, 0.1);
+        }
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            background: #6a7bff;
+            color: white;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #5a6be0;
+        }
+        .logo {
+            width: 150px;
+            height: auto;
+            border-radius: 50%;
+            border: 2px solid #b3e0ff;
+            box-shadow: 0 0 10px rgba(179, 224, 255, 0.3);
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <img src="{{ url_for('static', filename='image.jpg') }}" alt="VeriTag Logo" class="logo">
+    <header>
+        <h1>VeriTag</h1>
+    </header>
+
+    <div class="container">
+        <h2>Create Account</h2>
+        <form action="/create_account" method="post">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+            <button type="submit">Create Account</button>
+        </form>
+        <button onclick="location.href='/'">Back to Login</button>
+    </div>
+
+    <footer>
+        <p>© 2025 VeriTag</p>
+    </footer>
+</body>
+</html>

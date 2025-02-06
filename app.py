@@ -1,16 +1,12 @@
 import os
-from flask import Flask, render_template, g
+from flask import Flask, render_template, g, request, redirect, url_for, flash
 import sqlite3
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key'  # Required for flashing messages
 
 # Database setup
-# Path relative to the script location, no matter where the script is run from
-DATABASE = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'database.db')
-db = sqlite3.connect(DATABASE)
-
-
-
+DATABASE = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'database', 'articles.db')
 
 def get_db():
     """Connect to SQLite database."""
@@ -19,7 +15,7 @@ def get_db():
     return db
 
 def init_db():
-    """Create the database and table if they don't exist."""
+    """Create the database and tables if they don't exist."""
     with app.app_context():
         db = get_db()
         db.execute('''CREATE TABLE IF NOT EXISTS articles
@@ -27,12 +23,43 @@ def init_db():
                         title TEXT NOT NULL,
                         source TEXT NOT NULL,
                         summary TEXT NOT NULL)''')
+        db.execute('''CREATE TABLE IF NOT EXISTS users
+                       (id INTEGER PRIMARY KEY,
+                        username TEXT NOT NULL UNIQUE,
+                        email TEXT NOT NULL UNIQUE,
+                        password TEXT NOT NULL)''')
         db.commit()
 
 @app.route('/')
 def index():
-    """Render the homepage."""
-    return render_template('index.html')
+    """Render the login page."""
+    return redirect(url_for('login'))
+
+@app.route('/create_account', methods=['GET', 'POST'])
+def create_account():
+    """Handle account creation."""
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+
+        if password != confirm_password:
+            flash('Passwords do not match!', 'error')
+            return redirect(url_for('create_account'))
+
+        db = get_db()
+        try:
+            db.execute('INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
+                       (username, email, password))
+            db.commit()
+            flash('Account created successfully! Please log in.', 'success')
+            return redirect(url_for('login'))
+        except sqlite3.IntegrityError:
+            flash('Username or email already exists!', 'error')
+            return redirect(url_for('create_account'))
+
+    return render_template('create_account.html')
 
 @app.route('/browse')
 def browse():
@@ -47,6 +74,25 @@ def article(article_id):
     db = get_db()
     article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
     return render_template('article.html', article=article)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """Handle user login."""
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        db = get_db()
+        user = db.execute('SELECT * FROM users WHERE username = ? AND password = ?', (username, password)).fetchone()
+
+        if user:
+            flash('Login successful!', 'success')
+            return redirect(url_for('browse'))  # Redirect to browse after successful login
+        else:
+            flash('Invalid username or password!', 'error')
+            return redirect(url_for('login'))
+
+    return render_template('login.html') 
 
 if __name__ == '__main__':
     init_db()  # Initialize DB
