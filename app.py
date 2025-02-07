@@ -78,6 +78,7 @@ def article(article_id):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """Handle user login."""
+    error = None  # Initialize error variable
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -89,10 +90,9 @@ def login():
             flash('Login successful!', 'success')
             return redirect(url_for('browse'))  # Redirect to browse after successful login
         else:
-            flash('Invalid username or password!', 'error')
-            return redirect(url_for('login'))
+            error = True  # Set error to True if login fails
 
-    return render_template('login.html') 
+    return render_template('login.html', error=error)  # Pass error to the template
 
 if __name__ == '__main__':
     init_db()  # Initialize DB
