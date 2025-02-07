@@ -1,6 +1,6 @@
-import os
 from flask import Flask, render_template, g
 import sqlite3
+import os
 
 app = Flask(__name__)
 
@@ -8,9 +8,6 @@ app = Flask(__name__)
 # Path relative to the script location, no matter where the script is run from
 DATABASE = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'database.db')
 db = sqlite3.connect(DATABASE)
-
-
-
 
 def get_db():
     """Connect to SQLite database."""
