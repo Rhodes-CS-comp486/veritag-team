@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VeriTag - Login</title>
+    <style>
+        /* Modern, futuristic styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            text-align: center;
+            background: linear-gradient(135deg, #1a1a1a, #2c3e50);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        header {
+            padding: 1.5rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(to right, #6a7bff, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: absolute;
+            top: 20px;
+        }
+        .container {
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        input {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+        input:focus {
+            border-color: #6a7bff;
+            box-shadow: 0 0 12px rgba(106, 123, 255, 0.5);
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            background: linear-gradient(to right, #6a7bff, #9b59b6);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 123, 255, 0.3);
+        }
+        .guest {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+        .guest:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .input-container {
+            position: relative;
+        }
+        .input-container input {
+            width: 100%;
+            padding: 12px; /* Same padding as other inputs */
+            box-sizing: border-box; /* Ensures padding is included in width */
+        }
+        .password-container {
+            position: relative;
+        }
+        .password-container input {
+            width: 100%;
+            padding: 12px;
+            padding-right: 40px; /* Space for the eye icon */
+            box-sizing: border-box;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6a7bff; /* Eye icon color */
+            background: rgba(0, 0, 0, 0.4); /* Dark background to make the icon stand out */
+            padding: 3px; /* Reduced padding for a smaller circle */
+            border-radius: 50%; /* Keeps the circle shape */
+            border: 1px solid #6a7bff; /* Border to define the icon's boundary */
+        }
+
+        .password-toggle:hover {
+            background: rgba(0, 0, 0, 0.6); /* Darker background on hover */
+        }
+        footer {
+            position: absolute;
+            bottom: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>VeriTag</h1>
+    </header>
+    <div class="container">
+        <h2>Login</h2>
+        <form action="{{ url_for('login') }}" method="post">
+            <div class="input-container">
+                <input type="text" name="username" placeholder="Username" required>
+            </div>
+            <div class="password-container">
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <span class="password-toggle" onclick="togglePassword()">👁️</span>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <button onclick="location.href='{{ url_for('create_account') }}'">Create Account</button>
+        <button class="guest" onclick="location.href='{{ url_for('browse') }}'">Continue as Guest</button>
+    </div>
+    <footer>
+        <p>© 2025 VeriTag | Martin Maxim, Nick Bilotti, Jud Turner, Peter Halvorsen</p>
+    </footer>
+    <script>
+        function togglePassword() {
+            var passwordField = document.getElementById('password');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        }
+    </script>
+</body>
+</html>
