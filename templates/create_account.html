@@ -3,80 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VeriTag - Create Account</title>
+    <title> VERITAG - Create Account</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Orbitron', 'Arial', sans-serif;
+        /* Consistent with browse.html */
+        * {
             margin: 0;
             padding: 0;
-            color: #333;
-            text-align: center;
-            background: linear-gradient(to right, rgba(173, 216, 230, 0.5), #ffffff, rgba(216, 191, 255, 0.5));
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             height: 100vh;
-            overflow: hidden;
         }
-        header {
-            color: #1a1a1a;
-            padding: 1.5rem;
-            font-size: 2.5rem;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            font-weight: 500;
-            background: linear-gradient(to right, #b3e0ff, #d8bfff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            position: relative;
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5000px rgba(176, 136, 255, 0.8);
+        }
+
         .container {
             max-width: 400px;
-            margin: 50px auto;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 30px;
-            border-radius: 15px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(204, 204, 204, 0.3);
-            box-shadow: 0 5px 15px rgba(204, 204, 204, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.8s ease-out;
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #fff;
+        }
+
         input {
-            width: calc(100% - 20px);
-            padding: 10px;
+            width: 100%;
+            padding: 12px;
             margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
             font-size: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transition: all 0.3s ease;
         }
+
+        input:focus {
+            border-color: #B088FF;
+            box-shadow: 0 0 12px rgba(176, 136, 255, 0.5);
+            outline: none;
+        }
+
         button {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin: 10px 0;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 1rem;
             cursor: pointer;
-            background: #6a7bff;
+            background: linear-gradient(45deg, #B088FF, #6a7bff);
             color: white;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
         }
+
         button:hover {
-            background: #5a6be0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(176, 136, 255, 0.3);
         }
-        .logo {
-            width: 150px;
-            height: auto;
-            border-radius: 50%;
-            border: 2px solid #b3e0ff;
-            box-shadow: 0 0 10px rgba(179, 224, 255, 0.3);
+
+        .back-button {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        footer {
             position: absolute;
-            top: 10px;
-            left: 10px;
+            bottom: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
-    <img src="{{ url_for('static', filename='image.jpg') }}" alt="VeriTag Logo" class="logo">
-    <header>
-        <h1>VeriTag</h1>
-    </header>
+    <nav class="navbar">
+        <a href="/" class="logo">VERITAG</a>
+    </nav>
 
     <div class="container">
         <h2>Create Account</h2>
@@ -87,11 +137,11 @@
             <input type="password" name="confirm_password" placeholder="Confirm Password" required>
             <button type="submit">Create Account</button>
         </form>
-        <button onclick="location.href='/'">Back to Login</button>
+        <button class="back-button" onclick="location.href='/'">Back to Login</button>
     </div>
 
     <footer>
-        <p>© 2025 VeriTag</p>
+        <p>© 2025 VERITAG | Martin Maxim, Nick Bilotti, Jud Turner, Peter Halvorsen</p>
     </footer>
 </body>
 </html>
