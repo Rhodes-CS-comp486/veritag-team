@@ -67,6 +67,11 @@ def create_account():
 
     return render_template('create_account.html')
 
+# Route for the About page
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/browse')
 def browse():
     """Display article headlines."""
