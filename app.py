@@ -2,6 +2,8 @@ import os
 from flask import Flask, render_template, g, redirect, url_for, request, flash
 import sqlite3
 import os
+import json
+
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Required for flashing messages
@@ -12,7 +14,11 @@ DATABASE = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'database.d
 db = sqlite3.connect(DATABASE)
 
 
-
+@app.route('/api/articles')
+def get_articles():
+    articles = json.load(open('placeholder-data/dev-articles.json'))
+    
+    return (articles)
 
 def get_db():
     """Connect to SQLite database."""
@@ -76,8 +82,8 @@ def about():
 def browse():
     """Display article headlines."""
     db = get_db()
-    articles = db.execute('SELECT * FROM articles').fetchall()
-    return render_template('browse.html', articles=articles)
+    #articles = db.execute('SELECT * FROM articles').fetchall()
+    return render_template('browse.html', articles=get_articles())
 
 @app.route('/article/<int:article_id>')
 def article(article_id):
