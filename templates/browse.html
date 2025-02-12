@@ -549,84 +549,83 @@
     </div>
     <script>
         function createArticleCard(article) {
-        return `
-            <div class="article-card" 
-                data-length="${article.length}"
-                data-category="${article.category}"
-                data-rating="${article.rating}">
+    return `
+        <a href="/article/${article.id}" class="article-card"
+            data-length="${article.length}"
+            data-category="${article.category}"
+            data-rating="${article.rating}">
             <div class="card-inner">
                 <div class="card-front" style="background-image: url('${article.image || "/api/placeholder/400/400"}')">
-                <h3 class="card-title">${article.title}</h3>
+                    <h3 class="card-title">${article.title}</h3>
                 </div>
                 <div class="card-back">
-                <div class="card-meta">
-                    <div class="meta-top">
-                    <span class="category-badge">${article.category}</span>
-                    <span class="length-badge">${article.length === 'Short' ? '< 5 min' : article.length === 'Medium' ? '5 - 15 min' : '> 15 min'}</span>
+                    <div class="card-meta">
+                        <div class="meta-top">
+                            <span class="category-badge">${article.category}</span>
+                            <span class="length-badge">${article.length === 'Short' ? '< 5 min' : article.length === 'Medium' ? '5 - 15 min' : '> 15 min'}</span>
+                        </div>
+                        <div class="article-info">
+                            <strong>Author:</strong> ${article.author || "Unknown"}<br>
+                            <strong>Source:</strong> ${article.source || "Source Unavailable"}
+                        </div>
+                        <div class="article-summary">${article.summary || "No summary available."}</div>
+                        <div class="rating-badge">Rating: ${article.rating} ★</div>
                     </div>
-                    <div class="article-info">
-                    <strong>Author:</strong> ${article.author || "Unknown"}<br>
-                    <strong>Source:</strong> ${article.source || "Source Unavailable"}
-                    </div>
-                    <div class="article-summary">${article.summary || "No summary available."}</div>
-                    <div class="rating-badge">Rating: ${article.rating} ★</div>
-                </div>
                 </div>
             </div>
-            </div>
-        `;
-        }
+        </a>
+    `;
+}
 
+function createLoadingPlaceholders() {
+    const grid = document.querySelector('.articles-grid');
+    const placeholders = Array(12).fill('<div class="article-card loading-placeholder"></div>').join('');
+    grid.innerHTML = placeholders;
+}
 
-        function createLoadingPlaceholders() {
-            const grid = document.querySelector('.articles-grid');
-            const placeholders = Array(12).fill('<div class="article-card loading-placeholder"></div>').join('');
-            grid.innerHTML = placeholders;
-        }
+function filterArticles() {
+    const selectedLength = document.querySelector('input[name="length"]:checked')?.value || 'all';
+    const selectedCategory = document.querySelector('input[name="category"]:checked')?.value || 'all';
+    const selectedRating = document.querySelector('input[name="rating"]:checked')?.value || 'all';
 
-        function filterArticles() {
-            const selectedLength = document.querySelector('input[name="length"]:checked').value;
-            const selectedCategory = document.querySelector('input[name="category"]:checked').value;
-            const selectedRating = document.querySelector('input[name="rating"]:checked').value;
+    const cards = document.querySelectorAll('.article-card');
 
-            const cards = document.querySelectorAll('.article-card');
-            
-            cards.forEach(card => {
-                const matchesLength = selectedLength === 'all' || card.dataset.length === selectedLength;
-                const matchesCategory = selectedCategory === 'all' || card.dataset.category === selectedCategory;
-                const matchesRating = selectedRating === 'all' || parseFloat(card.dataset.rating) == parseFloat(selectedRating);
-                
-                card.style.display = (matchesLength && matchesCategory && matchesRating) ? 'block' : 'none';
-            });
-        }
+    cards.forEach(card => {
+        const matchesLength = selectedLength === 'all' || card.dataset.length === selectedLength;
+        const matchesCategory = selectedCategory === 'all' || card.dataset.category === selectedCategory;
+        const matchesRating = selectedRating === 'all' || parseFloat(card.dataset.rating) == parseFloat(selectedRating);
 
-        document.addEventListener("DOMContentLoaded", function() {
-            createLoadingPlaceholders();
+        card.style.display = (matchesLength && matchesCategory && matchesRating) ? 'block' : 'none';
+    });
+}
 
-            // Add filter event listeners to all radio buttons
-            document.querySelectorAll('.filter-option input[type="radio"]').forEach(radio => {
-                radio.addEventListener('change', filterArticles);
-            });
+document.addEventListener("DOMContentLoaded", function() {
+    createLoadingPlaceholders();
 
-            // simulate loading delay
-            setTimeout(() => {
+    // Add filter event listeners
+    document.querySelectorAll('.filter-option input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', filterArticles);
+    });
 
-                fetch('/api/articles')
-                    .then(response => response.json())
-                    .then(articles => {
-                        console.log("Fetched articles:", articles);
-                        articlesData = articles.articles;
-                        console.log("Parsed articles:", articlesData);
+    // Simulate loading delay
+    setTimeout(() => {
+        fetch('/api/articles')
+            .then(response => response.json())
+            .then(data => {
+                console.log("Fetched articles:", data);
+                const articles = data.articles;
+                console.log("Parsed articles:", articles);
 
-                        const grid = document.querySelector('.articles-grid');
-                        if (grid) {
-                            grid.innerHTML = articlesData.map(article => createArticleCard(article)).join('');
-                        }
-                        filterArticles();
-                    })
-                    .catch(error => console.error("Error loading articles:", error));
-            }, 2000);
-        });
+                const grid = document.querySelector('.articles-grid');
+                if (grid) {
+                    grid.innerHTML = articles.map(article => createArticleCard(article)).join('');
+                }
+                filterArticles();
+            })
+            .catch(error => console.error("Error loading articles:", error));
+    }, 2000);
+});
+
     </script>
 </body>
 </html>

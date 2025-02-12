@@ -1,8 +1,7 @@
 import os
-from flask import Flask, render_template, g, redirect, url_for, request, flash
+from flask import Flask, render_template, g, redirect, url_for, request, flash, jsonify
 import sqlite3
 import os
-import json
 
 
 app = Flask(__name__)
@@ -14,11 +13,39 @@ DATABASE = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'database.d
 db = sqlite3.connect(DATABASE)
 
 
+def seed_articles():
+    db = sqlite3.connect(DATABASE)
+    cursor = db.cursor()
+
+    # Check if there are already articles in the database
+    cursor.execute("SELECT COUNT(*) FROM articles")
+    count = cursor.fetchone()[0]
+
+    if count == 0:  # Only insert if no articles exist
+        cursor.execute("INSERT INTO articles (title, source, summary) VALUES (?, ?, ?)",
+                       ("The Future of AI", "Tech Daily", "AI is transforming the world at an incredible pace."))
+        cursor.execute("INSERT INTO articles (title, source, summary) VALUES (?, ?, ?)",
+                       ("Health Tips 2025", "Wellness Weekly", "New health research reveals how to stay fit."))
+        cursor.execute("INSERT INTO articles (title, source, summary) VALUES (?, ?, ?)",
+                       ("Exploring Space", "Science World",
+                        "Scientists are looking at new planets beyond our solar system."))
+
+        db.commit()
+
+    db.close()
+
+
 @app.route('/api/articles')
 def get_articles():
-    articles = json.load(open('placeholder-data/dev-articles.json'))
-    
-    return (articles)
+    """Fetch all articles from the database and return as JSON."""
+    db = get_db()
+    articles = db.execute('SELECT id, title, source, summary FROM articles').fetchall()
+
+    articles_list = [dict(article) for article in articles]  # Convert rows to dicts
+
+    return jsonify({"articles": articles_list})  # Wrap list in a dictionary
+
+
 
 def get_db():
     """Connect to SQLite database."""
@@ -41,7 +68,7 @@ def init_db():
                         email TEXT NOT NULL UNIQUE,
                         password TEXT NOT NULL)''')
         db.commit()
-
+    seed_articles()
 @app.route('/')
 def index():
     """Render the login page."""
@@ -78,6 +105,26 @@ def create_account():
 def about():
     return render_template('about.html')
 
+
+@app.route('/api/article/<int:article_id>')
+def get_article(article_id):
+    """Fetch a single article by ID from the database and return it as JSON."""
+
+    db = get_db()
+    article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
+
+    if article is None:
+        print(f"Article ID {article_id} not found!")  # Debugging
+        return jsonify({"error": "Article not found"}), 404
+
+    return jsonify(dict(article))  # Convert row to dict
+
+
+@app.route('/article/<int:article_id>')
+def article_page(article_id):
+    """Render the article.html page, which will fetch article data via JavaScript."""
+    return render_template("article.html")
+
 @app.route('/browse')
 def browse():
     """Display article headlines."""
@@ -87,10 +134,14 @@ def browse():
 
 @app.route('/article/<int:article_id>')
 def article(article_id):
-    """View a single article."""
+    """View a single article in full screen."""
     db = get_db()
     article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
-    return render_template('article.html', article=article)
+    if article is None:
+        flash('Article not found!', 'error')
+        return redirect(url_for('browse'))
+    return render_template('article.html', article_id=article)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -114,3 +165,4 @@ def login():
 if __name__ == '__main__':
     init_db()  # Initialize DB
     app.run(debug=True)
+
