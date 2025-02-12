@@ -22,12 +22,12 @@ def seed_articles():
     count = cursor.fetchone()[0]
 
     if count == 0:  # Only insert if no articles exist
-        cursor.execute("INSERT INTO articles (title, source, author, length, summary) VALUES (?, ?, ?,?,?)",
-                       ("The Future of AI", "Tech Daily", "Dr. John Smith", 12, "AI is transforming the world at an incredible pace."))
-        cursor.execute("INSERT INTO articles (title, source, author, length, summary) VALUES (?, ?, ?,?,?)",
-                       ("Health Tips 2025", "Wellness Weekly", "Dr. Alice Johnson", 10, "New health research reveals how to stay fit."))
-        cursor.execute("INSERT INTO articles (title, source, author, length, summary) VALUES (?, ?, ?,?,?)",
-                       ("Exploring Space", "Science World", "Dr. Mark Lee", 15,
+        cursor.execute("INSERT INTO articles (title, source, author, length, category, summary) VALUES (?, ?, ?, ?, ?, ?)",
+                       ("The Future of AI", "Tech Daily", "Dr. John Smith", 12, "Tech", "AI is transforming the world at an incredible pace."))
+        cursor.execute("INSERT INTO articles (title, source, author, length, category, summary) VALUES (?, ?, ?, ?, ?, ?)",
+                       ("Health Tips 2025", "Wellness Weekly", "Dr. Alice Johnson", 10, "Health", "New health research reveals how to stay fit."))
+        cursor.execute("INSERT INTO articles (title, source, author, length, category, summary) VALUES (?, ?, ?, ?, ?, ?)",
+                       ("Exploring Space", "Science World", "Dr. Mark Lee", 15, "Science",
                         "Scientists are looking at new planets beyond our solar system."))
 
         db.commit()
@@ -39,7 +39,7 @@ def seed_articles():
 def get_articles():
     """Fetch all articles from the database and return as JSON."""
     db = get_db()
-    articles = db.execute('SELECT id, title, source, author, length, summary FROM articles').fetchall()
+    articles = db.execute('SELECT id, title, source, author, length, category, summary FROM articles').fetchall()
 
     articles_list = [dict(article) for article in articles]  # Convert rows to dicts
 
@@ -63,6 +63,7 @@ def init_db():
                         source TEXT NOT NULL,
                         author TEXT NOT NULL,
                         length INTEGER NOT NULL,
+                        category TEXT NOT NULL,
                         summary TEXT NOT NULL)''')
         db.execute('''CREATE TABLE IF NOT EXISTS users
                        (id INTEGER PRIMARY KEY,
