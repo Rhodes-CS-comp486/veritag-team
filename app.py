@@ -22,12 +22,12 @@ def seed_articles():
     count = cursor.fetchone()[0]
 
     if count == 0:  # Only insert if no articles exist
-        cursor.execute("INSERT INTO articles (title, source, summary) VALUES (?, ?, ?)",
-                       ("The Future of AI", "Tech Daily", "AI is transforming the world at an incredible pace."))
-        cursor.execute("INSERT INTO articles (title, source, summary) VALUES (?, ?, ?)",
-                       ("Health Tips 2025", "Wellness Weekly", "New health research reveals how to stay fit."))
-        cursor.execute("INSERT INTO articles (title, source, summary) VALUES (?, ?, ?)",
-                       ("Exploring Space", "Science World",
+        cursor.execute("INSERT INTO articles (title, source, author, length, summary) VALUES (?, ?, ?,?,?)",
+                       ("The Future of AI", "Tech Daily", "Dr. John Smith", 12, "AI is transforming the world at an incredible pace."))
+        cursor.execute("INSERT INTO articles (title, source, author, length, summary) VALUES (?, ?, ?,?,?)",
+                       ("Health Tips 2025", "Wellness Weekly", "Dr. Alice Johnson", 10, "New health research reveals how to stay fit."))
+        cursor.execute("INSERT INTO articles (title, source, author, length, summary) VALUES (?, ?, ?,?,?)",
+                       ("Exploring Space", "Science World", "Dr. Mark Lee", 15,
                         "Scientists are looking at new planets beyond our solar system."))
 
         db.commit()
@@ -39,7 +39,7 @@ def seed_articles():
 def get_articles():
     """Fetch all articles from the database and return as JSON."""
     db = get_db()
-    articles = db.execute('SELECT id, title, source, summary FROM articles').fetchall()
+    articles = db.execute('SELECT id, title, source, author, length, summary FROM articles').fetchall()
 
     articles_list = [dict(article) for article in articles]  # Convert rows to dicts
 
@@ -61,6 +61,8 @@ def init_db():
                        (id INTEGER PRIMARY KEY,
                         title TEXT NOT NULL,
                         source TEXT NOT NULL,
+                        author TEXT NOT NULL,
+                        length INTEGER NOT NULL,
                         summary TEXT NOT NULL)''')
         db.execute('''CREATE TABLE IF NOT EXISTS users
                        (id INTEGER PRIMARY KEY,
@@ -112,9 +114,7 @@ def get_article(article_id):
 
     db = get_db()
     article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
-
     if article is None:
-        print(f"Article ID {article_id} not found!")  # Debugging
         return jsonify({"error": "Article not found"}), 404
 
     return jsonify(dict(article))  # Convert row to dict

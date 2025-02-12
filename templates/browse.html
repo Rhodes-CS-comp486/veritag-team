@@ -552,6 +552,10 @@
     return `
         <a href="/article/${article.id}" class="article-card"
             data-length="${article.length}"
+            data-author="${article.author}"
+            data-source="${article.source}"
+            data-summary="${article.summary}"
+            data-image="${article.image}""
             data-category="${article.category}"
             data-rating="${article.rating}">
             <div class="card-inner">
@@ -562,13 +566,13 @@
                     <div class="card-meta">
                         <div class="meta-top">
                             <span class="category-badge">${article.category}</span>
-                            <span class="length-badge">${article.length === 'Short' ? '< 5 min' : article.length === 'Medium' ? '5 - 15 min' : '> 15 min'}</span>
+                            <span class="length-badge">${article.length}</span>
                         </div>
                         <div class="article-info">
-                            <strong>Author:</strong> ${article.author || "Unknown"}<br>
-                            <strong>Source:</strong> ${article.source || "Source Unavailable"}
+                            <strong>Author:</strong> ${article.author || 'Test Author'}<br>
+                            <strong>Source:</strong> ${article.source || 'Test Source'}<br>
                         </div>
-                        <div class="article-summary">${article.summary || "No summary available."}</div>
+                        <div class="article-summary">${article.summary}</div>
                         <div class="rating-badge">Rating: ${article.rating} ★</div>
                     </div>
                 </div>

@@ -5,35 +5,100 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Article</title>
     <style>
+        /* General Dark Theme */
         body {
             margin: 0;
             padding: 0;
-            overflow: hidden;
-            background-color: #00f4f4;
-        }
-        .article-container {
-            width: 100vw;
-            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
+            min-height: 100vh;
         }
+
+        /* Article Container */
+        .article-container {
+            width: 90%;
+            max-width: 800px;
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        /* Header */
         .article-header {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        /* Metadata (Author & Source) */
+        .article-meta {
+            font-size: 1rem;
+            color: #b0b0b0;
+            font-style: italic;
             margin-bottom: 20px;
         }
-        .article-meta {
-            font-size: 1.25rem;
-            margin-bottom: 10px;
-        }
+
+        /* Summary */
         .article-body {
             font-size: 1.1rem;
-            max-width: 800px;
             text-align: justify;
             line-height: 1.6;
+            color: #d0d0d0;
+            padding: 10px 0;
+        }
+
+        /* Button */
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            font-size: 1rem;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .back-button:hover {
+            background: #0056b3;
+        }
+
+        /* Fade In Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .article-container {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .article-header {
+                font-size: 1.8rem;
+            }
+
+            .article-body {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -42,44 +107,40 @@
         <div class="article-header" id="article-title">Loading...</div>
         <div class="article-meta" id="article-meta"></div>
         <div class="article-body" id="article-content"></div>
+        <a href="/browse" class="back-button">← Back to Articles</a>
     </div>
 
     <script>
-document.addEventListener("DOMContentLoaded", function() {
-    // Extract article ID from the URL
-    const articleId = window.location.pathname.split("/").pop();
+        document.addEventListener("DOMContentLoaded", function() {
+            const articleId = window.location.pathname.split("/").pop();
 
-    // Check if articleId is valid
-    if (!articleId || isNaN(articleId)) {
-        console.error("Invalid article ID:", articleId);
-        document.getElementById("article-container").innerHTML = `<p>Error loading article.</p>`;
-        return;
-    }
-
-    // Fetch the article details
-    fetch(`/api/article/${articleId}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Failed to load article");
-            }
-            return response.json();
-        })
-        .then(article => {
-            if (article.error) {
-                throw new Error(article.error);
+            if (!articleId || isNaN(articleId)) {
+                console.error("Invalid article ID:", articleId);
+                document.querySelector(".article-container").innerHTML = `<p>Error loading article.</p>`;
+                return;
             }
 
-            // Populate the article page with data
-            document.getElementById("article-title").textContent = article.title;
-            document.getElementById("article-source").textContent = `Source: ${article.source}`;
-            document.getElementById("article-summary").textContent = article.summary;
-        })
-        .catch(error => {
-            console.error("Error loading article:", error);
-            document.getElementById("article-container").innerHTML = `<p>Error loading article.</p>`;
+            fetch(`/api/article/${articleId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to load article");
+                    }
+                    return response.json();
+                })
+                .then(article => {
+                    if (article.error) {
+                        throw new Error(article.error);
+                    }
+
+                    document.getElementById("article-title").textContent = article.title;
+                    document.getElementById("article-meta").textContent = `By ${article.author} | Source: ${article.source} | Reading Time: ${article.length} min`;
+                    document.getElementById("article-content").textContent = article.summary;
+                })
+                .catch(error => {
+                    console.error("Error loading article:", error);
+                    document.querySelector(".article-container").innerHTML = `<p>Error loading article.</p>`;
+                });
         });
-});
-</script>
-
+    </script>
 </body>
 </html>
