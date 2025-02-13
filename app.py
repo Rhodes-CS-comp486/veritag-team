@@ -233,6 +233,11 @@ def browse_verified():
         return render_template('browse_verified.html')
     return render_template('browse_verified.html')
 
+# Route for the community page
+@app.route('/community')
+def community():
+    return render_template('community.html')
+
 
 if __name__ == '__main__':
     init_db()  # Initialize DB

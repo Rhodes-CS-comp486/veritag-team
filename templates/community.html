@@ -139,6 +139,17 @@
             padding: 0.75rem;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 8px;
+            max-width: 70%;
+            position: relative;
+        }
+
+        .message.you {
+            margin-left: auto; /* Align your messages to the right */
+            background: rgba(176, 136, 255, 0.2); /* Different background for your messages */
+        }
+
+        .message.others {
+            margin-right: auto; /* Align others' messages to the left */
         }
 
         .message-author {
@@ -221,19 +232,45 @@
     <script>
         // Mock user for demonstration
         const currentUser = {
-            name: "User",
+            name: "ChattyMcChatFace", // Humorous name for you
             verified: false, // Set to true if the user is verified
         };
 
+        // List of humorous names for other users
+        const humorousNames = [
+            "CaptainKeyboard",
+            "SirSpamsALot",
+            "TheMemeMachine",
+            "ProfessorPun",
+            "LordOfTheGifs",
+            "QueenOfEmojis",
+            "TheJokester",
+            "Ms.Typo",
+            "GrammarPolice",
+            "TheLurker"
+        ];
+
+        // Function to get a random humorous name
+        function getRandomName() {
+            return humorousNames[Math.floor(Math.random() * humorousNames.length)];
+        }
+
         // Function to add a message to the chat
-        function addMessage(author, content, verified) {
+        function addMessage(author, content, isYou = false) {
             const chatMessages = document.getElementById("chat-messages");
             const messageElement = document.createElement("div");
             messageElement.classList.add("message");
 
+            // Add a class to differentiate your messages
+            if (isYou) {
+                messageElement.classList.add("you");
+            } else {
+                messageElement.classList.add("others");
+            }
+
             messageElement.innerHTML = `
                 <div class="message-author">
-                    ${author} ${verified ? '<span class="comment-verified">✔ Verified</span>' : ''}
+                    ${author} ${isYou ? '<span class="comment-verified">(You)</span>' : ''}
                 </div>
                 <div class="message-content">${content}</div>
             `;
@@ -248,15 +285,21 @@
             const content = input.value.trim();
 
             if (content) {
-                addMessage(currentUser.name, content, currentUser.verified);
+                addMessage(currentUser.name, content, true); // Add your message
                 input.value = ""; // Clear the input
+
+                // Simulate a response from another user
+                setTimeout(() => {
+                    addMessage(getRandomName(), "This is a witty response!", false);
+                }, 1000); // Simulate a 1-second delay
             }
         }
 
         // Simulate loading some initial messages
         document.addEventListener("DOMContentLoaded", () => {
-            addMessage("John Doe", "Hello everyone!", true);
-            addMessage("Jane Smith", "Hi there!", false);
+            addMessage(getRandomName(), "Hello everyone!", false);
+            addMessage(getRandomName(), "Welcome to the chat!", false);
+            addMessage(currentUser.name, "Hey everyone! Let's chat!", true);
         });
     </script>
 </body>
