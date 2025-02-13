@@ -76,8 +76,9 @@ def init_db():
 
 @app.route('/')
 def index():
-    """Render the login page."""
-    return redirect(url_for('login'))
+    """Redirect to the browse page on startup."""
+    return redirect(url_for('browse'))
+
 
 @app.route('/create_account', methods=['GET', 'POST'])
 def create_account():
@@ -201,6 +202,37 @@ def login():
             error = True  # Set error to True if login fails
 
     return render_template('login.html', error=error)  # Pass error to the template
+
+
+
+@app.route('/verified_login', methods=['GET', 'POST'])
+def verified_login():
+    """Handle verified user login."""
+    error = None
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        db = get_db()
+        user = db.execute('SELECT * FROM users WHERE username = ? AND password = ? AND verified_code != ""', 
+                          (username, password)).fetchone()
+
+        if user:
+            flash('Verified login successful!', 'success')
+            return render_template('browse_verified.html')  # Change to browse_verified.html
+        else:
+            error = True
+
+    return render_template('verified_login.html', error=error)
+
+
+@app.route('/browse_verified', methods=['POST', 'GET'])
+def browse_verified():
+    if request.method == 'POST':
+        # handle POST logic
+        return render_template('browse_verified.html')
+    return render_template('browse_verified.html')
+
 
 if __name__ == '__main__':
     init_db()  # Initialize DB
