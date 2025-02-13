@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> VERITAG - Create Account</title>
+    <title>VeriTag - Verified Login</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Consistent with browse.html */
         * {
             margin: 0;
             padding: 0;
@@ -44,7 +43,7 @@
             color: #fff;
             text-decoration: none;
             letter-spacing: 1px;
-            text-shadow: 0 0 5000px rgba(176, 136, 255, 0.8);
+            text-shadow: 0 0 5000px rgba(255, 215, 0, 0.8);
         }
 
         .container {
@@ -77,14 +76,15 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 8px;
             font-size: 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: black;
+            font-weight: bold;
             transition: all 0.3s ease;
         }
 
         input:focus {
-            border-color: #B088FF;
-            box-shadow: 0 0 12px rgba(176, 136, 255, 0.5);
+            border-color: #FFD700;
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
             outline: none;
         }
 
@@ -96,23 +96,45 @@
             border-radius: 8px;
             font-size: 1rem;
             cursor: pointer;
-            background: linear-gradient(45deg, #B088FF, #6a7bff);
-            color: white;
+            background: linear-gradient(45deg, #FFD700, #FF8C00);
+            color: black;
+            font-weight: bold;
             transition: all 0.3s ease;
         }
 
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(176, 136, 255, 0.3);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
         }
 
-        .back-button {
+        .back {
             background: rgba(255, 255, 255, 0.15);
             color: #fff;
         }
 
-        .back-button:hover {
+        .back:hover {
             background: rgba(255, 255, 255, 0.3);
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #FFD700;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 3px;
+            border-radius: 50%;
+            border: 1px solid #FFD700;
+        }
+
+        .password-toggle:hover {
+            background: rgba(0, 0, 0, 0.6);
         }
 
         footer {
@@ -129,19 +151,34 @@
     </nav>
 
     <div class="container">
-        <h2>Create Account</h2>
-        <form action="/create_account" method="post">
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <input type="password" name="confirm_password" placeholder="Confirm Password" required>
-            <button type="submit">Create Account</button>
+        <h2>Verified User Login</h2>
+        <form action="{{ url_for('browse_verified') }}" method="post">
+            <div class="input-container">
+                <input type="text" name="username" placeholder="Verified Username" required>
+            </div>
+            <div class="password-container">
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <span class="password-toggle" onclick="togglePassword()">👁️</span>
+            </div>
+            <button type="submit">Login as Verified</button>
         </form>
-        
+        <button class="back" onclick="location.href='{{ url_for('create_verified_account') }}'">Create Verified Account</button>
+
     </div>
 
     <footer>
         <p>© 2025 VERITAG | Martin Maxim, Nick Bilotti, Jud Turner, Peter Halvorsen</p>
     </footer>
+
+    <script>
+        function togglePassword() {
+            var passwordField = document.getElementById('password');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        }
+    </script>
 </body>
 </html>
