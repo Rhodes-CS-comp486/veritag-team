@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VeriTag - Login</title>
+    <title>VERITAG - Create Verified Account</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Consistent with browse.html */
+        /* Consistent with login.html */
         * {
             margin: 0;
             padding: 0;
@@ -106,34 +106,13 @@
             box-shadow: 0 5px 15px rgba(176, 136, 255, 0.3);
         }
 
-        .guest {
+        .back-button {
             background: rgba(255, 255, 255, 0.15);
             color: #fff;
         }
 
-        .guest:hover {
+        .back-button:hover {
             background: rgba(255, 255, 255, 0.3);
-        }
-
-        .password-container {
-            position: relative;
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #B088FF;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 3px;
-            border-radius: 50%;
-            border: 1px solid #B088FF;
-        }
-
-        .password-toggle:hover {
-            background: rgba(0, 0, 0, 0.6);
         }
 
         footer {
@@ -141,6 +120,13 @@
             bottom: 20px;
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.9rem;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            margin-top: 10px;
+            font-size: 1rem;
+            text-align: center;
         }
     </style>
 </head>
@@ -150,20 +136,22 @@
     </nav>
 
     <div class="container">
-        <h2>Login</h2>
-        <form action="{{ url_for('login') }}" method="post">
-            <div class="input-container">
-                <input type="text" name="username" placeholder="Username" required>
-            </div>
-            <div class="password-container">
-                <input type="password" id="password" name="password" placeholder="Password" required>
-                <span class="password-toggle" onclick="togglePassword()">👁️</span>
-            </div>
-            <button type="submit">Login</button>
+        <h2>Create Verified Account</h2>
+
+        <!-- Error Message Block (if there's an error in the verification code) -->
+        <div id="error-message" class="error-message">
+            <!-- This will be populated with error messages if needed -->
+        </div>
+
+        <form action="/create_verified_account" method="post">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+            <input type="text" name="verification_code" placeholder="Enter verification code" required>
+            <button type="submit">Create Verified Account</button>
         </form>
-        <button onclick="location.href='{{ url_for('create_account') }}'">Create Account</button>
-         <button onclick="location.href='{{ url_for('create_verified_account') }}'">Create Verified Account</button>
-        <button class="guest" onclick="location.href='{{ url_for('browse') }}'">Continue as Guest</button>
+        <button class="back-button" onclick="location.href='/'">Back to Login</button>
     </div>
 
     <footer>
@@ -171,13 +159,10 @@
     </footer>
 
     <script>
-        function togglePassword() {
-            var passwordField = document.getElementById('password');
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-            } else {
-                passwordField.type = 'password';
-            }
+        // Display error message if verification fails (this would be dynamic based on your backend)
+        const errorMessage = 'Incorrect verification code. Please try again.';
+        if (errorMessage) {
+            document.getElementById('error-message').textContent = errorMessage;
         }
     </script>
 </body>

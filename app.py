@@ -69,9 +69,11 @@ def init_db():
                        (id INTEGER PRIMARY KEY,
                         username TEXT NOT NULL UNIQUE,
                         email TEXT NOT NULL UNIQUE,
-                        password TEXT NOT NULL)''')
+                        password TEXT NOT NULL,
+                        verified_code TEXT NOT NULL)''')  # Add verified_code column
         db.commit()
     seed_articles()
+
 @app.route('/')
 def index():
     """Render the login page."""
@@ -102,6 +104,43 @@ def create_account():
             return redirect(url_for('create_account'))
 
     return render_template('create_account.html')
+
+VALID_VERIFICATION_CODES = ['12345']  # Example valid codes
+
+@app.route('/create_verified_account', methods=['GET', 'POST'])
+def create_verified_account():
+    """Handle the creation of a verified account."""
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+        verified_code = request.form['verification_code']
+
+        # Password match check
+        if password != confirm_password:
+            flash('Passwords do not match!', 'error')
+            return redirect(url_for('create_verified_account'))
+
+        # Verified code check
+        if verified_code not in VALID_VERIFICATION_CODES:
+            flash('Invalid verification code!', 'error')
+            return redirect(url_for('create_verified_account'))
+
+        # Connect to SQLite and insert the user with the verified code
+        db = get_db()
+        try:
+            db.execute('INSERT INTO users (username, email, password, verified_code) VALUES (?, ?, ?, ?)',
+                       (username, email, password, verified_code))
+            db.commit()
+            flash('Account created successfully! Please log in.', 'success')
+            return redirect(url_for('login'))  # Redirect to login page
+        except sqlite3.IntegrityError:
+            flash('Username or email already exists!', 'error')
+            return redirect(url_for('create_verified_account'))
+
+    return render_template('create_verified_account.html')
+
 
 # Route for the About page
 @app.route('/about')
