@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Reuse the same styles -->
     <style>
         * {
             margin: 0;
@@ -17,9 +19,10 @@
             background-color: #000;
             color: #fff;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            height: 100vh;
+            justify-content: center;
+            min-height: 100vh; /* Ensure the body takes the full viewport height */
         }
 
         .navbar {
@@ -76,15 +79,65 @@
             background: rgba(176, 136, 255, 0.2);
         }
 
-        .about-content {
-            text-align: center;
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
         }
 
-        .about-content img {
-            max-width: 100%;
-            height: auto;
+        .user-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+        }
+
+        .nav-right:hover .user-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .user-menu-item {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .user-menu-item:hover {
+            background: rgba(176, 136, 255, 0.2);
+        }
+
+        /* About Page Styles */
+        .about-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .about-container img {
+            width: 100%; /* Make the image responsive */
+            max-width: 600px; /* Limit maximum size */
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(176, 136, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(176, 136, 255, 0.3);
         }
     </style>
 </head>
@@ -96,119 +149,27 @@
                 <a href="/explore" class="nav-link">Explore</a>
                 <a href="/categories" class="nav-link">Categories</a>
                 <a href="/community" class="nav-link">Community</a>
-                <a href="/about" class="nav-link active">About</a> <!-- Active link for About page -->
+                <a href="/about" class="nav-link active">About</a>
             </div>
         </div>
         <div class="nav-right">
-            <div class="filter-dropdown">
-                <button class="filter-trigger">
-                    <i class="fas fa-filter"></i>
-                    Filters
-                </button>
-                <div class="filter-menu">
-                    <div class="filter-section">
-                        <div class="filter-section-title">Length</div>
-                        <div class="filter-options">
-                            <label class="filter-option">
-                                <input type="radio" name="length" value="all" checked>
-                                <span>All Lengths</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="length" value="Short">
-                                <span>Short (< 5 min)</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="length" value="Medium">
-                                <span>Medium (5-15 min)</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="length" value="Long">
-                                <span>Long (> 15 min)</span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="filter-section">
-                        <div class="filter-section-title">Category</div>
-                        <div class="filter-options">
-                            <label class="filter-option">
-                                <input type="radio" name="category" value="all" checked>
-                                <span>All Categories</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="category" value="Tech">
-                                <span>Technology</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="category" value="Health">
-                                <span>Health</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="category" value="Science">
-                                <span>Science</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="category" value="Politics">
-                                <span>Politics</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="category" value="Culture">
-                                <span>Culture</span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="filter-section">
-                        <div class="filter-section-title">Rating</div>
-                        <div class="filter-options">
-                            <label class="filter-option">
-                                <input type="radio" name="rating" value="all" checked>
-                                <span>Any Rating</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="rating" value="5">
-                                <span>5 Stars</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="rating" value="4">
-                                <span>4 Stars</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="rating" value="3">
-                                <span>3 Stars</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="rating" value="1">
-                                <span>1 Stars</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="rating" value="0">
-                                <span>0 Stars</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search articles...">
-            </div>
-            <div class="notification-badge">
-                <i class="fas fa-bell"></i>
-            </div>
             <div class="user-section">
                 <button class="user-menu-trigger">
                     <i class="fas fa-user-circle"></i>
                 </button>
                 <div class="user-menu">
                     <a href="/login" class="user-menu-item">Login</a>
-                    <a href="/login" class="user-menu-item">Verified Login</a>
+                    <a href="/verified_login" class="user-menu-item">Verified Login</a>
                     <a href="/create_account" class="user-menu-item">Create Account</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="about-content">
-        <img src="download.jpg" alt="About Us Image">
+    <!-- About Page Content -->
+    <div class="about-container">
+        <!-- Bigger Image in the middle -->
+        <img src="static/download.jpg" alt="Team Photo">
     </div>
 </body>
 </html>
