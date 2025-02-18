@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, g, redirect, url_for, request, flash, jsonify
+from flask import Flask, render_template, g, redirect, url_for, request, flash, jsonify, json
 import sqlite3
 import os
 
@@ -22,13 +22,44 @@ def seed_articles():
     count = cursor.fetchone()[0]
 
     if count == 0:  # Only insert if no articles exist
-        cursor.execute("INSERT INTO articles (title, source, author, length, category, summary) VALUES (?, ?, ?, ?, ?, ?)",
-                       ("The Future of AI", "Tech Daily", "Dr. John Smith", 12, "Tech", "AI is transforming the world at an incredible pace."))
-        cursor.execute("INSERT INTO articles (title, source, author, length, category, summary) VALUES (?, ?, ?, ?, ?, ?)",
-                       ("Health Tips 2025", "Wellness Weekly", "Dr. Alice Johnson", 10, "Health", "New health research reveals how to stay fit."))
-        cursor.execute("INSERT INTO articles (title, source, author, length, category, summary) VALUES (?, ?, ?, ?, ?, ?)",
-                       ("Exploring Space", "Science World", "Dr. Mark Lee", 15, "Science",
-                        "Scientists are looking at new planets beyond our solar system."))
+        cursor.execute(
+            "INSERT INTO articles (title, source, author, length, category, rating, summary) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            ("The Future of AI", "Tech Daily", "Dr. John Smith", 12, "Tech", 3,
+             "AI is transforming the world at an incredible pace."))
+        cursor.execute(
+            "INSERT INTO articles (title, source, author, length, category, rating, summary) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            ("Health Tips 2025", "Wellness Weekly", "Dr. Alice Johnson", 10, "Health", 4,
+             "New health research reveals how to stay fit."))
+        cursor.execute(
+            "INSERT INTO articles (title, source, author, length, category, rating, summary) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            ("Exploring Space", "Science World", "Dr. Mark Lee", 15, "Science", 5,
+             "Scientists are looking at new planets beyond our solar system."))
+
+        # New seed articles
+        cursor.execute(
+            "INSERT INTO articles (title, source, author, length, category, rating, summary) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            ("The Rise of Quantum Computing", "Tech Times", "Dr. Emily White", 18, "Tech", 4,
+             "Quantum computing is poised to revolutionize computing power beyond classical limits."))
+        cursor.execute(
+            "INSERT INTO articles (title, source, author, length, category, rating, summary) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            ("The Importance of Mental Health in 2025", "Health Digest", "Dr. Michael Brown", 14, "Health", 5,
+             "With increasing awareness, mental health is becoming a critical part of overall wellness."))
+        cursor.execute(
+            "INSERT INTO articles (title, source, author, length, category, rating, summary) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            ("New Frontiers in Space Travel", "Space News", "Dr. Sarah Green", 20, "Science", 4,
+             "Exploring the latest advancements in space technology and how they could change travel to Mars and beyond."))
+        cursor.execute(
+            "INSERT INTO articles (title, source, author, length, category, rating, summary) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            ("AI and Ethics: Navigating the Future", "Tech Insight", "Dr. James Blue", 22, "Tech", 3,
+             "Ethical concerns surrounding AI development and how we can approach them responsibly."))
+        cursor.execute(
+            "INSERT INTO articles (title, source, author, length, category, rating, summary) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            ("Eating for Longevity", "Wellness Daily", "Dr. Olivia Martin", 12, "Health", 4,
+             "Research reveals the best foods to eat to promote longevity and healthy aging."))
+        cursor.execute(
+            "INSERT INTO articles (title, source, author, length, category, rating, summary) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            ("The Search for Extraterrestrial Life", "Cosmic Times", "Dr. Peter Collins", 17, "Science", 5,
+             "Scientists are searching for signs of extraterrestrial life and what that could mean for humanity."))
 
         db.commit()
 
@@ -39,7 +70,7 @@ def seed_articles():
 def get_articles():
     """Fetch all articles from the database and return as JSON."""
     db = get_db()
-    articles = db.execute('SELECT id, title, source, author, length, category, summary FROM articles').fetchall()
+    articles = db.execute('SELECT id, title, source, author, length, category, rating, summary FROM articles').fetchall()
 
     articles_list = [dict(article) for article in articles]  # Convert rows to dicts
 
@@ -64,6 +95,7 @@ def init_db():
                         author TEXT NOT NULL,
                         length INTEGER NOT NULL,
                         category TEXT NOT NULL,
+                        rating INTEGER NOT NULL,
                         summary TEXT NOT NULL)''')
         db.execute('''CREATE TABLE IF NOT EXISTS users
                        (id INTEGER PRIMARY KEY,
@@ -237,6 +269,24 @@ def browse_verified():
 @app.route('/community')
 def community():
     return render_template('community.html')
+
+@app.route('/categories')
+def categories():
+    response = get_articles()  # This returns a Response object
+    articles = json.loads(response.get_data(as_text=True))["articles"]  # Extract article list
+
+    # Group articles by category
+    categories = {}
+    for article in articles:
+        category = article["category"]
+        if category not in categories:
+            categories[category] = []
+        categories[category].append(article)
+
+    return render_template('categories.html', categories=categories)
+
+
+
 
 
 if __name__ == '__main__':

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Categories</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        .category-card {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .category-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .category-card-body {
+            position: relative;
+            padding: 2rem;
+        }
+
+        .category-card-body h5 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .category-card-body ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .category-card-body ul li a {
+            display: block;
+            padding: 0.75rem 1rem;
+            margin: 0.5rem 0;
+            background-color: #444;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        .category-card-body ul li a:hover {
+            background-color: #007bff;
+        }
+
+        .category-heading {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #f1f1f1;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .back-btn {
+            margin-top: 2rem;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+        }
+
+        body {
+            background-color: #121212;
+            color: #f1f1f1;
+        }
+
+        .container {
+            padding: 3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-5">Explore Our Article Categories</h1>
+
+        <div class="row">
+            {% for category, articles in categories.items() %}
+                <div class="col-md-4 mb-4">
+                    <div class="card category-card bg-dark text-light">
+                        <div class="category-card-body">
+                            <h5 class="category-heading">{{ category }}</h5>
+                            <ul>
+                                {% for article in articles %}
+                                    <li>
+                                        <a href="{{ url_for('article', article_id=article['id']) }}" class="text-light text-decoration-none">
+                                            {{ article['title'] }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center">
+            <a href="{{ url_for('browse') }}" class="btn btn-outline-light back-btn">Back to Browse</a>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
