@@ -135,7 +135,7 @@ def create_verified_account():
                        (username, email, password, verified_code))
             db.commit()
             flash('Account created successfully! Please log in.', 'success')
-            return redirect(url_for('login'))  # Redirect to login page
+            return redirect(url_for('verified_login'))  # Redirect to login page
         except sqlite3.IntegrityError:
             flash('Username or email already exists!', 'error')
             return redirect(url_for('create_verified_account'))
