@@ -1,0 +1,358 @@
+[
+  {
+    "id": "01",
+    "title": "AI Breakthrough in Healthcare",
+    "author": "Jane Doe",
+    "category": "Health",
+    "length": "Medium",
+    "summary": "Scientists have developed an AI model that predicts disease outbreaks with unprecedented accuracy, allowing for early interventions and better public health outcomes.",
+    "rating": 4,
+    "source": "The New York Times",
+    "publication_date": "2025-02-21"
+  },
+  {
+    "id": "02",
+    "title": "Quantum Computing: The Next Frontier",
+    "author": "John Smith",
+    "category": "Science",
+    "length": "Long",
+    "summary": "Researchers at a leading university have unveiled a quantum processor capable of solving complex problems exponentially faster than classical computers.",
+    "rating": 5,
+    "source": "Scientific American",
+    "publication_date": "2025-02-18"
+  },
+  {
+    "id": "03",
+    "title": "The Rise of Augmented Reality in Daily Life",
+    "author": "Alex Johnson",
+    "category": "Technology",
+    "length": "Short",
+    "summary": "Augmented reality is becoming a staple in everyday applications, from virtual shopping experiences to enhanced navigation systems.",
+    "rating": 3,
+    "source": "Wired",
+    "publication_date": "2025-02-17"
+  },
+  {
+    "id": "04",
+    "title": "Social Media’s Impact on Political Discourse",
+    "author": "Emily White",
+    "category": "Politics",
+    "length": "Medium",
+    "summary": "Experts weigh in on how social media algorithms shape public opinion, influence elections, and contribute to political polarization.",
+    "rating": 4,
+    "source": "The Atlantic",
+    "publication_date": "2025-02-20"
+  },
+  {
+    "id": "05",
+    "title": "The Return of Vinyl Records",
+    "author": "Mike Brown",
+    "category": "Culture",
+    "length": "Short",
+    "summary": "Vinyl records are experiencing a resurgence as younger generations rediscover the rich sound and nostalgic appeal of physical music collections.",
+    "rating": 5,
+    "source": "Rolling Stone",
+    "publication_date": "2025-02-22"
+  },
+  {
+    "id": "06",
+    "title": "Self-Driving Cars: Who's in Control?",
+    "author": "Otto Pilot",
+    "category": "Technology",
+    "length": "Medium",
+    "summary": "The push for autonomous vehicles continues, but who takes responsibility when things go wrong?",
+    "rating": 3,
+    "source": "Car and Driver",
+    "publication_date": "2025-02-22"
+  },
+  {
+    "id": "07",
+    "title": "Breaking the Code: The Rise of Ethical Hackers",
+    "author": "Hugh Jaxxon",
+    "category": "Technology",
+    "length": "Short",
+    "summary": "Ethical hackers are stepping up to protect systems from cyber threats before criminals can exploit them.",
+    "rating": 4,
+    "source": "TechCrunch",
+    "publication_date": "2025-02-20"
+  },
+  {
+    "id": "08",
+    "title": "New Study Reveals Benefits of Laughter Therapy",
+    "author": "Dr. Chuckles",
+    "category": "Health",
+    "length": "Medium",
+    "summary": "Laughter may truly be the best medicine, as researchers find significant health benefits linked to humor-based therapy.",
+    "rating": 5,
+    "source": "The Journal of Funny Medicine",
+    "publication_date": "2025-02-22"
+  },
+  {
+    "id": "09",
+    "title": "Mars Colonization Plans Take Shape",
+    "author": "Elon Gated",
+    "category": "Science",
+    "length": "Long",
+    "summary": "Space agencies and private firms outline their next steps in turning Mars into a habitable home for humans.",
+    "rating": 4,
+    "source": "NASA Insider",
+    "publication_date": "2025-02-19"
+  },
+  {
+    "id": "10",
+    "title": "Political Scandals: A Never-Ending Story",
+    "author": "Phil A. Buster",
+    "category": "Politics",
+    "length": "Medium",
+    "summary": "The latest exposé reveals another twist in the ongoing saga of corruption and power struggles.",
+    "rating": 3,
+    "source": "The Daily Gossip",
+    "publication_date": "2025-02-22"
+  },
+
+
+  {
+    "id": "11",
+    "title": "The Secret to Immortality May Be Closer Than We Think",
+    "author": "Eve R. Lasting",
+    "category": "Science",
+    "length": "Long",
+    "summary": "New research on cellular regeneration suggests that extending human lifespan dramatically may soon be possible.",
+    "rating": 5,
+    "publication_date": "2025-02-16",
+    "source": "The Genome Gazette"
+  },
+  {
+    "id": "12",
+    "title": "AI Writes a Bestseller: Are Authors Obsolete?",
+    "author": "Paige Turner",
+    "category": "Technology",
+    "length": "Short",
+    "summary": "An AI-written novel tops charts sparking debates over the future of human creativity.",
+    "rating": 4,
+    "publication_date": "2025-02-22",
+    "source": "The Algorithmic Times"
+  },
+  
+    {
+      "id": "13",
+      "title": "Yoga and Mental Health: The Surprising Connection",
+      "author": "Ben D. Body",
+      "category": "Health",
+      "length": "Medium",
+      "summary": "Studies show that yoga can improve mental well-being just as effectively as traditional therapy.",
+      "rating": 1,
+      "publication_date": "2025-02-21",
+      "source": "The Daily Stretch"
+    },
+    {
+      "id": "14",
+      "title": "Virtual Reality Concerts: The Future of Live Music?",
+      "author": "Rocky Riffs",
+      "category": "Culture",
+      "length": "Short",
+      "summary": "As VR concerts become more realistic will they replace in-person events?",
+      "rating": 3,
+      "publication_date": "2025-02-19",
+      "source": "Rolling Clone"
+    },
+    {
+      "id": "15",
+      "title": "Why Politicians Keep Changing Their Minds",
+      "author": "Flip Flopson",
+      "category": "Politics",
+      "length": "Medium",
+      "summary": "Experts analyze why political leaders frequently shift positions on key policies.",
+      "rating": 4,
+      "publication_date": "2025-02-20",
+      "source": "The Flip-Flop Times"
+    },
+    {
+      "id": "16",
+      "title": "The Science of Perfect Sleep",
+      "author": "Dr. REMy Napper",
+      "category": "Health",
+      "length": "Medium",
+      "summary": "New insights reveal the optimal conditions for achieving deep and restorative sleep.",
+      "rating": 0,
+      "publication_date": "2025-02-20",
+      "source": "The Snooze Report"
+    },
+    {
+      "id": "17",
+      "title": "The Decline of Print Newspapers",
+      "author": "Ink Well",
+      "category": "Culture",
+      "length": "Medium",
+      "summary": "Traditional newspapers continue to struggle as digital media dominates the industry. Can they survive the shift?",
+      "rating": 2,
+      "publication_date": "2025-02-19",
+      "source": "The Paper Trail"
+    },
+    {
+      "id": "18",
+      "title": "The Overhyped Future of Flying Cars",
+      "author": "Skylar Jetson",
+      "category": "Technology",
+      "length": "Short",
+      "summary": "Despite decades of speculation, flying cars remain impractical. Will they ever take off?",
+      "rating": 1,
+      "publication_date": "2025-02-17",
+      "source": "The Airborne Observer"
+    },
+    {
+      "id": "19",
+      "title": "Fast Fashion’s Hidden Costs",
+      "author": "Taylor Stitch",
+      "category": "Culture",
+      "length": "Medium",
+      "summary": "The environmental and ethical consequences of cheap, disposable clothing are worse than most people realize.",
+      "rating": 3,
+      "publication_date": "2025-02-21",
+      "source": "Thread Bare News"
+    },
+    {
+      "id": "20",
+      "title": "The Streaming Wars Are Over—Who Won?",
+      "author": "Holly Wood",
+      "category": "Entertainment",
+      "length": "Long",
+      "summary": "With so many streaming services competing for attention, which platforms are here to stay?",
+      "rating": 2,
+      "publication_date": "2025-02-22",
+      "source": "Stream Scene"
+    },
+    {
+      "id": "21",
+      "title": "Why Passwords Might Become Obsolete",
+      "author": "Key Less",
+      "category": "Technology",
+      "length": "Short",
+      "summary": "Biometric security and passkeys are gaining traction—will they replace traditional passwords?",
+      "rating": 4,
+      "publication_date": "2025-02-18",
+      "source": "The Cipher Sentinel"
+    },
+    {
+      "id": "22",
+      "title": "The Failed Promise of Smart Cities",
+      "author": "Urban Sprawl",
+      "category": "Politics",
+      "length": "Medium",
+      "summary": "Despite billions invested, many smart city initiatives have fallen short of expectations.",
+      "rating": 1,
+      "publication_date": "2025-02-16",
+      "source": "The Gridlock Gazette"
+    },
+    {
+      "id": "23",
+      "title": "Why So Many Tech Startups Fail",
+      "author": "Silicon Valley",
+      "category": "Business",
+      "length": "Medium",
+      "summary": "High valuations and ambitious goals don’t always translate to long-term success. Here’s why most startups don’t make it.",
+      "rating": 3,
+      "publication_date": "2025-02-22",
+      "source": "Tech Crash Weekly"
+    },
+    {
+      "id": "24",
+      "title": "The Dangerous Rise of Deepfake Scams",
+      "author": "Real I. Tee",
+      "category": "Technology",
+      "length": "Short",
+      "summary": "Deepfake technology is making scams harder to detect, leading to financial and reputational damages.",
+      "rating": 4,
+      "publication_date": "2025-02-21",
+      "source": "The Fake News Observer"
+    },
+    {
+      "id": "25",
+      "title": "The Illusion of Work-Life Balance",
+      "author": "Jenna Rate",
+      "category": "Business",
+      "length": "Medium",
+      "summary": "Despite corporate promises, most employees struggle to truly balance work and personal life.",
+      "rating": 2,
+      "publication_date": "2025-02-20",
+      "source": "The Overworked Journal"
+    },
+    {
+      "id": "26",
+      "title": "The Mystery of Vanishing Insects",
+      "author": "Buzz Kill",
+      "category": "Science",
+      "length": "Long",
+      "summary": "Insect populations are declining at an alarming rate—what does this mean for the ecosystem?",
+      "rating": 3,
+      "publication_date": "2025-02-19",
+      "source": "The Bug Report"
+    },
+    {
+      "id": "27",
+      "title": "Has Minimalism Gone Too Far?",
+      "author": "Clutter Free",
+      "category": "Culture",
+      "length": "Short",
+      "summary": "Some experts argue that extreme minimalism can be just as stressful as consumerism.",
+      "rating": 1,
+      "publication_date": "2025-02-17",
+      "source": "Nothing Monthly"
+    },
+    {
+      "id": "28",
+      "title": "The Unfulfilled Promise of AI Art",
+      "author": "Art I. Ficial",
+      "category": "Technology",
+      "length": "Short",
+      "summary": "AI-generated art is everywhere, but is it truly creative, or just another algorithmic output?",
+      "rating": 0,
+      "publication_date": "2025-02-22",
+      "source": "The Algorithmic Aesthetic"
+    },
+    {
+      "id": "29",
+      "title": "Why Public Transport Is Still Failing",
+      "author": "Ryder Bus",
+      "category": "Politics",
+      "length": "Medium",
+      "summary": "Despite investments, many cities struggle to create effective public transportation systems.",
+      "rating": 5,
+      "publication_date": "2025-02-16",
+      "source": "Transit Times"
+    },
+    {
+      "id": "30",
+      "title": "The Reality of Space Tourism",
+      "author": "Neil Rocket",
+      "category": "Science",
+      "length": "Medium",
+      "summary": "Space tourism is no longer just science fiction, but is it worth the cost?",
+      "rating": 3,
+      "publication_date": "2025-02-18",
+      "source": "The Cosmic Ledger"
+    },
+    {
+      "id": "31",
+      "title": "The Psychological Toll of Social Media",
+      "author": "Like Button",
+      "category": "Health",
+      "length": "Medium",
+      "summary": "Experts explore how social media addiction and online validation impact mental health.",
+      "rating": 4,
+      "publication_date": "2025-02-19",
+      "source": "Scroll Psychology Weekly"
+    },
+    {
+      "id": "32",
+      "title": "The End of Office Culture?",
+      "author": "Remote Lee",
+      "category": "Business",
+      "length": "Short",
+      "summary": "With remote work on the rise, is the traditional office environment disappearing forever?",
+      "rating": 2,
+      "publication_date": "2025-02-20",
+      "source": "WFH Today"
+    }
+  ]
+  
