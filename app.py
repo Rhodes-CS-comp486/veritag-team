@@ -277,7 +277,9 @@ def categories():
 
     return render_template('categories.html', categories=categories)
 
-
+@app.route('/explore')
+def explore():
+    return render_template('browse.html')
 
 
 
