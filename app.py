@@ -14,18 +14,37 @@ DATABASE = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'database.d
 db = sqlite3.connect(DATABASE)
 
 
+def seed_articles():
+    db = sqlite3.connect(DATABASE)
+    cursor = db.cursor()
 
+    # Check if there are already articles in the database
+    cursor.execute("SELECT COUNT(*) FROM articles")
+    count = cursor.fetchone()[0]
+
+    if count == 0:  # Only insert if no articles exist
+        cursor.execute("INSERT INTO articles (title, source, author, length, category, summary) VALUES (?, ?, ?, ?, ?, ?)",
+                       ("The Future of AI", "Tech Daily", "Dr. John Smith", 12, "Tech", "AI is transforming the world at an incredible pace."))
+        cursor.execute("INSERT INTO articles (title, source, author, length, category, summary) VALUES (?, ?, ?, ?, ?, ?)",
+                       ("Health Tips 2025", "Wellness Weekly", "Dr. Alice Johnson", 10, "Health", "New health research reveals how to stay fit."))
+        cursor.execute("INSERT INTO articles (title, source, author, length, category, summary) VALUES (?, ?, ?, ?, ?, ?)",
+                       ("Exploring Space", "Science World", "Dr. Mark Lee", 15, "Science",
+                        "Scientists are looking at new planets beyond our solar system."))
+
+        db.commit()
+
+    db.close()
 
 
 @app.route('/api/articles')
 def get_articles():
     """Fetch all articles from the database and return as JSON."""
     db = get_db()
-    articles = db.execute('SELECT * FROM articles').fetchall()
+    articles = db.execute('SELECT id, title, source, author, length, category, summary FROM articles').fetchall()
 
     articles_list = [dict(article) for article in articles]  # Convert rows to dicts
 
-    return jsonify({"articles": articles_list})
+    return jsonify({"articles": articles_list})  # Wrap list in a dictionary
 
 
 
@@ -42,21 +61,21 @@ def init_db():
         db.execute('''CREATE TABLE IF NOT EXISTS articles
                        (id TEXT PRIMARY KEY,
                         title TEXT NOT NULL,
-                        author TEXT NOT NULL,
-                        category TEXT NOT NULL,
-                        length TEXT NOT NULL,
-                        summary TEXT NOT NULL,
-                        rating INTEGER NOT NULL,
                         source TEXT NOT NULL,
+                        author TEXT NOT NULL,
+                        length INTEGER NOT NULL,
+                        category TEXT NOT NULL,
+                        rating INTEGER NOT NULL,
+                        summary TEXT NOT NULL,
                         publication_date TEXT NOT NULL)''')
         db.execute('''CREATE TABLE IF NOT EXISTS users
                        (id INTEGER PRIMARY KEY,
                         username TEXT NOT NULL UNIQUE,
                         email TEXT NOT NULL UNIQUE,
                         password TEXT NOT NULL,
-                        verified_code TEXT NOT NULL)''')  
+                        verified_code TEXT NOT NULL)''')
         db.commit()
-        load_articles_from_json()  
+        load_articles_from_json()
 
 def load_articles_from_json():
     """Load articles from dev-articles.json into the database."""
@@ -181,7 +200,6 @@ def browse():
 @app.route('/article/<int:article_id>')
 def article(article_id):
     """View a single article in full screen."""
-    print(f"Received article_id: {article_id}")  # Debugging
     db = get_db()
     article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
     if article is None:
@@ -243,6 +261,24 @@ def browse_verified():
 @app.route('/community')
 def community():
     return render_template('community.html')
+
+@app.route('/categories')
+def categories():
+    response = get_articles()  # This returns a Response object
+    articles = json.loads(response.get_data(as_text=True))["articles"]  # Extract article list
+
+    # Group articles by category
+    categories = {}
+    for article in articles:
+        category = article["category"]
+        if category not in categories:
+            categories[category] = []
+        categories[category].append(article)
+
+    return render_template('categories.html', categories=categories)
+
+
+
 
 
 if __name__ == '__main__':
