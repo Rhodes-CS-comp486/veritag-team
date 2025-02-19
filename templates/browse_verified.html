@@ -487,6 +487,27 @@
             color: white;
         }
 
+        .comment-button {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: none;
+            background: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .comment-button:hover {
+            background: #45a049;
+            transform: translateY(-1px);
+        }
+
+        .comment-button-container {
+            margin-top: 10px; /* Add space above the comment button */
+        }
+
+
     </style>
 </head>
 <body>
@@ -617,14 +638,14 @@
         <div class="articles-grid"></div>
     </div>
     <script>
-    function createArticleCard(article) {
+function createArticleCard(article) {
     return `
         <a href="/article/${article.id}" class="article-card"
             data-length="${article.length}"
             data-author="${article.author}"
             data-source="${article.source}"
             data-summary="${article.summary}"
-            data-image="${article.image}""
+            data-image="${article.image}"
             data-category="${article.category}"
             data-rating="${article.rating}">
             <div class="card-inner">
@@ -644,21 +665,17 @@
                         <div class="article-summary">${article.summary}</div>
                         <div class="rating-badge">Rating: ${article.rating} ★</div>
                     </div>
-                    <div class="comments-section">
-                        <h4>Comments</h4>
-                        <div class="comments-list" id="comments-${article.id}">
-                            <!-- Comments will be dynamically loaded here -->
-                        </div>
-                        <div class="comment-form">
-                            <textarea placeholder="Add a comment..."></textarea>
-                            <button onclick="addComment('${article.id}')">Post Comment</button>
-                        </div>
+                    <div class="comment-button-container">
+                        <button class="comment-button" onclick="location.href='/article/${article.id}#comments'">
+                            Comment
+                        </button>
                     </div>
                 </div>
             </div>
         </a>
     `;
 }
+
 async function fetchComments(articleId) {
     // Mock API response for comments
 const mockComments = [
