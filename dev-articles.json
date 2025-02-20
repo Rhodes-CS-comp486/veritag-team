@@ -353,6 +353,182 @@
       "rating": 2,
       "publication_date": "2025-02-20",
       "source": "WFH Today"
-    }
+    },
+      {
+        "id": "33",
+        "title": "The Future of Streaming",
+        "author": "Alex Carter",
+        "category": "Entertainment",
+        "length": "Medium",
+        "summary": "How streaming services are changing the way we consume media.",
+        "rating": 4,
+        "publication_date": "2025-02-18",
+        "source": "Media Trends Weekly"
+      },
+      {
+        "id": "34",
+        "title": "The Rise of Indie Music",
+        "author": "Samantha Rhodes",
+        "category": "Music",
+        "length": "Long",
+        "summary": "How independent artists are reshaping the music industry.",
+        "rating": 5,
+        "publication_date": "2025-02-15",
+        "source": "Music Insider"
+      },
+      {
+        "id": "35",
+        "title": "The Business of Sports",
+        "author": "Jordan Maxwell",
+        "category": "Sports",
+        "length": "Medium",
+        "summary": "Examining the financial side of professional athletics.",
+        "rating": 3,
+        "publication_date": "2025-02-10",
+        "source": "Sports Finance Daily"
+      },
+      {
+        "id": "36",
+        "title": "The Psychology of Investing",
+        "author": "Liam Patterson",
+        "category": "Business",
+        "length": "Short",
+        "summary": "Understanding how emotions drive financial decisions.",
+        "rating": 4,
+        "publication_date": "2025-02-05",
+        "source": "Investor's Digest"
+      },
+      {
+        "id": "37",
+        "title": "AI in the Music Industry",
+        "author": "Chris Nolan",
+        "category": "Music",
+        "length": "Long",
+        "summary": "How artificial intelligence is revolutionizing music production.",
+        "rating": 5,
+        "publication_date": "2025-01-30",
+        "source": "Tech & Tunes"
+      },
+      {
+        "id": "38",
+        "title": "The Comeback of Vinyl",
+        "author": "Lisa Harper",
+        "category": "Music",
+        "length": "Medium",
+        "summary": "Why vinyl records are making a resurgence in the digital age.",
+        "rating": 3,
+        "publication_date": "2025-01-25",
+        "source": "SoundWave Magazine"
+      },
+      {
+        "id": "39",
+        "title": "Sports Analytics Revolution",
+        "author": "David Green",
+        "category": "Sports",
+        "length": "Short",
+        "summary": "How data and AI are transforming sports strategy.",
+        "rating": 5,
+        "publication_date": "2025-01-20",
+        "source": "The Athletic Analyst"
+      },
+      {
+        "id": "40",
+        "title": "Hollywood's New Era",
+        "author": "Emily Roberts",
+        "category": "Entertainment",
+        "length": "Long",
+        "summary": "How digital platforms are reshaping the movie industry.",
+        "rating": 2,
+        "publication_date": "2025-01-15",
+        "source": "Cinema Weekly"
+      },
+      {
+        "id": "41",
+        "title": "Esports: The Next Big League?",
+        "author": "Kyle Anderson",
+        "category": "Sports",
+        "length": "Medium",
+        "summary": "Can esports truly rival traditional sports?",
+        "rating": 4,
+        "publication_date": "2025-01-10",
+        "source": "Gaming Today"
+      },
+      {
+        "id": "42",
+        "title": "The Gig Economy's Impact",
+        "author": "Olivia Chang",
+        "category": "Business",
+        "length": "Short",
+        "summary": "How gig work is reshaping the modern economy.",
+        "rating": 3,
+        "publication_date": "2025-01-05",
+        "source": "Economy Watch"
+      },
+      {
+        "id": "43",
+        "title": "The Art of Film Scoring",
+        "author": "Michael Stein",
+        "category": "Music",
+        "length": "Long",
+        "summary": "Exploring how music shapes cinematic experiences.",
+        "rating": 5,
+        "publication_date": "2024-12-28",
+        "source": "Film Music Journal"
+      },
+      {
+        "id": "44",
+        "title": "Streaming Wars: Who's Winning?",
+        "author": "Rachel Lee",
+        "category": "Entertainment",
+        "length": "Medium",
+        "summary": "A deep dive into the competition among streaming platforms.",
+        "rating": 2,
+        "publication_date": "2024-12-20",
+        "source": "Tech Trends Weekly"
+      },
+      {
+        "id": "45",
+        "title": "Can Athletes Be CEOs?",
+        "author": "Nathan Hall",
+        "category": "Sports",
+        "length": "Short",
+        "summary": "How former athletes are making moves in the business world.",
+        "rating": 3,
+        "publication_date": "2024-12-10",
+        "source": "Forbes Sports"
+      },
+      {
+        "id": "46",
+        "title": "Music and Mental Health",
+        "author": "Sophie Bennett",
+        "category": "Music",
+        "length": "Medium",
+        "summary": "The healing power of music for mental well-being.",
+        "rating": 4,
+        "publication_date": "2024-12-01",
+        "source": "Wellness Notes"
+      },
+      {
+        "id": "47",
+        "title": "The Decline of Network TV",
+        "author": "Mark Harrison",
+        "category": "Entertainment",
+        "length": "Long",
+        "summary": "Is traditional television on its way out?",
+        "rating": 1,
+        "publication_date": "2024-11-20",
+        "source": "TV & Media Review"
+      },
+      {
+        "id": "48",
+        "title": "Women in Sports Leadership",
+        "author": "Jessica Adams",
+        "category": "Sports",
+        "length": "Short",
+        "summary": "Breaking barriers in the sports industry.",
+        "rating": 5,
+        "publication_date": "2024-11-10",
+        "source": "The Sports Leader"
+      }
   ]
   
