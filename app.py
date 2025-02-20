@@ -58,8 +58,10 @@ def init_db():
     """Create the database and tables if they don't exist."""
     with app.app_context():
         db = get_db()
+
+        # Modify the schema to include 'article_content' column
         db.execute('''CREATE TABLE IF NOT EXISTS articles
-                       (id TEXT PRIMARY KEY,
+                       (id INTEGER PRIMARY KEY AUTOINCREMENT,
                         title TEXT NOT NULL,
                         source TEXT NOT NULL,
                         author TEXT NOT NULL,
@@ -67,7 +69,9 @@ def init_db():
                         category TEXT NOT NULL,
                         rating INTEGER NOT NULL,
                         summary TEXT NOT NULL,
-                        publication_date TEXT NOT NULL)''')
+                        publication_date TEXT NOT NULL,
+                        article_content TEXT NOT NULL)''')  # Add article_content column
+
         db.execute('''CREATE TABLE IF NOT EXISTS users
                        (id INTEGER PRIMARY KEY,
                         username TEXT NOT NULL UNIQUE,
@@ -75,7 +79,10 @@ def init_db():
                         password TEXT NOT NULL,
                         verified_code TEXT NOT NULL)''')
         db.commit()
+
+        # Make sure you load articles only after the schema has been properly updated
         load_articles_from_json()
+
 
 def load_articles_from_json():
     """Load articles from dev-articles.json into the database."""
@@ -89,10 +96,10 @@ def load_articles_from_json():
 
     for article in articles:
         cursor.execute(
-            '''INSERT OR IGNORE INTO articles (id, title, author, category, length, summary, rating, source, publication_date) 
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+            '''INSERT OR IGNORE INTO articles (id, title, author, category, length, summary, rating, source, publication_date, article_content) 
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
             (article["id"], article["title"], article["author"], article["category"], article["length"],
-             article["summary"], article["rating"], article["source"], article["publication_date"])
+             article["summary"], article["rating"], article["source"], article["publication_date"], article["content"])
         )
 
     db.commit()
@@ -178,34 +185,37 @@ def get_article(article_id):
     """Fetch a single article by ID from the database and return it as JSON."""
 
     db = get_db()
+    print(f"Fetching article with ID: {article_id}")  # Debugging log
+
     article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
+
     if article is None:
+        print("Article not found!")  # Debugging log
         return jsonify({"error": "Article not found"}), 404
 
-    return jsonify(dict(article))  # Convert row to dict
+    return jsonify(dict(zip(article.keys(), article)))  # Convert row to dict
 
-
-@app.route('/article/<int:article_id>')
-def article_page(article_id):
-    """Render the article.html page, which will fetch article data via JavaScript."""
-    return render_template("article.html")
 
 @app.route('/browse')
 def browse():
     """Display article headlines."""
     db = get_db()
-    #articles = db.execute('SELECT * FROM articles').fetchall()
-    return render_template('browse.html', articles=get_articles())
+    articles = db.execute('SELECT id, title, source, author, length, category, summary FROM articles').fetchall()
+    articles_list = [dict(article) for article in articles]  # Convert rows to dicts
+    return render_template('browse.html', articles=articles_list)
 
 @app.route('/article/<int:article_id>')
-def article(article_id):
-    """View a single article in full screen."""
+def article_page(article_id):
+    """Render a single article page with full content."""
     db = get_db()
     article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
+
     if article is None:
         flash('Article not found!', 'error')
         return redirect(url_for('browse'))
-    return render_template('article.html', articleId=article_id)
+
+    return render_template('article.html', article=dict(article))
+
 
 
 @app.route('/login', methods=['GET', 'POST'])

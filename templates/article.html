@@ -107,39 +107,42 @@
         <div class="article-header" id="article-title">Loading...</div>
         <div class="article-meta" id="article-meta"></div>
         <div class="article-body" id="article-content"></div>
-
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const articleId = window.location.pathname.split("/").pop();
+            let articleId = window.location.pathname.split("/").pop();
+            articleId = articleId.replace(/[^0-9]/g, ""); // Ensure it's only numbers
 
-            if (!articleId || isNaN(articleId)) {
-                console.error("Invalid article ID:", articleId);
-                document.querySelector(".article-container").innerHTML = `<p>Error loading article.</p>`;
+            if (!articleId) {
+                showError("Invalid article ID.");
                 return;
             }
 
             fetch(`/api/article/${articleId}`)
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error("Failed to load article");
+                        throw new Error(`Server responded with ${response.status}`);
                     }
                     return response.json();
                 })
                 .then(article => {
-                    if (article.error) {
-                        throw new Error(article.error);
+                    if (!article || Object.keys(article).length === 0) {
+                        throw new Error("Article data is missing.");
                     }
 
-                    document.getElementById("article-title").textContent = article.title;
-                    document.getElementById("article-meta").textContent = `By ${article.author} | Source: ${article.source} | Reading Time: ${article.length} min | Rating: ${article.rating} ★`;
-                    document.getElementById("article-content").textContent = article.summary;
+                    document.getElementById("article-title").textContent = article.title || "Untitled";
+                    document.getElementById("article-meta").textContent = `By ${article.author || "Unknown"} | Source: ${article.source || "Unknown"} | Reading Time: ${article.length || "?"} min | Rating: ${article.rating || "N/A"} ★`;
+                    document.getElementById("article-content").textContent = article.summary || "No content available.";
                 })
                 .catch(error => {
-                    console.error("Error loading article:", error);
-                    document.querySelector(".article-container").innerHTML = `<p>Error loading article.</p>`;
+                    showError(error.message);
                 });
+
+            function showError(message) {
+                console.error("Error loading article:", message);
+                document.querySelector(".article-container").innerHTML = `<p style="color: red;">Error loading article: ${message}</p>`;
+            }
         });
     </script>
 </body>
