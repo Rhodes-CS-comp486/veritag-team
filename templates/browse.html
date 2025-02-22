@@ -607,7 +607,7 @@
             data-summary="${article.summary}"
             data-image="${article.image}""
             data-category="${article.category}"
-            data-rating="${article.rating}">
+            data-rating=article.rating>
             <div class="card-inner">
                 <div class="card-front" style="background-image: url('${article.image || "/api/placeholder/400/400"}')">
                     <h3 class="card-title">${article.title}</h3>
@@ -623,7 +623,8 @@
                             <strong>Source:</strong> ${article.source || 'Test Source'}<br>
                         </div>
                         <div class="article-summary">${article.summary}</div>
-                        <div class="rating-badge">Rating: ${article.rating} ★</div>
+                       <div class="rating-badge">Rating: ${Number(article.rating)} ★</div>
+
                     </div>
                 </div>
 

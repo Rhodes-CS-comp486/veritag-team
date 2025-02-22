@@ -40,7 +40,7 @@ def seed_articles():
 def get_articles():
     """Fetch all articles from the database and return as JSON."""
     db = get_db()
-    articles = db.execute('SELECT id, title, source, author, length, category, summary FROM articles').fetchall()
+    articles = db.execute('SELECT id, title, source, author, length, category, rating, summary FROM articles').fetchall()
 
     articles_list = [dict(article) for article in articles]  # Convert rows to dicts
 
