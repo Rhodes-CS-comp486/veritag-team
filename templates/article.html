@@ -266,7 +266,7 @@
         <div class="article-header" id="article-title">Loading...</div>
         <div class="article-meta" id="article-meta"></div>
         <div class="article-body" id="article-content"></div>
-        
+
         <div class="comments-section">
             <h3>Comments</h3>
             <div class="comment-form">
@@ -282,6 +282,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const articleId = window.location.pathname.split("/").pop();
+
             if (!articleId || isNaN(articleId)) {
                 console.error("Invalid article ID:", articleId);
                 document.querySelector(".article-container").innerHTML = `<p>Error loading article.</p>`;
@@ -340,9 +341,9 @@
 
                 // Moderation Rules: Check for offensive language or spam
                 const offensiveWords = [
-                    'badword1', 'badword2', 'spam', 
-                    'jerk', 'idiot', 'stupid', 
-                    'sewanee', 'yankees', 'michigan', 
+                    'badword1', 'badword2', 'spam',
+                    'jerk', 'idiot', 'stupid',
+                    'sewanee', 'yankees', 'michigan',
                     'friggin', 'frigg', 'friggoff'
                 ];
                 const lowerText = commentText.toLowerCase();
@@ -373,7 +374,7 @@
             function addComment(text) {
                 const commentDiv = document.createElement('div');
                 commentDiv.className = 'comment';
-                
+
                 const usernameDiv = document.createElement('div');
                 usernameDiv.className = 'comment-username';
                 if (isLoggedIn && username) {
@@ -386,18 +387,18 @@
                 const commentText = document.createElement('div');
                 commentText.className = 'comment-text';
                 commentText.textContent = text;
-                
+
                 const voteDiv = document.createElement('div');
                 voteDiv.className = 'vote-buttons';
-                
+
                 const upvote = document.createElement('button');
                 upvote.className = 'vote-btn upvote';
                 upvote.innerHTML = '<i class="fas fa-arrow-up"></i>';
-                
+
                 const voteCount = document.createElement('span');
                 voteCount.className = 'vote-count';
                 voteCount.textContent = '0';
-                
+
                 const downvote = document.createElement('button');
                 downvote.className = 'vote-btn downvote';
                 downvote.innerHTML = '<i class="fas fa-arrow-down"></i>';

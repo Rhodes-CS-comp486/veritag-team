@@ -40,7 +40,7 @@ def seed_articles():
 def get_articles():
     """Fetch all articles from the database and return as JSON."""
     db = get_db()
-    articles = db.execute('SELECT id, title, source, author, length, category, rating, summary FROM articles').fetchall()
+    articles = db.execute('SELECT id, title, source, author, length, category, rating, body, summary FROM articles').fetchall()
 
     articles_list = [dict(article) for article in articles]  # Convert rows to dicts
 
@@ -67,7 +67,8 @@ def init_db():
                         category TEXT NOT NULL,
                         rating INTEGER NOT NULL,
                         summary TEXT NOT NULL,
-                        publication_date TEXT NOT NULL)''')
+                        publication_date TEXT NOT NULL,
+                        body TEXT)''')
         db.execute('''CREATE TABLE IF NOT EXISTS users
                        (id INTEGER PRIMARY KEY,
                         username TEXT NOT NULL UNIQUE,
@@ -89,10 +90,10 @@ def load_articles_from_json():
 
     for article in articles:
         cursor.execute(
-            '''INSERT OR IGNORE INTO articles (id, title, author, category, length, summary, rating, source, publication_date) 
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+            '''INSERT OR IGNORE INTO articles (id, title, author, category, length, summary, rating, source, publication_date, body) 
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
             (article["id"], article["title"], article["author"], article["category"], article["length"],
-             article["summary"], article["rating"], article["source"], article["publication_date"])
+             article["summary"], article["rating"], article["source"], article["publication_date"], article["body"])
         )
 
     db.commit()
@@ -194,7 +195,7 @@ def article_page(article_id):
 def browse():
     """Display article headlines with ratings."""
     db = get_db()
-    articles = db.execute('SELECT id, title, source, author, length, category, summary, rating FROM articles').fetchall()
+    articles = db.execute('SELECT id, title, source, author, length, category, summary, body, publication_date, rating FROM articles').fetchall()
     return render_template('browse.html', articles=articles)
 
 
