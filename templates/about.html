@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-
-    <!-- Reuse the same styles -->
     <style>
         * {
             margin: 0;
@@ -22,7 +20,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh; /* Ensure the body takes the full viewport height */
+            min-height: 100vh;
         }
 
         .navbar {
@@ -79,48 +77,6 @@
             background: rgba(176, 136, 255, 0.2);
         }
 
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .user-menu {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 8px;
-            padding: 0.5rem;
-            margin-top: 0.5rem;
-            min-width: 200px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s;
-        }
-
-        .nav-right:hover .user-menu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .user-menu-item {
-            display: block;
-            padding: 0.75rem 1rem;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
-            transition: background 0.2s;
-        }
-
-        .user-menu-item:hover {
-            background: rgba(176, 136, 255, 0.2);
-        }
-
-        /* About Page Styles */
         .about-container {
             display: flex;
             flex-direction: column;
@@ -131,13 +87,6 @@
             width: 100%;
             max-width: 800px;
             margin: 0 auto;
-        }
-
-        .about-container img {
-            width: 100%; /* Make the image responsive */
-            max-width: 600px; /* Limit maximum size */
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(176, 136, 255, 0.3);
         }
     </style>
 </head>
@@ -152,24 +101,11 @@
                 <a href="/about" class="nav-link active">About</a>
             </div>
         </div>
-        <div class="nav-right">
-            <div class="user-section">
-                <button class="user-menu-trigger">
-                    <i class="fas fa-user-circle"></i>
-                </button>
-                <div class="user-menu">
-                    <a href="/login" class="user-menu-item">Login</a>
-                    <a href="/verified_login" class="user-menu-item">Verified Login</a>
-                    <a href="/create_account" class="user-menu-item">Create Account</a>
-                </div>
-            </div>
-        </div>
     </nav>
 
-    <!-- About Page Content -->
     <div class="about-container">
-        <!-- Bigger Image in the middle -->
-        <img src="static/download.jpg" alt="Team Photo">
+        <h1>About Us</h1>
+        <p>Martin Maxim, Nick Bilotti, Jud Turner, and Peter Halvorsen are Computer Science majors at Rhodes College in Memphis, TN.</p>
     </div>
 </body>
 </html>
