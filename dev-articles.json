@@ -1,6 +1,6 @@
 [
   {
-    "id": "01",
+    "id": "1",
     "title": "AI Breakthrough in Healthcare",
     "author": "Jane Doe",
     "category": "Health",
@@ -11,7 +11,7 @@
     "publication_date": "2025-02-21"
   },
   {
-    "id": "02",
+    "id": "2",
     "title": "Quantum Computing: The Next Frontier",
     "author": "John Smith",
     "category": "Science",
@@ -22,7 +22,7 @@
     "publication_date": "2025-02-18"
   },
   {
-    "id": "03",
+    "id": "3",
     "title": "The Rise of Augmented Reality in Daily Life",
     "author": "Alex Johnson",
     "category": "Technology",
@@ -33,7 +33,7 @@
     "publication_date": "2025-02-17"
   },
   {
-    "id": "04",
+    "id": "4",
     "title": "Social Media’s Impact on Political Discourse",
     "author": "Emily White",
     "category": "Politics",
@@ -44,7 +44,7 @@
     "publication_date": "2025-02-20"
   },
   {
-    "id": "05",
+    "id": "5",
     "title": "The Return of Vinyl Records",
     "author": "Mike Brown",
     "category": "Culture",
@@ -55,7 +55,7 @@
     "publication_date": "2025-02-22"
   },
   {
-    "id": "06",
+    "id": "6",
     "title": "Self-Driving Cars: Who's in Control?",
     "author": "Otto Pilot",
     "category": "Technology",
@@ -66,7 +66,7 @@
     "publication_date": "2025-02-22"
   },
   {
-    "id": "07",
+    "id": "7",
     "title": "Breaking the Code: The Rise of Ethical Hackers",
     "author": "Hugh Jaxxon",
     "category": "Technology",
@@ -77,7 +77,7 @@
     "publication_date": "2025-02-20"
   },
   {
-    "id": "08",
+    "id": "8",
     "title": "New Study Reveals Benefits of Laughter Therapy",
     "author": "Dr. Chuckles",
     "category": "Health",
@@ -88,7 +88,7 @@
     "publication_date": "2025-02-22"
   },
   {
-    "id": "09",
+    "id": "9",
     "title": "Mars Colonization Plans Take Shape",
     "author": "Elon Gated",
     "category": "Science",

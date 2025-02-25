@@ -40,7 +40,7 @@ def seed_articles():
 def get_articles():
     """Fetch all articles from the database and return as JSON."""
     db = get_db()
-    articles = db.execute('SELECT id, title, source, author, length, category, summary FROM articles').fetchall()
+    articles = db.execute('SELECT id, title, source, author, length, category, rating, summary FROM articles').fetchall()
 
     articles_list = [dict(article) for article in articles]  # Convert rows to dicts
 
@@ -192,10 +192,11 @@ def article_page(article_id):
 
 @app.route('/browse')
 def browse():
-    """Display article headlines."""
+    """Display article headlines with ratings."""
     db = get_db()
-    #articles = db.execute('SELECT * FROM articles').fetchall()
-    return render_template('browse.html', articles=get_articles())
+    articles = db.execute('SELECT id, title, source, author, length, category, summary, rating FROM articles').fetchall()
+    return render_template('browse.html', articles=articles)
+
 
 @app.route('/article/<int:article_id>')
 def article(article_id):
