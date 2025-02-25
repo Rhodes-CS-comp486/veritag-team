@@ -262,7 +262,7 @@
 </head>
 <body>
     <div class="article-container">
-        <a href="/browse.html" class="back-button"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+        <a href="/browse" class="back-button"><i class="fas fa-arrow-left"></i> Back to Articles</a>
         <div class="article-header" id="article-title">Loading...</div>
         <div class="article-meta" id="article-meta"></div>
         <div class="article-body" id="article-content"></div>
@@ -316,7 +316,7 @@
                             if (article.error) throw new Error(article.error);
                             document.getElementById("article-title").textContent = article.title;
                             document.getElementById("article-meta").textContent = `By ${article.author} | Source: ${article.source} | Reading Time: ${article.length} min | Rating: ${article.rating} ★`;
-                            document.getElementById("article-content").textContent = article.summary;
+                            document.getElementById("article-content").textContent = article.body;
                         })
                         .catch(error => {
                             console.error("Error loading article:", error);
