@@ -231,6 +231,8 @@ def login():
 
 
 
+from flask import session
+
 @app.route('/verified_login', methods=['GET', 'POST'])
 def verified_login():
     """Handle verified user login."""
@@ -240,14 +242,22 @@ def verified_login():
         password = request.form['password']
 
         db = get_db()
-        user = db.execute('SELECT * FROM users WHERE username = ? AND password = ? AND verified_code != ""', 
+        user = db.execute('SELECT * FROM users WHERE username = ? AND password = ?',
                           (username, password)).fetchone()
 
         if user:
-            flash('Verified login successful!', 'success')
-            return render_template('browse_verified.html')  # Change to browse_verified.html
+            # Check if the user is verified (non-empty verified_code)
+            if user['verified_code']:
+                session['user_id'] = user['id']
+                session['verified'] = 1  # Set verified to True
+                flash('Verified login successful!', 'success')
+                return redirect(url_for('browse_verified'))  # Redirect to the verified content page
+            else:
+                flash('Your account is not verified.', 'error')
+                return redirect(url_for('verified_login'))  # Redirect back to login
+
         else:
-            error = True
+            error = True  # If login fails, show error message
 
     return render_template('verified_login.html', error=error)
 
