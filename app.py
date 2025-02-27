@@ -150,7 +150,7 @@ def get_articles():
     articles_list = [dict(article) for article in articles]
     return jsonify({"articles": articles_list})
 
-@app.route('/article/<int:article_id>', endpoint='article')
+@app.route('/api/article/<int:article_id>', endpoint='article')
 def get_article(article_id):
     db = get_db()
     article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
