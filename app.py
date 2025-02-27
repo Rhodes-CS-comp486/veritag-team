@@ -266,6 +266,14 @@ def categories():
         categories[category].append(article)
     return render_template('categories.html', categories=categories)
 
+@app.route('/article/<int:article_id>', endpoint='view_article')
+def view_article(article_id):
+    db = get_db()
+    article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
+    if article is None:
+        return render_template('404.html'), 404  # Render a custom 404 page
+    return render_template('article.html', article=article)  # Render the HTML page
+
 @app.route('/explore')
 def explore():
     return render_template('browse.html')
