@@ -221,15 +221,11 @@ def login():
             flash('Login successful!', 'success')
             return redirect(url_for('browse'))
         else:
-            error = True
-    return render_template('login.html', error=error)
+            error = True  # Set error to True if login fails
 
-@app.route('/logout')
-def logout():
-    session.pop('user_id', None)
-    session.pop('username', None)
-    flash('Logged out successfully!', 'success')
-    return redirect(url_for('login'))
+    return render_template('login.html', error=error)  # Pass error to the template
+
+
 
 @app.route('/verified_login', methods=['GET', 'POST'])
 def verified_login():
@@ -238,15 +234,14 @@ def verified_login():
         username = request.form['username']
         password = request.form['password']
         db = get_db()
-        user = db.execute('SELECT * FROM users WHERE username = ? AND password = ? AND verified_code != ""', 
+        user = db.execute('SELECT * FROM users WHERE username = ? AND password = ?',
                           (username, password)).fetchone()
         if user:
-            session['user_id'] = user['id']
-            session['username'] = user['username']
             flash('Verified login successful!', 'success')
-            return render_template('browse_verified.html')
+            return render_template('browse_verified.html')  # Change to browse_verified.html
         else:
             error = True
+
     return render_template('verified_login.html', error=error)
 
 @app.route('/browse_verified', methods=['POST', 'GET'])
