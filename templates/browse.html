@@ -598,6 +598,60 @@
         <div class="articles-grid"></div>
     </div>
     <script>
+        function updateArticleDisplay() {
+    const searchInput = document.querySelector('.search-bar input').value.toLowerCase().trim();
+    const selectedLength = document.querySelector('input[name="length"]:checked')?.value || 'all';
+    const selectedCategory = document.querySelector('input[name="category"]:checked')?.value || 'all';
+    const selectedRating = document.querySelector('input[name="rating"]:checked')?.value || 'all';
+
+    const cards = document.querySelectorAll('.article-card');
+
+    cards.forEach(card => {
+        // Filter conditions
+        const matchesLength = selectedLength === 'all' || card.dataset.length === selectedLength;
+        const matchesCategory = selectedCategory === 'all' || card.dataset.category === selectedCategory;
+        const matchesRating = selectedRating === 'all' || parseFloat(card.dataset.rating) == parseFloat(selectedRating);
+
+        // Search condition - check if title starts with the search input
+        const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
+        const matchesSearch = searchInput === '' || title.startsWith(searchInput);
+
+        // Show card only if it matches both filter and search criteria
+        card.style.display = (matchesLength && matchesCategory && matchesRating && matchesSearch) ? 'block' : 'none';
+    });
+}
+
+// Update the DOMContentLoaded event listener
+document.addEventListener("DOMContentLoaded", function() {
+    createLoadingPlaceholders();
+
+    // Add filter event listeners
+    document.querySelectorAll('.filter-option input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', updateArticleDisplay);
+    });
+
+    // Add search event listener
+    const searchInput = document.querySelector('.search-bar input');
+    searchInput.addEventListener('input', updateArticleDisplay);
+
+    // Simulate loading delay
+    setTimeout(() => {
+        fetch('/api/articles')
+            .then(response => response.json())
+            .then(data => {
+                console.log("Fetched articles:", data);
+                const articles = data.articles;
+                console.log("Parsed articles:", articles);
+
+                const grid = document.querySelector('.articles-grid');
+                if (grid) {
+                    grid.innerHTML = articles.map(article => createArticleCard(article)).join('');
+                }
+                updateArticleDisplay(); // Replace filterArticles() with this
+            })
+            .catch(error => console.error("Error loading articles:", error));
+    }, 2000);
+});
         function createArticleCard(article) {
     return `
         <a href="/article/${article.id}" class="article-card"
