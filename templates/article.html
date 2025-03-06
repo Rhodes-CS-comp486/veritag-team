@@ -244,7 +244,7 @@
             z-index: 1;
             font-weight: 500;
         }
-
+        
         .read-more:hover {
             background: rgba(176, 136, 255, 0.2);
             transform: translateY(-2px);
@@ -627,6 +627,7 @@
                             const aggOverall = mockReviews.length > 0
                                 ? mockReviews.reduce((sum, r) => sum + r.overall_rating, 0) / mockReviews.length
                                 : article.rating || 0;
+                    //<!-- test comment-->
                             const aggQuality = mockReviews.length > 0
                                 ? mockReviews.reduce((sum, r) => sum + r.quality_rating, 0) / mockReviews.length
                                 : 0;
