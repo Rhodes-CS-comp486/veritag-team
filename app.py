@@ -80,7 +80,6 @@ def load_articles_from_json():
     db.commit()
     db.close()
 
-<<<<<<< HEAD
 def read_lorem_file(filename):
     with open(filename, "r", encoding="utf-8") as file:
         lines = file.readlines()
@@ -92,20 +91,6 @@ def read_lorem_file(filename):
     return short, medium, long
 
 
-=======
-def seed_articles():
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute("SELECT COUNT(*) FROM articles")
-    count = cursor.fetchone()[0]
-    if count == 0:
-        cursor.execute("INSERT INTO articles (id, title, source, author, length, category, summary, rating, publication_date, body) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                       ("1", "The Future of AI", "Tech Daily", "Dr. John Smith", 12, "Tech", "AI is transforming the world.", 4, "2023-01-01", "Full article body here..."))
-        cursor.execute("INSERT INTO articles (id, title, source, author, length, category, summary, rating, publication_date, body) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                       ("2", "Health Tips 2025", "Wellness Weekly", "Dr. Alice Johnson", 10, "Health", "New health research.", 5, "2023-02-01", "Full article body here..."))
-        db.commit()
-    db.close()
->>>>>>> 913ee5a7fcbccf7abdfa49b1ec4ee03255f00067
 @app.route('/')
 def index():
     return redirect(url_for('browse'))
@@ -350,10 +335,5 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-<<<<<<< HEAD
     init_db()  # Initialize DB
-=======
-    init_db()
-    seed_articles()
->>>>>>> 913ee5a7fcbccf7abdfa49b1ec4ee03255f00067
     app.run(debug=True)
