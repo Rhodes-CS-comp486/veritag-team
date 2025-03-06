@@ -622,14 +622,22 @@
             </div>
             
             <div class="user-section">
+                {% if user_info %}
+                <div class="user-menu">
+                    <div class="user-menu-item">Username: {{ user_info.username }}</div>
+                    <div class="user-menu-item">Email: {{ user_info.email }}</div>
+                    <a href="/logout" class="user-menu-item">Logout</a>
+                </div>
+                {% else %}
                 <button class="user-menu-trigger">
                     <i class="fas fa-user-circle"></i>
                 </button>
                 <div class="user-menu">
                     <a href="/login" class="user-menu-item">Login</a>
                     <a href="/verified_login" class="user-menu-item">Verified Login</a>
-                    <a href="/create_account" class="user-menu-item">Create Account</a> <!-- Updated href -->
+                    <a href="/create_account" class="user-menu-item">Create Account</a>
                 </div>
+                {% endif %}
             </div>
         </div>
     </nav>
@@ -666,9 +674,6 @@ function createArticleCard(article) {
                         <div class="rating-badge">Rating: ${article.rating} ★</div>
                     </div>
                     <div class="comment-button-container">
-                        <button class="comment-button" onclick="location.href='/article/${article.id}#comments'">
-                            Add Review
-                        </button>
                     </div>
                 </div>
             </div>

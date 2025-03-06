@@ -252,10 +252,16 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-    </style>
+</style>
 </head>
 <body>
     <div class="article-container">
+        {% if is_verified %}
+            <a href="/browse_verified" class="back-button"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+        {% else %}
+            <a href="/browse" class="back-button"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+        {% endif %}
+
         <div class="article-header" id="article-title">Loading...</div>
         <div class="article-meta" id="article-meta"></div>
         <div class="article-body" id="article-content"></div>

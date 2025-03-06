@@ -5,14 +5,16 @@ import sqlite3
 import json
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Replace with a secure key for production
+app.secret_key = '12345'  # Replace with a secure key for production
 DATABASE = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'database.db')
 
+app.config['SESSION_PERMANENT'] = True
+app.config['SESSION_TYPE'] = 'filesystem'
+
 def get_db():
-    """Connect to SQLite database."""
-    db = sqlite3.connect(DATABASE)
-    db.row_factory = sqlite3.Row
-    return db
+    conn = sqlite3.connect(DATABASE)  # Fixed to use DATABASE variable
+    conn.row_factory = sqlite3.Row
+    return conn
 
 def init_db():
     """Create the database and tables if they don't exist."""
@@ -78,6 +80,7 @@ def load_articles_from_json():
     db.commit()
     db.close()
 
+<<<<<<< HEAD
 def read_lorem_file(filename):
     with open(filename, "r", encoding="utf-8") as file:
         lines = file.readlines()
@@ -89,6 +92,20 @@ def read_lorem_file(filename):
     return short, medium, long
 
 
+=======
+def seed_articles():
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT COUNT(*) FROM articles")
+    count = cursor.fetchone()[0]
+    if count == 0:
+        cursor.execute("INSERT INTO articles (id, title, source, author, length, category, summary, rating, publication_date, body) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                       ("1", "The Future of AI", "Tech Daily", "Dr. John Smith", 12, "Tech", "AI is transforming the world.", 4, "2023-01-01", "Full article body here..."))
+        cursor.execute("INSERT INTO articles (id, title, source, author, length, category, summary, rating, publication_date, body) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                       ("2", "Health Tips 2025", "Wellness Weekly", "Dr. Alice Johnson", 10, "Health", "New health research.", 5, "2023-02-01", "Full article body here..."))
+        db.commit()
+    db.close()
+>>>>>>> 913ee5a7fcbccf7abdfa49b1ec4ee03255f00067
 @app.route('/')
 def index():
     return redirect(url_for('browse'))
@@ -125,16 +142,13 @@ def create_verified_account():
         password = request.form['password']
         confirm_password = request.form['confirm_password']
         verified_code = request.form['verification_code']
-        if password != confirm_password:
-            flash('Passwords do not match!', 'error')
-            return redirect(url_for('create_verified_account'))
-        if verified_code not in VALID_VERIFICATION_CODES:
+        if verified_code not in VALID_VERIFICATION_CODES:  # Checks against ['12345']
             flash('Invalid verification code!', 'error')
             return redirect(url_for('create_verified_account'))
         db = get_db()
         try:
             db.execute('INSERT INTO users (username, email, password, verified_code) VALUES (?, ?, ?, ?)',
-                       (username, email, password, verified_code))
+                       (username, email, password, verified_code))  # Stores '12345'
             db.commit()
             flash('Account created successfully! Please log in.', 'success')
             return redirect(url_for('verified_login'))
@@ -190,8 +204,18 @@ def post_comment(article_id):
     if not article:
         return jsonify({"error": "Article not found"}), 404
 
-    username = session.get('username', "Anonymous" + str(random.randint(1, 1000)))
-    user_id = session.get('user_id', None)
+    user_id = session.get('user_id')  # Get user ID from session
+    username = session.get('username')  # Get username from session
+
+    if user_id and username:  # If user is logged in
+        # Check if the user is verified by looking at verified_code
+        user = db.execute('SELECT verified_code FROM users WHERE id = ?', (user_id,)).fetchone()
+        if user and user['verified_code'] != '':  # Verified user
+            username = session['username']  # Use their actual username
+        else:
+            username = f"Anonymous{random.randint(1, 1000)}"  # Non-verified logged-in user gets anonymous
+    else:
+        username = f"Anonymous{random.randint(1, 1000)}"  # Not logged in, always anonymous
 
     try:
         cursor = db.execute(
@@ -209,13 +233,23 @@ def post_comment(article_id):
 
 @app.route('/article/<article_id>')
 def article_page(article_id):
-    return render_template("article.html")
-
+    db = get_db()
+    is_verified = False
+    if 'user_id' in session:
+        user = db.execute('SELECT verified_code FROM users WHERE id = ?', (session['user_id'],)).fetchone()
+        if user and user['verified_code'] != '':
+            is_verified = True
+    return render_template('article.html', is_verified=is_verified)
 @app.route('/browse')
 def browse():
-    db = get_db()
+    db = get_db()  # Initialize db connection here
+    user_info = None
+    if 'user_id' in session:
+        user = db.execute('SELECT username, email FROM users WHERE id = ?', (session['user_id'],)).fetchone()
+        if user:
+            user_info = dict(user)
     articles = db.execute('SELECT id, title, source, author, length, category, summary, body, publication_date, rating FROM articles').fetchall()
-    return render_template('browse.html', articles=articles)
+    return render_template('browse.html', articles=articles, user_info=user_info)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -228,14 +262,14 @@ def login():
         if user:
             session['user_id'] = user['id']
             session['username'] = user['username']
+            session['verified_code'] = user['verified_code']  # Add verified_code to session
             flash('Login successful!', 'success')
+            print(f"Debug: User logged in - session={session}")
             return redirect(url_for('browse'))
         else:
             error = True  # Set error to True if login fails
 
     return render_template('login.html', error=error)  # Pass error to the template
-
-
 
 @app.route('/verified_login', methods=['GET', 'POST'])
 def verified_login():
@@ -244,21 +278,32 @@ def verified_login():
         username = request.form['username']
         password = request.form['password']
         db = get_db()
-        user = db.execute('SELECT * FROM users WHERE username = ? AND password = ?',
-                          (username, password)).fetchone()
+        user = db.execute('SELECT * FROM users WHERE username = ? AND password = ? AND verified_code != ""', (username, password)).fetchone()
+
         if user:
+            session['user_id'] = user['id']
+            session['username'] = user['username']
+            session['verified_code'] = user['verified_code']  # Add verified_code to session
             flash('Verified login successful!', 'success')
-            return render_template('browse_verified.html')  # Change to browse_verified.html
+            print(f"Debug: Verified user logged in - session={session}")
+            return redirect(url_for('browse_verified'))  # Redirect instead of rendering directly
         else:
             error = True
+            flash('Invalid username, password, or not a verified account.', 'error')
 
+    print(f"Debug: Verified login error - error={error}, session={session}")
     return render_template('verified_login.html', error=error)
 
 @app.route('/browse_verified', methods=['POST', 'GET'])
 def browse_verified():
-    if request.method == 'POST':
-        return render_template('browse_verified.html')
-    return render_template('browse_verified.html')
+    user_info = None
+    if 'user_id' in session:
+        db = get_db()
+        user = db.execute('SELECT username, email FROM users WHERE id = ?', (session['user_id'],)).fetchone()
+        if user:
+            user_info = dict(user)
+    print(f"Debug: browse_verified - user_info={user_info}, session={session}")
+    return render_template('browse_verified.html', user_info=user_info)
 
 @app.route('/community')
 def community():
@@ -288,6 +333,27 @@ def view_article(article_id):
 def explore():
     return render_template('browse.html')
 
+@app.route('/db_contents')
+def db_contents():
+    db = get_db()
+    users = db.execute('SELECT * FROM users').fetchall()
+    articles = db.execute('SELECT * FROM articles').fetchall()
+    comments = db.execute('SELECT * FROM comments').fetchall()
+    db.close()
+
+    return render_template('db_contents.html', users=users, articles=articles, comments=comments)
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('index'))
+
 if __name__ == '__main__':
+<<<<<<< HEAD
     init_db()  # Initialize DB
+=======
+    init_db()
+    seed_articles()
+>>>>>>> 913ee5a7fcbccf7abdfa49b1ec4ee03255f00067
     app.run(debug=True)
