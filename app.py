@@ -57,27 +57,37 @@ def load_articles_from_json():
     db = get_db()
     cursor = db.cursor()
     for article in articles:
+        LoremShort, LoremMedium, LoremLong = read_lorem_file("lorem.txt")
+        body = ""
+        if article["length"] == "Short":
+            body = LoremShort
+        elif article["length"] == "Medium":
+            body = LoremMedium 
+        else:
+            body = LoremLong
+
+        
+
         cursor.execute(
             '''INSERT OR IGNORE INTO articles (id, title, author, category, length, summary, rating, source, publication_date, body) 
                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
             (article["id"], article["title"], article["author"], article["category"], article["length"],
-             article["summary"], article["rating"], article["source"], article["publication_date"], article["body"])
+             article["summary"], article["rating"], article["source"], article["publication_date"], body)
         )
+
     db.commit()
     db.close()
 
-def seed_articles():
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute("SELECT COUNT(*) FROM articles")
-    count = cursor.fetchone()[0]
-    if count == 0:
-        cursor.execute("INSERT INTO articles (id, title, source, author, length, category, summary, rating, publication_date, body) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                       ("1", "The Future of AI", "Tech Daily", "Dr. John Smith", 12, "Tech", "AI is transforming the world.", 4, "2023-01-01", "Full article body here..."))
-        cursor.execute("INSERT INTO articles (id, title, source, author, length, category, summary, rating, publication_date, body) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                       ("2", "Health Tips 2025", "Wellness Weekly", "Dr. Alice Johnson", 10, "Health", "New health research.", 5, "2023-02-01", "Full article body here..."))
-        db.commit()
-    db.close()
+def read_lorem_file(filename):
+    with open(filename, "r", encoding="utf-8") as file:
+        lines = file.readlines()
+    
+    short = lines[0].strip()
+    medium = lines[1].strip()
+    long = lines[2].strip()
+
+    return short, medium, long
+
 
 @app.route('/')
 def index():
@@ -279,6 +289,5 @@ def explore():
     return render_template('browse.html')
 
 if __name__ == '__main__':
-    init_db()
-    seed_articles()  # Optional: Seeds some dummy articles if the DB is empty
+    init_db()  # Initialize DB
     app.run(debug=True)

@@ -61,28 +61,22 @@
         }
 
         .article-meta {
-            color: #ccc;
-            font-size: 0.9rem;
-            margin-bottom: 2rem;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            position: relative;
-            z-index: 1;
+            font-size: 1rem;
+            color: #b0b0b0;
+            font-style: italic;
+            margin-bottom: 20px;
         }
 
+        /* Summary */
         .article-body {
             font-size: 1.1rem;
-            line-height: 1.7;
-            color: #ddd;
-            margin-bottom: 2rem;
-            position: relative;
-            z-index: 1;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 8px;
+            text-align: justify;
+            line-height: 1.6;
+            color: #d0d0d0;
+            padding: 10px 0;
         }
 
+        /* Button */
         .back-button {
             display: inline-block;
             background: rgba(255, 255, 255, 0.1);
@@ -262,29 +256,101 @@
 </head>
 <body>
     <div class="article-container">
-        {% if verified %}
-            <a href="/browse_verified" class="back-button"><i class="fas fa-arrow-left"></i> Back to Articles</a>
-        {% else %}
-            <a href="/browse" class="back-button"><i class="fas fa-arrow-left"></i> Back to Articles</a>
-        {% endif %}
-
         <div class="article-header" id="article-title">Loading...</div>
         <div class="article-meta" id="article-meta"></div>
         <div class="article-body" id="article-content"></div>
 
-        <div class="comments-section">
-            <h3>Comments</h3>
-            <div class="comment-form">
-                <textarea class="comment-input" maxlength="500" placeholder="Share your thoughts (max 500 characters)"></textarea>
-                <div id="char-count">500 characters remaining</div>
-                <button class="comment-submit">Post Comment</button>
-                <div class="warning" id="comment-warning" style="display: none;"></div>
-            </div>
-            <div class="comment-list" id="comment-list"></div>
-        </div>
     </div>
 
     <script>
+        function generateStars(rating) {
+            const container = document.createElement('span');
+            const fullStars = Math.floor(rating);
+            for (let i = 0; i < 5; i++) {
+                const star = document.createElement('span');
+                star.textContent = '★';
+                star.className = i < fullStars ? 'star' : 'empty-star';
+                container.appendChild(star);
+            }
+            return container;
+        }
+
+        function toggleBody() {
+            const body = document.getElementById('article-body');
+            const button = document.querySelector('.read-more');
+            if (body.style.display === 'block') {
+                body.style.display = 'none';
+                button.textContent = 'Read More';
+            } else {
+                body.style.display = 'block';
+                button.textContent = 'Show Less';
+            }
+        }
+
+        function createReviewItem(review) {
+            const item = document.createElement('div');
+            item.className = 'review-item';
+
+            const header = document.createElement('div');
+            header.className = 'review-header';
+
+            const username = document.createElement('span');
+            username.className = 'review-username';
+            username.textContent = review.verified_username;
+
+            const overall = generateStars(review.overall_rating);
+
+            header.appendChild(username);
+            header.appendChild(overall);
+
+            const details = document.createElement('div');
+            details.className = 'review-details';
+
+            const ratings = document.createElement('div');
+            ratings.className = 'review-ratings';
+
+            const qualityRow = document.createElement('div');
+            qualityRow.className = 'review-rating-row';
+            qualityRow.innerHTML = '<span>Quality:</span>';
+            qualityRow.appendChild(generateStars(review.quality_rating));
+            ratings.appendChild(qualityRow);
+
+            const biasRow = document.createElement('div');
+            biasRow.className = 'review-rating-row';
+            biasRow.innerHTML = '<span>Bias:</span>';
+            biasRow.appendChild(generateStars(review.bias_rating));
+            ratings.appendChild(biasRow);
+
+            const accuracyRow = document.createElement('div');
+            accuracyRow.className = 'review-rating-row';
+            accuracyRow.innerHTML = '<span>Accuracy:</span>';
+            accuracyRow.appendChild(generateStars(review.accuracy_rating));
+            ratings.appendChild(accuracyRow);
+
+            const valueRow = document.createElement('div');
+            valueRow.className = 'review-rating-row';
+            valueRow.innerHTML = '<span>Value:</span>';
+            valueRow.appendChild(generateStars(review.value_rating));
+            ratings.appendChild(valueRow);
+
+            const text = document.createElement('div');
+            text.className = 'review-text';
+            text.textContent = review.review;
+
+            details.appendChild(ratings);
+            details.appendChild(text);
+
+            item.appendChild(header);
+            item.appendChild(details);
+
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                details.classList.toggle('show');
+            });
+
+            return item;
+        }
+
         document.addEventListener("DOMContentLoaded", function() {
             const articleId = window.location.pathname.split("/").pop();
         
@@ -293,79 +359,8 @@
                 document.querySelector(".article-container").innerHTML = `<p>Error loading article.</p>`;
                 return;
             }
-        
-            let isLoggedIn = false;
-            let username = null;
-        
-            fetch('/api/user', { credentials: 'include' })
-                .then(response => {
-                    if (response.ok) return response.json();
-                    throw new Error('Not logged in');
-                })
-                .then(user => {
-                    isLoggedIn = true;
-                    username = user.username;
-                })
-                .catch(() => {
-                    isLoggedIn = false;
-                })
-                .finally(() => {
-                    fetch(`/api/article/${articleId}`)
-                        .then(response => {
-                            if (!response.ok) throw new Error("Failed to load article");
-                            return response.json();
-                        })
-                        .then(article => {
-                            if (article.error) throw new Error(article.error);
-                            document.getElementById("article-title").textContent = article.title;
-                            document.getElementById("article-meta").textContent = `By ${article.author} | Source: ${article.source} | Reading Time: ${article.length} min | Rating: ${article.rating} ★`;
-                            document.getElementById("article-content").textContent = article.body;
-                            loadComments(); // Load comments after article is loaded
-                        })
-                        .catch(error => {
-                            console.error("Error loading article:", error);
-                            document.querySelector(".article-container").innerHTML = `<p>Error loading article.</p>`;
-                        });
-                });
-        
-            const commentInput = document.querySelector('.comment-input');
-            const charCount = document.getElementById('char-count');
-            const commentSubmit = document.querySelector('.comment-submit');
-            const commentList = document.getElementById('comment-list');
-            const warning = document.getElementById('comment-warning');
-        
-            commentInput.addEventListener('input', () => {
-                const remaining = 500 - commentInput.value.length;
-                charCount.textContent = `${remaining} characters remaining`;
-            });
-        
-            commentSubmit.addEventListener('click', () => {
-                const commentText = commentInput.value.trim();
-                if (!commentText) return;
-        
-                const offensiveWords = [
-                    'badword1', 'badword2', 'spam',
-                    'jerk', 'idiot', 'stupid',
-                    'sewanee', 'yankees', 'michigan',
-                    'friggin', 'frigg', 'friggoff'
-                ];
-                const lowerText = commentText.toLowerCase();
-                const isOffensive = offensiveWords.some(word => lowerText.includes(word));
-        
-                if (isOffensive) {
-                    warning.textContent = lowerText.includes('sewanee')
-                        ? 'Warning: Comment contains offensive language or spam and cannot be posted. Only legitimate colleges will be tolerated.'
-                        : 'Warning: Comment contains offensive language or spam and cannot be posted.';
-                    warning.style.display = 'block';
-                    return;
-                }
-        
-                fetch(`/api/article/${articleId}/comments`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: commentText }),
-                    credentials: 'include'
-                })
+
+            fetch(`/api/article/${articleId}`)
                 .then(response => {
                     if (!response.ok) throw new Error('Failed to post comment');
                     return response.json();
@@ -377,90 +372,9 @@
                     warning.style.display = 'none';
                 })
                 .catch(error => {
-                    console.error('Error posting comment:', error);
-                    warning.textContent = 'Error posting comment. Please try again.';
-                    warning.style.display = 'block';
+                    console.error("Error loading article:", error);
+                    document.querySelector(".article-container").innerHTML = `<p>Error loading article.</p>`;
                 });
-            });
-        
-            function loadComments() {
-                fetch(`/api/article/${articleId}/comments`)
-                    .then(response => response.json())
-                    .then(data => {
-                        commentList.innerHTML = ''; // Clear existing comments
-                        data.comments.forEach(comment => {
-                            addComment(comment.text, comment.votes, false, false, comment.username);
-                        });
-                    })
-                    .catch(error => console.error('Error loading comments:', error));
-            }
-        
-            function addComment(text, initialVotes = 0, hasVoted = false, isUpvote = false, usernameOverride) {
-                const commentDiv = document.createElement('div');
-                commentDiv.className = 'comment';
-        
-                const usernameDiv = document.createElement('div');
-                usernameDiv.className = 'comment-username';
-                usernameDiv.textContent = usernameOverride || (isLoggedIn && username ? username : `Anonymous${Math.floor(Math.random() * 1000) + 1}`);
-        
-                const commentText = document.createElement('div');
-                commentText.className = 'comment-text';
-                commentText.textContent = text;
-        
-                const voteDiv = document.createElement('div');
-                voteDiv.className = 'vote-buttons';
-        
-                const upvote = document.createElement('button');
-                upvote.className = 'vote-btn upvote';
-                upvote.innerHTML = '<i class="fas fa-arrow-up"></i>';
-                if (isUpvote && hasVoted) upvote.classList.add('voted');
-        
-                const voteCount = document.createElement('span');
-                voteCount.className = 'vote-count';
-                voteCount.textContent = initialVotes;
-        
-                const downvote = document.createElement('button');
-                downvote.className = 'vote-btn downvote';
-                downvote.innerHTML = '<i class="fas fa-arrow-down"></i>';
-                if (!isUpvote && hasVoted) downvote.classList.add('voted');
-        
-                let votes = initialVotes;
-                let voted = hasVoted;
-        
-                upvote.onclick = () => {
-                    if (!voted) {
-                        votes = 1;
-                        voted = true;
-                        upvote.classList.add('voted');
-                        downvote.classList.remove('voted');
-                    } else if (upvote.classList.contains('voted')) {
-                        votes = 0;
-                        voted = false;
-                        upvote.classList.remove('voted');
-                    }
-                    voteCount.textContent = votes;
-                    // TODO: Add API call to update votes on server
-                };
-        
-                downvote.onclick = () => {
-                    if (!voted) {
-                        votes = -1;
-                        voted = true;
-                        downvote.classList.add('voted');
-                        upvote.classList.remove('voted');
-                    } else if (downvote.classList.contains('voted')) {
-                        votes = 0;
-                        voted = false;
-                        downvote.classList.remove('voted');
-                    }
-                    voteCount.textContent = votes;
-                    // TODO: Add API call to update votes on server
-                };
-        
-                voteDiv.append(upvote, voteCount, downvote);
-                commentDiv.append(usernameDiv, commentText, voteDiv);
-                commentList.prepend(commentDiv);
-            }
         });
         </script>
 </body>
