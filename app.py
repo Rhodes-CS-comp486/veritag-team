@@ -64,27 +64,26 @@ def load_articles_from_json():
         if article["length"] == "Short":
             body = LoremShort
         elif article["length"] == "Medium":
-            body = LoremMedium 
+            body = LoremMedium
         else:
             body = LoremLong
 
-        
+
 
         cursor.execute(
-            '''INSERT OR IGNORE INTO articles (id, title, author, category, length, summary, rating, source, publication_date, body) 
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+            '''INSERT OR IGNORE INTO articles (id, title, author, category, length, summary, rating, source, publication_date) 
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
             (article["id"], article["title"], article["author"], article["category"], article["length"],
-             article["summary"], article["rating"], article["source"], article["publication_date"], body)
+             article["summary"], article["rating"], article["source"], article["publication_date"])
         )
-
     db.commit()
     db.close()
 
-<<<<<<< HEAD
+
 def read_lorem_file(filename):
     with open(filename, "r", encoding="utf-8") as file:
         lines = file.readlines()
-    
+
     short = lines[0].strip()
     medium = lines[1].strip()
     long = lines[2].strip()
@@ -92,7 +91,7 @@ def read_lorem_file(filename):
     return short, medium, long
 
 
-=======
+
 def seed_articles():
     db = get_db()
     cursor = db.cursor()
@@ -105,7 +104,6 @@ def seed_articles():
                        ("2", "Health Tips 2025", "Wellness Weekly", "Dr. Alice Johnson", 10, "Health", "New health research.", 5, "2023-02-01", "Full article body here..."))
         db.commit()
     db.close()
->>>>>>> 913ee5a7fcbccf7abdfa49b1ec4ee03255f00067
 @app.route('/')
 def index():
     return redirect(url_for('browse'))
@@ -350,10 +348,6 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-<<<<<<< HEAD
-    init_db()  # Initialize DB
-=======
     init_db()
     seed_articles()
->>>>>>> 913ee5a7fcbccf7abdfa49b1ec4ee03255f00067
     app.run(debug=True)
