@@ -378,9 +378,91 @@
                     warning.style.display = 'none';
                 })
                 .catch(error => {
-                    console.error("Error loading article:", error);
-                    document.querySelector(".article-container").innerHTML = `<p>Error loading article.</p>`;
+                    console.error('Error posting comment:', error);
+                    warning.textContent = 'Error posting comment. Please try again.';
+                    warning.style.display = 'block';
                 });
+            });
+        
+            function loadComments() {
+                fetch(`/api/article/${articleId}/comments`)
+                    .then(response => response.json())
+                    .then(data => {
+                        commentList.innerHTML = '';
+                        data.comments.forEach(comment => {
+                            addComment(comment.text, comment.votes, false, false, comment.username);
+                        });
+                    })
+                    .catch(error => console.error('Error loading comments:', error));
+            }
+        
+            function addComment(text, initialVotes = 0, hasVoted = false, isUpvote = false, usernameOverride) {
+                const commentDiv = document.createElement('div');
+                commentDiv.className = 'comment';
+        
+                const usernameDiv = document.createElement('div');
+                usernameDiv.className = 'comment-username';
+                usernameDiv.textContent = usernameOverride || (isLoggedIn && username ? username : `Anonymous${Math.floor(Math.random() * 1000) + 1}`);
+        
+                const commentText = document.createElement('div');
+                commentText.className = 'comment-text';
+                commentText.textContent = text;
+        
+                const voteDiv = document.createElement('div');
+                voteDiv.className = 'vote-buttons';
+        
+                const upvote = document.createElement('button');
+                upvote.className = 'vote-btn upvote';
+                upvote.innerHTML = '<i class="fas fa-arrow-up"></i>';
+                if (isUpvote && hasVoted) upvote.classList.add('voted');
+        
+                const voteCount = document.createElement('span');
+                voteCount.className = 'vote-count';
+                voteCount.textContent = initialVotes;
+        
+                const downvote = document.createElement('button');
+                downvote.className = 'vote-btn downvote';
+                downvote.innerHTML = '<i class="fas fa-arrow-down"></i>';
+                if (!isUpvote && hasVoted) downvote.classList.add('voted');
+        
+                let votes = initialVotes;
+                let voted = hasVoted;
+        
+                upvote.onclick = () => {
+                    if (!voted) {
+                        votes = 1;
+                        voted = true;
+                        upvote.classList.add('voted');
+                        downvote.classList.remove('voted');
+                    } else if (upvote.classList.contains('voted')) {
+                        votes = 0;
+                        voted = false;
+                        upvote.classList.remove('voted');
+                    }
+                    voteCount.textContent = votes;
+                    // TODO: Add API call to update votes on server
+                };
+        
+                downvote.onclick = () => {
+                    if (!voted) {
+                        votes = -1;
+                        voted = true;
+                        downvote.classList.add('voted');
+                        upvote.classList.remove('voted');
+                    } else if (downvote.classList.contains('voted')) {
+                        votes = 0;
+                        voted = false;
+                        downvote.classList.remove('voted');
+                    }
+                    voteCount.textContent = votes;
+                    // TODO: Add API call to update votes on server
+                };
+        
+                voteDiv.append(upvote, voteCount, downvote);
+                commentDiv.append(usernameDiv, commentText, voteDiv);
+                commentList.prepend(commentDiv);
+            }
+            
         });
         </script>
 </body>
