@@ -1,52 +1,12 @@
 import os
-from flask import Flask, render_template, g, redirect, url_for, request, flash, jsonify
+import random
+from flask import Flask, render_template, redirect, url_for, request, flash, jsonify, session
 import sqlite3
-import os
 import json
 
-
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Required for flashing messages
-
-# Database setup
-# Path relative to the script location, no matter where the script is run from
+app.secret_key = 'your_secret_key'  # Replace with a secure key for production
 DATABASE = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'database.db')
-db = sqlite3.connect(DATABASE)
-
-
-def seed_articles():
-    db = sqlite3.connect(DATABASE)
-    cursor = db.cursor()
-
-    # Check if there are already articles in the database
-    cursor.execute("SELECT COUNT(*) FROM articles")
-    count = cursor.fetchone()[0]
-
-    if count == 0:  # Only insert if no articles exist
-        cursor.execute("INSERT INTO articles (title, source, author, length, category, summary) VALUES (?, ?, ?, ?, ?, ?)",
-                       ("The Future of AI", "Tech Daily", "Dr. John Smith", 12, "Tech", "AI is transforming the world at an incredible pace."))
-        cursor.execute("INSERT INTO articles (title, source, author, length, category, summary) VALUES (?, ?, ?, ?, ?, ?)",
-                       ("Health Tips 2025", "Wellness Weekly", "Dr. Alice Johnson", 10, "Health", "New health research reveals how to stay fit."))
-        cursor.execute("INSERT INTO articles (title, source, author, length, category, summary) VALUES (?, ?, ?, ?, ?, ?)",
-                       ("Exploring Space", "Science World", "Dr. Mark Lee", 15, "Science",
-                        "Scientists are looking at new planets beyond our solar system."))
-
-        db.commit()
-
-    db.close()
-
-
-@app.route('/api/articles')
-def get_articles():
-    """Fetch all articles from the database and return as JSON."""
-    db = get_db()
-    articles = db.execute('SELECT id, title, source, author, length, category, rating, body, summary FROM articles').fetchall()
-
-    articles_list = [dict(article) for article in articles]  # Convert rows to dicts
-
-    return jsonify({"articles": articles_list})  # Wrap list in a dictionary
-
-
 
 def get_db():
     """Connect to SQLite database."""
@@ -75,155 +35,200 @@ def init_db():
                         email TEXT NOT NULL UNIQUE,
                         password TEXT NOT NULL,
                         verified_code TEXT NOT NULL)''')
+        db.execute('''CREATE TABLE IF NOT EXISTS comments
+                       (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        article_id TEXT NOT NULL,
+                        user_id INTEGER,
+                        username TEXT NOT NULL,
+                        text TEXT NOT NULL,
+                        votes INTEGER DEFAULT 0,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        FOREIGN KEY (article_id) REFERENCES articles(id),
+                        FOREIGN KEY (user_id) REFERENCES users(id))''')
         db.commit()
         load_articles_from_json()
 
 def load_articles_from_json():
     """Load articles from dev-articles.json into the database."""
     json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dev-articles.json')
-
     with open(json_file, 'r', encoding='utf-8') as file:
         articles = json.load(file)
 
     db = get_db()
     cursor = db.cursor()
-
     for article in articles:
+        LoremShort, LoremMedium, LoremLong = read_lorem_file("lorem.txt")
+        body = ""
+        if article["length"] == "Short":
+            body = LoremShort
+        elif article["length"] == "Medium":
+            body = LoremMedium 
+        else:
+            body = LoremLong
+
+        
+
         cursor.execute(
             '''INSERT OR IGNORE INTO articles (id, title, author, category, length, summary, rating, source, publication_date, body) 
                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
             (article["id"], article["title"], article["author"], article["category"], article["length"],
-             article["summary"], article["rating"], article["source"], article["publication_date"], article["body"])
+             article["summary"], article["rating"], article["source"], article["publication_date"], body)
         )
-
     db.commit()
     db.close()
 
+def read_lorem_file(filename):
+    with open(filename, "r", encoding="utf-8") as file:
+        lines = file.readlines()
+    
+    short = lines[0].strip()
+    medium = lines[1].strip()
+    long = lines[2].strip()
+
+    return short, medium, long
+
+
 @app.route('/')
 def index():
-    """Redirect to the browse page on startup."""
     return redirect(url_for('browse'))
-
 
 @app.route('/create_account', methods=['GET', 'POST'])
 def create_account():
-    """Handle account creation."""
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
         confirm_password = request.form['confirm_password']
-
         if password != confirm_password:
             flash('Passwords do not match!', 'error')
             return redirect(url_for('create_account'))
-
         db = get_db()
         try:
-            db.execute('INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
-                       (username, email, password))
+            db.execute('INSERT INTO users (username, email, password, verified_code) VALUES (?, ?, ?, ?)',
+                       (username, email, password, ''))
             db.commit()
             flash('Account created successfully! Please log in.', 'success')
             return redirect(url_for('login'))
         except sqlite3.IntegrityError:
             flash('Username or email already exists!', 'error')
             return redirect(url_for('create_account'))
-
     return render_template('create_account.html')
 
-VALID_VERIFICATION_CODES = ['12345']  # Example valid codes
+VALID_VERIFICATION_CODES = ['12345']
 
 @app.route('/create_verified_account', methods=['GET', 'POST'])
 def create_verified_account():
-    """Handle the creation of a verified account."""
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
         confirm_password = request.form['confirm_password']
         verified_code = request.form['verification_code']
-
-        # Password match check
         if password != confirm_password:
             flash('Passwords do not match!', 'error')
             return redirect(url_for('create_verified_account'))
-
-        # Verified code check
         if verified_code not in VALID_VERIFICATION_CODES:
             flash('Invalid verification code!', 'error')
             return redirect(url_for('create_verified_account'))
-
-        # Connect to SQLite and insert the user with the verified code
         db = get_db()
         try:
             db.execute('INSERT INTO users (username, email, password, verified_code) VALUES (?, ?, ?, ?)',
                        (username, email, password, verified_code))
             db.commit()
             flash('Account created successfully! Please log in.', 'success')
-            return redirect(url_for('verified_login'))  # Redirect to login page
+            return redirect(url_for('verified_login'))
         except sqlite3.IntegrityError:
             flash('Username or email already exists!', 'error')
             return redirect(url_for('create_verified_account'))
-
     return render_template('create_verified_account.html')
 
-
-# Route for the About page
 @app.route('/about')
 def about():
     return render_template('about.html')
 
+@app.route('/api/user')
+def get_user():
+    if 'user_id' in session:
+        return jsonify({"username": session['username']})
+    return jsonify({}), 401
 
-@app.route('/api/article/<int:article_id>')
+@app.route('/api/articles')
+def get_articles():
+    db = get_db()
+    articles = db.execute('SELECT id, title, source, author, length, category, rating, body, summary FROM articles').fetchall()
+    articles_list = [dict(article) for article in articles]
+    return jsonify({"articles": articles_list})
+
+@app.route('/api/article/<int:article_id>', endpoint='article')
 def get_article(article_id):
-    """Fetch a single article by ID from the database and return it as JSON."""
-
     db = get_db()
     article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
     if article is None:
         return jsonify({"error": "Article not found"}), 404
+    return jsonify(dict(article))
 
-    return jsonify(dict(article))  # Convert row to dict
+@app.route('/api/article/<article_id>/comments', methods=['GET'])
+def get_comments(article_id):
+    db = get_db()
+    comments = db.execute(
+        'SELECT id, username, text, votes, created_at FROM comments WHERE article_id = ? ORDER BY created_at DESC',
+        (article_id,)
+    ).fetchall()
+    comments_list = [dict(comment) for comment in comments]
+    return jsonify({"comments": comments_list})
 
+@app.route('/api/article/<article_id>/comments', methods=['POST'])
+def post_comment(article_id):
+    data = request.get_json()
+    if not data or 'text' not in data:
+        return jsonify({"error": "Comment text is required"}), 400
 
-@app.route('/article/<int:article_id>')
+    comment_text = data['text']
+    db = get_db()
+    article = db.execute('SELECT id FROM articles WHERE id = ?', (article_id,)).fetchone()
+    if not article:
+        return jsonify({"error": "Article not found"}), 404
+
+    username = session.get('username', "Anonymous" + str(random.randint(1, 1000)))
+    user_id = session.get('user_id', None)
+
+    try:
+        cursor = db.execute(
+            'INSERT INTO comments (article_id, user_id, username, text) VALUES (?, ?, ?, ?)',
+            (article_id, user_id, username, comment_text)
+        )
+        db.commit()
+        new_comment = db.execute(
+            'SELECT id, username, text, votes, created_at FROM comments WHERE id = ?',
+            (cursor.lastrowid,)
+        ).fetchone()
+        return jsonify(dict(new_comment)), 201
+    except sqlite3.Error as e:
+        return jsonify({"error": "Failed to post comment: " + str(e)}), 500
+
+@app.route('/article/<article_id>')
 def article_page(article_id):
-    """Render the article.html page, which will fetch article data via JavaScript."""
     return render_template("article.html")
 
 @app.route('/browse')
 def browse():
-    """Display article headlines with ratings."""
     db = get_db()
     articles = db.execute('SELECT id, title, source, author, length, category, summary, body, publication_date, rating FROM articles').fetchall()
     return render_template('browse.html', articles=articles)
 
-
-@app.route('/article/<int:article_id>')
-def article(article_id):
-    """View a single article in full screen."""
-    db = get_db()
-    article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
-    if article is None:
-        flash('Article not found!', 'error')
-        return redirect(url_for('browse'))
-    return render_template('article.html', articleId=article_id)
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    """Handle user login."""
-    error = None  # Initialize error variable
+    error = None
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
         db = get_db()
         user = db.execute('SELECT * FROM users WHERE username = ? AND password = ?', (username, password)).fetchone()
-
         if user:
+            session['user_id'] = user['id']
+            session['username'] = user['username']
             flash('Login successful!', 'success')
-            return redirect(url_for('browse'))  # Redirect to browse after successful login
+            return redirect(url_for('browse'))
         else:
             error = True  # Set error to True if login fails
 
@@ -233,16 +238,13 @@ def login():
 
 @app.route('/verified_login', methods=['GET', 'POST'])
 def verified_login():
-    """Handle verified user login."""
     error = None
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
         db = get_db()
-        user = db.execute('SELECT * FROM users WHERE username = ? AND password = ? AND verified_code != ""', 
+        user = db.execute('SELECT * FROM users WHERE username = ? AND password = ?',
                           (username, password)).fetchone()
-
         if user:
             flash('Verified login successful!', 'success')
             return render_template('browse_verified.html')  # Change to browse_verified.html
@@ -251,41 +253,40 @@ def verified_login():
 
     return render_template('verified_login.html', error=error)
 
-
 @app.route('/browse_verified', methods=['POST', 'GET'])
 def browse_verified():
     if request.method == 'POST':
-        # handle POST logic
         return render_template('browse_verified.html')
     return render_template('browse_verified.html')
 
-# Route for the community page
 @app.route('/community')
 def community():
     return render_template('community.html')
 
 @app.route('/categories')
 def categories():
-    response = get_articles()  # This returns a Response object
-    articles = json.loads(response.get_data(as_text=True))["articles"]  # Extract article list
-
-    # Group articles by category
+    response = get_articles()
+    articles = json.loads(response.get_data(as_text=True))["articles"]
     categories = {}
     for article in articles:
         category = article["category"]
         if category not in categories:
             categories[category] = []
         categories[category].append(article)
-
     return render_template('categories.html', categories=categories)
+
+@app.route('/article/<int:article_id>', endpoint='view_article')
+def view_article(article_id):
+    db = get_db()
+    article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
+    if article is None:
+        return render_template('404.html'), 404  # Render a custom 404 page
+    return render_template('article.html', article=article)  # Render the HTML page
 
 @app.route('/explore')
 def explore():
     return render_template('browse.html')
 
-
-
 if __name__ == '__main__':
-    init_db()  # Initialize DB
+    init_db()
     app.run(debug=True)
-

@@ -8,9 +8,7 @@
     "summary": "Scientists have developed an AI model that predicts disease outbreaks with unprecedented accuracy, allowing for early interventions and better public health outcomes.",
     "rating": 4,
     "source": "The New York Times",
-    "publication_date": "2025-02-21",
-    "body": "Artificial Intelligence (AI) is rapidly evolving, transforming industries and daily life. From self-driving cars to personalized recommendations, AI's impact is undeniable. Researchers continue to push boundaries, developing models that can understand and generate human-like text, recognize images with remarkable accuracy, and even make complex decisions. However, ethical concerns such as bias in AI models and job displacement remain critical topics of discussion. Governments and organizations are working on regulations to ensure AI development aligns with human values. As AI advances, integrating it responsibly into society will be a key challenge and opportunity."
-
+    "publication_date": "2025-02-21"
   },
   {
     "id": "2",
@@ -21,9 +19,7 @@
     "summary": "Researchers at a leading university have unveiled a quantum processor capable of solving complex problems exponentially faster than classical computers.",
     "rating": 5,
     "source": "Scientific American",
-    "publication_date": "2025-02-18",
-    "body": "Quantum computing has the potential to revolutionize industries by solving problems that are currently infeasible for classical computers. The newly unveiled quantum processor boasts qubits with unprecedented coherence times and error rates, making it a significant step toward practical applications. Experts predict breakthroughs in fields such as cryptography, drug discovery, and climate modeling. However, challenges remain in scaling up these systems and mitigating quantum decoherence. As investment in quantum technology grows, the next decade will likely see rapid advancements in both hardware and software capabilities."
-
+    "publication_date": "2025-02-18"
   },
   {
     "id": "3",
@@ -34,9 +30,7 @@
     "summary": "Augmented reality is becoming a staple in everyday applications, from virtual shopping experiences to enhanced navigation systems.",
     "rating": 3,
     "source": "Wired",
-    "publication_date": "2025-02-17",
-    "body": "Augmented reality (AR) is no longer confined to gaming and entertainment. Companies are leveraging AR to enhance shopping experiences, allowing users to visualize furniture in their homes before purchasing. In navigation, AR-powered apps overlay directions onto real-world streets, making travel more intuitive. Additionally, AR is making waves in education and healthcare, offering immersive learning experiences and aiding medical professionals in complex procedures. As hardware and software improve, AR is poised to become a fundamental part of daily interactions."
-
+    "publication_date": "2025-02-17"
   },
   {
     "id": "4",
@@ -47,9 +41,7 @@
     "summary": "Experts weigh in on how social media algorithms shape public opinion, influence elections, and contribute to political polarization.",
     "rating": 4,
     "source": "The Atlantic",
-    "publication_date": "2025-02-20",
-    "body": "Social media platforms have transformed political discourse, amplifying diverse perspectives while also deepening divides. Algorithms designed to maximize engagement often prioritize sensational or polarizing content, leading to echo chambers and misinformation. Researchers are examining the role of these platforms in shaping voter behavior and election outcomes. While social media enables grassroots activism and direct communication with leaders, concerns about manipulation and the spread of false information persist. Policymakers are now considering regulations to increase transparency and accountability in digital political advertising."
-
+    "publication_date": "2025-02-20"
   },
   {
     "id": "5",
@@ -60,9 +52,8 @@
     "summary": "Vinyl records are experiencing a resurgence as younger generations rediscover the rich sound and nostalgic appeal of physical music collections.",
     "rating": 5,
     "source": "Rolling Stone",
-    "publication_date": "2025-02-22",
-    "body": "Recent technological advancements in renewable energy are driving down costs and improving efficiency. Solar panel efficiency has reached new highs, and wind turbines are becoming more reliable. These innovations are making renewable energy more accessible and competitive with traditional fossil fuels."
-  },
+    "publication_date": "2025-02-22"
+    },
   {
     "id": "6",
     "title": "Self-Driving Cars: Who's in Control?",
@@ -72,8 +63,7 @@
     "summary": "The push for autonomous vehicles continues, but who takes responsibility when things go wrong?",
     "rating": 3,
     "source": "Car and Driver",
-    "publication_date": "2025-02-22",
-    "body":"The emergence of self-driving cars has sparked one of the most significant debates in modern transportation. As autonomous technology continues to evolve, questions of liability, safety, and regulation become increasingly complex. While manufacturers promise that artificial intelligence (AI)-driven vehicles will reduce accidents caused by human error, critics argue that these systems remain imperfect and require human oversight. One of the biggest concerns is accountability. If a self-driving car gets into an accident, who is at fault—the manufacturer, the software developer, or the passenger? Legal frameworks worldwide have struggled to keep pace with the rapid development of autonomous vehicle technology. Some experts advocate for a shared liability model between carmakers and users, while others believe the burden should fall solely on the companies designing the AI. Beyond liability, there are ethical considerations. AI must make split-second decisions in dangerous situations, raising moral dilemmas. If a self-driving car must choose between hitting a pedestrian or risking the passenger’s life, what should it do? These scenarios highlight the challenges of programming ethical decision-making into machines.Despite these issues, self-driving technology continues to advance, with companies like Tesla, Waymo, and traditional automakers investing heavily in automation. Governments worldwide are working to establish regulatory guidelines, but until clear policies exist, the question remains: Who is truly in control of self-driving cars?"
+    "publication_date": "2025-02-22"
   },
   {
     "id": "7",
@@ -84,8 +74,7 @@
     "summary": "Ethical hackers are stepping up to protect systems from cyber threats before criminals can exploit them.",
     "rating": 4,
     "source": "TechCrunch",
-    "publication_date": "2025-02-20",
-    "body":"As cyber threats grow more sophisticated, ethical hackers, also known as white-hat hackers, have emerged as an essential force in cybersecurity. These professionals use their skills to identify vulnerabilities in systems before malicious hackers can exploit them. Companies and governments now rely on ethical hackers to safeguard sensitive information and protect digital infrastructure. Ethical hackers operate within legal boundaries, often participating in bug bounty programs or working for cybersecurity firms. They help prevent data breaches, ransomware attacks, and identity theft. Unlike black-hat hackers, who exploit weaknesses for personal gain, ethical hackers collaborate with organizations to strengthen security. The demand for ethical hackers has surged, with tech companies offering lucrative salaries for skilled professionals. Certifications like Certified Ethical Hacker (CEH) and Offensive Security Certified Professional (OSCP) have become highly valued in the industry. Despite their contributions, ethical hackers face challenges. Some governments impose strict regulations, and legal gray areas exist around hacking techniques. However, as cybercrime continues to escalate, ethical hackers will remain at the forefront of defense, proving that breaking the code can be a force for good."
+    "publication_date": "2025-02-20"
   },
   {
     "id": "8",
@@ -96,8 +85,7 @@
     "summary": "Laughter may truly be the best medicine, as researchers find significant health benefits linked to humor-based therapy.",
     "rating": 5,
     "source": "The Journal of Funny Medicine",
-    "publication_date": "2025-02-22",
-    "body":"Laughter may truly be the best medicine, according to a new study on laughter therapy. Researchers have found that humor-based therapy can significantly improve mental and physical health, reducing stress, lowering blood pressure, and even boosting the immune system. Laughter therapy involves structured activities such as group laughter sessions, comedy exposure, and improvisational exercises. Studies indicate that laughter triggers the release of endorphins, the body’s natural feel-good chemicals, which help alleviate pain and enhance mood. Beyond psychological benefits, laughter has physiological effects. It improves circulation, relaxes muscles, and promotes overall well-being. Hospitals and wellness centers have begun incorporating laughter therapy into treatment plans for patients with chronic illnesses. Despite its proven advantages, laughter therapy is not widely adopted in mainstream medicine. Skeptics argue that more extensive research is needed. However, as evidence grows, laughter therapy is gaining recognition as a valuable tool for improving health. In a world where stress is prevalent, a good laugh might be just what the doctor ordered."
+    "publication_date": "2025-02-22"
   },
   {
     "id": "9",
@@ -108,8 +96,7 @@
     "summary": "Space agencies and private firms outline their next steps in turning Mars into a habitable home for humans.",
     "rating": 4,
     "source": "NASA Insider",
-    "publication_date": "2025-02-19",
-    "body":"The dream of colonizing Mars is moving closer to reality as space agencies and private companies outline detailed plans for establishing a human presence on the Red Planet. NASA, SpaceX, and international space programs are developing technologies to sustain life on Mars, focusing on transportation, habitat construction, and resource utilization. SpaceX, led by Elon Musk, is leading the charge with its Starship spacecraft, designed to carry humans to Mars and beyond. The company envisions self-sustaining colonies powered by solar energy and supported by resources extracted from Martian soil. Meanwhile, NASA’s Artemis program is laying the groundwork by testing technologies on the Moon before deploying them to Mars. Challenges remain, including radiation exposure, extreme temperatures, and psychological effects on astronauts. Scientists are exploring solutions such as underground habitats and genetic modifications to help humans adapt. Despite these hurdles, enthusiasm for Mars colonization continues to grow. With rapid advancements in space technology, a permanent human settlement on Mars could become a reality within the next few decades."
+    "publication_date": "2025-02-19"
   },
   {
     "id": "10",
@@ -120,9 +107,8 @@
     "summary": "The latest exposé reveals another twist in the ongoing saga of corruption and power struggles.",
     "rating": 3,
     "source": "The Daily Gossip",
-    "publication_date": "2025-02-22",
-    "body":"Politics and scandal often go hand in hand, and history proves that corruption and power struggles are recurring themes. From financial misdeeds to abuse of power, political scandals continue to make headlines worldwide. One reason scandals persist is the immense power and influence politicians wield. The temptation to bend rules, accept bribes, or manipulate systems is ever-present. Despite efforts to implement transparency measures, corruption often finds a way to thrive in the shadows. The media plays a crucial role in exposing scandals, acting as a watchdog for the public. Investigative journalism has led to the downfall of many leaders, proving that accountability is still possible. However, public reaction to scandals varies—some politicians face severe consequences, while others manage to recover and continue their careers. In the digital age, social media amplifies political controversies, making it harder for politicians to hide misconduct. As long as power and ambition exist, political scandals will remain a never-ending story."
-  },
+    "publication_date": "2025-02-22"
+   },
 
 
   {
@@ -134,9 +120,8 @@
     "summary": "New research on cellular regeneration suggests that extending human lifespan dramatically may soon be possible.",
     "rating": 5,
     "publication_date": "2025-02-16",
-    "source": "The Genome Gazette",
-    "body":"Advancements in cellular regeneration and genetic research are bringing the dream of extended human lifespan closer to reality. Scientists are exploring ways to slow aging, repair damaged cells, and even reverse the effects of time. One promising avenue is telomere extension, which involves lengthening the protective caps on DNA strands to prevent aging-related deterioration. Additionally, researchers are investigating stem cell therapy and gene editing techniques like CRISPR to rejuvenate tissues and organs. While these breakthroughs are exciting, ethical concerns remain. Who will have access to life-extending treatments? Will only the wealthy benefit? These questions must be addressed as science progresses. If researchers succeed in significantly prolonging human life, society will need to adapt to new challenges, such as population growth and economic shifts. Whether immortality becomes a reality or remains a dream, one thing is clear: the future of longevity is rapidly evolving."
-  },
+    "source": "The Genome Gazette"
+   },
   {
     "id": "12",
     "title": "AI Writes a Bestseller: Are Authors Obsolete?",
@@ -146,8 +131,404 @@
     "summary": "An AI-written novel tops charts sparking debates over the future of human creativity.",
     "rating": 4,
     "publication_date": "2025-02-22",
-    "source": "The Algorithmic Times",
-    "body":"Artificial intelligence has reached a new milestone: writing a bestselling novel. A recent AI-generated book has topped literary charts, raising concerns about the future of human creativity. AI writing tools have advanced significantly, capable of mimicking human styles and generating compelling narratives. While some see this as an innovation, others worry about its implications. Will AI replace human authors, or will it simply become another tool for creativity? Many argue that AI lacks true imagination and emotional depth, relying instead on patterns and data. However, publishers are experimenting with AI-assisted writing, suggesting that human-AI collaboration may define the future of storytelling. As technology progresses, the role of authors may evolve, but human creativity is unlikely to disappear entirely. Instead, AI may push writers to explore new frontiers in literature, blending machine efficiency with human artistry."
-  }
-  ]
-  
+    "source": "The Algorithmic Times"
+   },
+
+    {
+      "id": "13",
+      "title": "Quantum Computing Breakthrough Redefines Encryption",
+      "author": "Max Planck",
+      "category": "Technology",
+      "length": "Long",
+      "summary": "Scientists unveil a quantum computing advancement that could render current encryption methods obsolete.",
+      "rating": 5,
+      "publication_date": "2025-02-25",
+      "source": "Tech Horizons"
+    },
+    {
+      "id": "14",
+      "title": "Indie Artists Thrive in Streaming Revolution",
+      "author": "Melody Harmon",
+      "category": "Music",
+      "length": "Medium",
+      "summary": "Independent musicians are leveraging AI-driven platforms to bypass traditional record labels and reach global audiences.",
+      "rating": 4,
+      "publication_date": "2025-03-01",
+      "source": "SoundWave News"
+    },
+    {
+      "id": "15",
+      "title": "The Rise of Virtual Influencers in Social Media",
+      "author": "Lena Avatar",
+      "category": "Culture",
+      "length": "Short",
+      "summary": "AI-generated influencers are gaining millions of followers—what does this mean for human content creators?",
+      "rating": 4,
+      "publication_date": "2025-02-28",
+      "source": "Digital Culture Weekly"
+    },
+    {
+      "id": "16",
+      "title": "Stock Market Soars as AI Predicts Economic Trends",
+      "author": "Warren Charts",
+      "category": "Business",
+      "length": "Long",
+      "summary": "Financial analysts are increasingly relying on AI models to forecast market movements with stunning accuracy.",
+      "rating": 5,
+      "publication_date": "2025-03-03",
+      "source": "Wall Street Insights"
+    },
+    {
+      "id": "17",
+      "title": "Breakthrough in Cancer Treatment Using Nanobots",
+      "author": "Dr. Helena Wells",
+      "category": "Health",
+      "length": "Medium",
+      "summary": "Researchers develop nanobot technology capable of targeting cancer cells with unprecedented precision.",
+      "rating": 5,
+      "publication_date": "2025-02-27",
+      "source": "Medical Frontiers"
+    },
+    {
+      "id": "18",
+      "title": "AI Referees Tested in Major League Soccer",
+      "author": "Chris Fairplay",
+      "category": "Sports",
+      "length": "Short",
+      "summary": "The use of AI-powered referees in professional soccer sparks controversy among players and fans.",
+      "rating": 3,
+      "publication_date": "2025-03-02",
+      "source": "Sports AI Digest"
+    },
+    {
+      "id": "19",
+      "title": "NASA Confirms Signs of Microbial Life on Mars",
+      "author": "Dr. Leo Armstrong",
+      "category": "Science",
+      "length": "Long",
+      "summary": "New findings from the Perseverance rover suggest microbial life may exist beneath the Martian surface.",
+      "rating": 5,
+      "publication_date": "2025-02-29",
+      "source": "Cosmic Discoveries"
+    },
+    {
+      "id": "20",
+      "title": "AI-Generated Movies Challenge Hollywood Norms",
+      "author": "Cine Matica",
+      "category": "Entertainment",
+      "length": "Medium",
+      "summary": "Major studios experiment with AI-driven scriptwriting and CGI actors, leaving traditional filmmakers uneasy.",
+      "rating": 4,
+      "publication_date": "2025-03-04",
+      "source": "FilmTech Journal"
+    },
+    {
+      "id": "21",
+      "title": "Global Governments Debate AI Regulation",
+      "author": "Polly Tix",
+      "category": "Politics",
+      "length": "Long",
+      "summary": "World leaders struggle to create regulations for rapidly advancing AI technologies and their societal impact.",
+      "rating": 4,
+      "publication_date": "2025-02-26",
+      "source": "The Policy Ledger"
+    },
+    {
+      "id": "22",
+      "title": "New Study Links Social Media Usage to Mental Health Decline",
+      "author": "Dr. Amy Balance",
+      "category": "Health",
+      "length": "Medium",
+      "summary": "Researchers find strong correlations between excessive social media use and rising anxiety levels among young adults.",
+      "rating": 4,
+      "publication_date": "2025-02-24",
+      "source": "Health & Mind Report"
+    },
+    {
+      "id": "23",
+      "title": "AI-Powered Legal Assistants Reshape Law Firms",
+      "author": "Justice Code",
+      "category": "Business",
+      "length": "Short",
+      "summary": "Law firms integrate AI-based legal assistants, improving efficiency but raising concerns about job security.",
+      "rating": 4,
+      "publication_date": "2025-02-23",
+      "source": "Legal Tech Today"
+    },
+    {
+      "id": "24",
+      "title": "E-Sports Gains Olympic Recognition",
+      "author": "Alex Gamer",
+      "category": "Sports",
+      "length": "Medium",
+      "summary": "The International Olympic Committee announces plans to include competitive gaming as an official event.",
+      "rating": 4,
+      "publication_date": "2025-02-22",
+      "source": "E-Sports Daily"
+    },
+    {
+      "id": "25",
+      "title": "Self-Driving Trucks Hit the Highways",
+      "author": "Roady Tesla",
+      "category": "Technology",
+      "length": "Long",
+      "summary": "Autonomous freight trucks begin large-scale deployment, transforming the logistics industry.",
+      "rating": 4,
+      "publication_date": "2025-03-05",
+      "source": "Automated Transit Times"
+    },
+    {
+      "id": "26",
+      "title": "The Return of Vinyl: Why Records Are Outselling CDs",
+      "author": "Spin Jones",
+      "category": "Music",
+      "length": "Short",
+      "summary": "Despite the streaming era, vinyl record sales continue to surge, appealing to nostalgic and audiophile consumers alike.",
+      "rating": 4,
+      "publication_date": "2025-02-20",
+      "source": "Retro Sound Review"
+    },
+    {
+      "id": "27",
+      "title": "Climate Engineering: A Solution or a Risk?",
+      "author": "Dr. Gale Weatherly",
+      "category": "Science",
+      "length": "Long",
+      "summary": "Scientists propose geoengineering methods to combat climate change, but ethical concerns loom large.",
+      "rating": 2,
+      "publication_date": "2025-02-18",
+      "source": "Future Earth Report"
+    },
+    {
+      "id": "28",
+      "title": "Hollywood's Struggle with AI-Generated Actors",
+      "author": "Cine Reel",
+      "category": "Entertainment",
+      "length": "Medium",
+      "summary": "As AI-generated actors become more realistic, Hollywood debates the future of human performances.",
+      "rating": 3,
+      "publication_date": "2025-02-21",
+      "source": "Cinema Trends Weekly"
+    },
+    {
+      "id": "29",
+      "title": "The AI Arms Race Between Nations",
+      "author": "Major Conflict",
+      "category": "Politics",
+      "length": "Long",
+      "summary": "Governments around the world are investing heavily in AI-driven military technologies, raising ethical concerns.",
+      "rating": 5,
+      "publication_date": "2025-02-17",
+      "source": "Global Security Review"
+    },
+    {
+      "id": "30",
+      "title": "The Psychology Behind Viral TikTok Trends",
+      "author": "Dr. Meme",
+      "category": "Culture",
+      "length": "Medium",
+      "summary": "Researchers analyze why certain trends go viral and the psychological effects of short-form content.",
+      "rating": 4,
+      "publication_date": "2025-02-19",
+      "source": "Social Media Insights"
+    },
+      {
+        "id": "31",
+        "title": "AI in Education: Revolutionizing Classrooms",
+        "author": "Sophie Teach",
+        "category": "Technology",
+        "length": "Medium",
+        "summary": "AI-powered tutoring systems are transforming how students learn, offering personalized education experiences.",
+        "rating": 2,
+        "publication_date": "2025-03-06",
+        "source": "EdTech Times"
+      },
+      {
+        "id": "32",
+        "title": "The Gender Gap in Music Production",
+        "author": "Jazz Mellow",
+        "category": "Music",
+        "length": "Long",
+        "summary": "Despite increasing numbers of women in the industry, gender disparities persist in music production roles.",
+        "rating": 1,
+        "publication_date": "2025-03-07",
+        "source": "Music Industry Review"
+      },
+      {
+        "id": "33",
+        "title": "The Impact of Streaming on Movie Theaters",
+        "author": "Cinema Buff",
+        "category": "Entertainment",
+        "length": "Medium",
+        "summary": "Streaming services are reshaping how people watch movies, putting traditional theaters under pressure.",
+        "rating": 0,
+        "publication_date": "2025-03-08",
+        "source": "Film Insights"
+      },
+      {
+        "id": "34",
+        "title": "The Dark Side of AI in Hiring",
+        "author": "Sam Recruit",
+        "category": "Business",
+        "length": "Short",
+        "summary": "AI-based hiring systems are criticized for perpetuating bias and discrimination in the recruitment process.",
+        "rating": 3,
+        "publication_date": "2025-03-09",
+        "source": "HR Tech Daily"
+      },
+      {
+        "id": "35",
+        "title": "Next-Gen Vaccines: Targeting Multiple Diseases Simultaneously",
+        "author": "Dr. Eliza Vax",
+        "category": "Health",
+        "length": "Long",
+        "summary": "Researchers are working on vaccines capable of preventing several diseases at once, promising a major breakthrough.",
+        "rating": 3,
+        "publication_date": "2025-03-10",
+        "source": "Medical Progress Journal"
+      },
+      {
+        "id": "36",
+        "title": "AI Enhances Sports Training: The Future of Athletes",
+        "author": "SportTech Writer",
+        "category": "Sports",
+        "length": "Medium",
+        "summary": "AI is being used to analyze player performance, offering insights that could change how athletes train.",
+        "rating": 5,
+        "publication_date": "2025-03-11",
+        "source": "Sports Innovation News"
+      },
+      {
+        "id": "37",
+        "title": "Solar Energy Set to Dominate Global Power Markets",
+        "author": "Green Future",
+        "category": "Science",
+        "length": "Long",
+        "summary": "Global investment in solar energy is increasing as renewable sources become more efficient and affordable.",
+        "rating": 2,
+        "publication_date": "2025-03-12",
+        "source": "Eco Science Review"
+      },
+      {
+        "id": "38",
+        "title": "The Role of AI in Political Campaigns",
+        "author": "Alex Politica",
+        "category": "Politics",
+        "length": "Medium",
+        "summary": "AI tools are now being used to target voters and craft campaign strategies, revolutionizing political processes.",
+        "rating": 1,
+        "publication_date": "2025-03-13",
+        "source": "Political Tech Report"
+      },
+      {
+        "id": "39",
+        "title": "Apple’s New Privacy Features Spark Consumer Debate",
+        "author": "Tech Scribe",
+        "category": "Technology",
+        "length": "Short",
+        "summary": "Apple introduces new privacy features, but questions remain about how much control consumers actually have.",
+        "rating": 2,
+        "publication_date": "2025-03-14",
+        "source": "Tech World Today"
+      },
+      {
+        "id": "40",
+        "title": "Music Festivals Go Green: Sustainability in Live Events",
+        "author": "EcoSound",
+        "category": "Music",
+        "length": "Medium",
+        "summary": "As climate change awareness grows, music festivals are adopting green practices to reduce environmental impact.",
+        "rating": 3,
+        "publication_date": "2025-03-15",
+        "source": "Live Music Journal"
+      },
+      {
+        "id": "41",
+        "title": "How AI is Changing the Face of Movie Production",
+        "author": "Filmmaker AI",
+        "category": "Entertainment",
+        "length": "Long",
+        "summary": "AI is now involved in almost every aspect of movie production, from scriptwriting to CGI effects.",
+        "rating": 4,
+        "publication_date": "2025-03-16",
+        "source": "Hollywood Innovations"
+      },
+      {
+        "id": "42",
+        "title": "AI-Generated Music: The End of Traditional Composers?",
+        "author": "Beats AI",
+        "category": "Music",
+        "length": "Short",
+        "summary": "AI-generated music is gaining popularity, leading some to question the future of human composers in the industry.",
+        "rating": 4,
+        "publication_date": "2025-03-17",
+        "source": "Digital Music Trends"
+      },
+      {
+        "id": "43",
+        "title": "Startups Disrupt Healthcare with AI Diagnosis Tools",
+        "author": "Health Innovators",
+        "category": "Health",
+        "length": "Medium",
+        "summary": "AI diagnostic tools are revolutionizing healthcare by providing faster and more accurate diagnoses.",
+        "rating": 4,
+        "publication_date": "2025-03-18",
+        "source": "MedTech Review"
+      },
+      {
+        "id": "44",
+        "title": "E-commerce Giants Turn to AI for Customer Support",
+        "author": "Retail Tech",
+        "category": "Business",
+        "length": "Short",
+        "summary": "AI-powered chatbots are now handling a growing portion of customer service inquiries, reducing operational costs.",
+        "rating": 4,
+        "publication_date": "2025-03-19",
+        "source": "E-commerce Insider"
+      },
+      {
+        "id": "45",
+        "title": "How Exercise Is Changing with Wearable Technology",
+        "author": "FitTech Guru",
+        "category": "Health",
+        "length": "Medium",
+        "summary": "Wearable devices are now tracking everything from heart rate to sleep patterns, transforming the way we approach fitness.",
+        "rating": 4,
+        "publication_date": "2025-03-20",
+        "source": "Health Tech Review"
+      },
+      {
+        "id": "46",
+        "title": "China's AI-Powered Surveillance State: What’s at Stake?",
+        "author": "Beijing Watch",
+        "category": "Politics",
+        "length": "Long",
+        "summary": "China’s use of AI surveillance technology raises concerns about privacy, freedom, and human rights.",
+        "rating": 4,
+        "publication_date": "2025-03-21",
+        "source": "Global Politics Network"
+      },
+      {
+        "id": "47",
+        "title": "The Social Impact of Virtual Reality Communities",
+        "author": "Virtual Voice",
+        "category": "Culture",
+        "length": "Medium",
+        "summary": "Virtual reality communities are changing social dynamics, with both positive and negative consequences for human interaction.",
+        "rating": 4,
+        "publication_date": "2025-03-22",
+        "source": "Digital Society Journal"
+      },
+      {
+        "id": "48",
+        "title": "Athletes Use AI to Maximize Performance Recovery",
+        "author": "Recovery Coach",
+        "category": "Sports",
+        "length": "Short",
+        "summary": "AI tools help athletes optimize recovery time and prevent injuries, changing the landscape of professional sports.",
+        "rating": 4,
+        "publication_date": "2025-03-23",
+        "source": "Sports Science Digest"
+      }
+    
+]
