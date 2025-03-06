@@ -71,13 +71,37 @@
         /* Summary */
         .article-body {
             font-size: 1.1rem;
-            text-align: justify;
-            line-height: 1.6;
-            color: #d0d0d0;
-            padding: 10px 0;
+            line-height: 1.7;
+            color: #ddd;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            display: none;
         }
 
-        /* Button */
+        .read-more {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+        
+        .read-more:hover {
+            background: rgba(176, 136, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(176, 136, 255, 0.3);
+            border-color: #B088FF;
+        }
+
         .back-button {
             display: inline-block;
             background: rgba(255, 255, 255, 0.1);
@@ -366,8 +390,134 @@
                 document.querySelector(".article-container").innerHTML = `<p>Error loading article.</p>`;
                 return;
             }
+        
+            let isLoggedIn = false;
+            let username = null;
+        
+            fetch('/api/user', { credentials: 'include' })
+                .then(response => {
+                    if (response.ok) return response.json();
+                    throw new Error('Not logged in');
+                })
+                .then(user => {
+                    isLoggedIn = true;
+                    username = user.username;
+                })
+                .catch(() => {
+                    isLoggedIn = false;
+                })
+                .finally(() => {
+                    fetch(`/api/article/${articleId}`)
+                        .then(response => {
+                            if (!response.ok) throw new Error("Failed to load article");
+                            return response.json();
+                        })
+                        .then(article => {
+                            if (article.error) throw new Error(article.error);
+                            document.getElementById("article-title").textContent = article.title;
+                            document.getElementById("article-meta").textContent = `By ${article.author} | Source: ${article.source} | Reading Time: ${article.length} min`;
+                            document.getElementById("article-summary").textContent = article.summary;
+                            document.getElementById("article-body").textContent = article.body;
 
-            fetch(`/api/article/${articleId}`)
+                            const mockReviews = [
+                                {
+                                    review_id: 1,
+                                    article_id: articleId,
+                                    verified_username: "Reviewer1",
+                                    overall_rating: 4,
+                                    quality_rating: 4,
+                                    bias_rating: 3,
+                                    accuracy_rating: 5,
+                                    value_rating: 4,
+                                    review: "Solid overview but could use more balanced perspectives."
+                                },
+                                {
+                                    review_id: 2,
+                                    article_id: articleId,
+                                    verified_username: "Reviewer2",
+                                    overall_rating: 3,
+                                    quality_rating: 3,
+                                    bias_rating: 4,
+                                    accuracy_rating: 3,
+                                    value_rating: 3,
+                                    review: "Decent article, but lacks depth in some areas."
+                                }
+                            ];
+
+                            const aggOverall = mockReviews.length > 0
+                                ? mockReviews.reduce((sum, r) => sum + r.overall_rating, 0) / mockReviews.length
+                                : article.rating || 0;
+                    //<!-- test comment-->
+                            const aggQuality = mockReviews.length > 0
+                                ? mockReviews.reduce((sum, r) => sum + r.quality_rating, 0) / mockReviews.length
+                                : 0;
+                            const aggBias = mockReviews.length > 0
+                                ? mockReviews.reduce((sum, r) => sum + r.bias_rating, 0) / mockReviews.length
+                                : 0;
+                            const aggAccuracy = mockReviews.length > 0
+                                ? mockReviews.reduce((sum, r) => sum + r.accuracy_rating, 0) / mockReviews.length
+                                : 0;
+                            const aggValue = mockReviews.length > 0
+                                ? mockReviews.reduce((sum, r) => sum + r.value_rating, 0) / mockReviews.length
+                                : 0;
+
+                            document.getElementById('rating-overall').appendChild(generateStars(aggOverall));
+                            document.getElementById('rating-quality-agg').appendChild(generateStars(aggQuality));
+                            document.getElementById('rating-bias-agg').appendChild(generateStars(aggBias));
+                            document.getElementById('rating-accuracy-agg').appendChild(generateStars(aggAccuracy));
+                            document.getElementById('rating-value-agg').appendChild(generateStars(aggValue));
+
+                            const reviewList = document.getElementById('review-list');
+                            mockReviews.forEach(review => {
+                                reviewList.appendChild(createReviewItem(review));
+                            });
+
+                            loadComments();
+                        })
+                        .catch(error => {
+                            console.error("Error loading article:", error);
+                            document.querySelector(".article-container").innerHTML = `<p>Error loading article.</p>`;
+                        });
+                });
+        
+            const commentInput = document.querySelector('.comment-input');
+            const charCount = document.getElementById('char-count');
+            const commentSubmit = document.querySelector('.comment-submit');
+            const commentList = document.getElementById('comment-list');
+            const warning = document.getElementById('comment-warning');
+        
+            commentInput.addEventListener('input', () => {
+                const remaining = 500 - commentInput.value.length;
+                charCount.textContent = `${remaining} characters remaining`;
+            });
+        
+            commentSubmit.addEventListener('click', () => {
+                const commentText = commentInput.value.trim();
+                if (!commentText) return;
+        
+                const offensiveWords = [
+                    'badword1', 'badword2', 'spam',
+                    'jerk', 'idiot', 'stupid',
+                    'sewanee', 'yankees', 'michigan',
+                    'friggin', 'frigg', 'friggoff'
+                ];
+                const lowerText = commentText.toLowerCase();
+                const isOffensive = offensiveWords.some(word => lowerText.includes(word));
+        
+                if (isOffensive) {
+                    warning.textContent = lowerText.includes('sewanee')
+                        ? 'Warning: Comment contains offensive language or spam and cannot be posted. Only legitimate colleges will be tolerated.'
+                        : 'Warning: Comment contains offensive language or spam and cannot be posted.';
+                    warning.style.display = 'block';
+                    return;
+                }
+        
+                fetch(`/api/article/${articleId}/comments`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: commentText }),
+                    credentials: 'include'
+                })
                 .then(response => {
                     if (!response.ok) throw new Error('Failed to post comment');
                     return response.json();
