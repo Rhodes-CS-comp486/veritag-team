@@ -81,10 +81,10 @@ def load_articles_from_json():
             body = LoremLong
             length_int = 15
         cursor.execute(
-            '''INSERT OR IGNORE INTO articles (id, title, author, category, length, summary, rating, source, publication_date) 
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+            '''INSERT OR IGNORE INTO articles (id, title, author, category, length, summary, rating, source, publication_date, body) 
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
             (article["id"], article["title"], article["author"], article["category"], length_int,
-             article["summary"], article["rating"], article["source"], article["publication_date"])
+             article["summary"], article["rating"], article["source"], article["publication_date"], body)
         )
     db.commit()
     db.close()
@@ -352,3 +352,7 @@ def logout():
 if __name__ == '__main__':
     init_db()
     app.run(debug=True)
+else:
+    # Initialize when imported
+    with app.app_context():
+        init_db()
