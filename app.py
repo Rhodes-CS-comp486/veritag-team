@@ -81,10 +81,10 @@ def load_articles_from_json():
             body = LoremLong
             length_int = 15
         cursor.execute(
-            '''INSERT OR IGNORE INTO articles (id, title, author, category, length, summary, rating, source, publication_date, body) 
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+            '''INSERT OR IGNORE INTO articles (id, title, author, category, length, summary, rating, source, publication_date) 
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
             (article["id"], article["title"], article["author"], article["category"], length_int,
-             article["summary"], article["rating"], article["source"], article["publication_date"], body)
+             article["summary"], article["rating"], article["source"], article["publication_date"])
         )
     db.commit()
     db.close()
