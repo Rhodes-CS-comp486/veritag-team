@@ -436,7 +436,18 @@
         {% else %}
             <a href="/browse" class="back-button"><i class="fas fa-arrow-left"></i> Back to Articles</a>
         {% endif %}
+        {% if is_verified %}
+            <h3>Your Review</h3>
+            <textarea id="review-text" name="review">{{ user_review }}</textarea>
+            <button onclick="submitReview('{{ article.id }}')">Submit Review</button>
+        {% endif %}
 
+        <h3>Verified User Reviews</h3>
+        <ul id="reviews-list">
+            {% for review in reviews %}
+                <li><b>{{ review.username }}</b>: {{ review.review }}</li>
+            {% endfor %}
+        </ul>
         <div class="article-header" id="article-title">Loading...</div>
         <div class="article-meta" id="article-meta"></div>
         
@@ -474,6 +485,21 @@
     </div>
 
     <script>
+        function submitReview(articleId) {
+    const reviewText = document.getElementById("review-text").value;
+    fetch(`/api/article/${articleId}/review`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ review: reviewText })
+    }).then(response => response.json()).then(data => {
+        if (data.success) {
+            alert("Review submitted successfully!");
+            location.reload();
+        } else {
+            alert("Error: " + data.error);
+        }
+    });
+}
         function generateStars(rating) {
             const container = document.createElement('span');
             const fullStars = Math.floor(rating);
@@ -563,102 +589,123 @@
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-            const articleId = window.location.pathname.split("/").pop();
-        
-            if (!articleId || isNaN(articleId)) {
-                console.error("Invalid article ID:", articleId);
-                document.querySelector(".article-container").innerHTML = `<p>Error loading article.</p>`;
-                return;
-            }
-        
-            let isLoggedIn = false;
-            let username = null;
-        
-            fetch('/api/user', { credentials: 'include' })
+    const articleId = window.location.pathname.split("/").pop();
+
+    if (!articleId || isNaN(articleId)) {
+        console.error("Invalid article ID:", articleId);
+        document.querySelector(".article-container").innerHTML = `<p>Error loading article.</p>`;
+        return;
+    }
+
+    let isLoggedIn = false;
+    let username = null;
+
+    fetch('/api/user', { credentials: 'include' })
+        .then(response => {
+            if (response.ok) return response.json();
+            throw new Error('Not logged in');
+        })
+        .then(user => {
+            isLoggedIn = true;
+            username = user.username;
+        })
+        .catch(() => {
+            isLoggedIn = false;
+        })
+        .finally(() => {
+            // Fetch the article
+            fetch(`/api/article/${articleId}`)
                 .then(response => {
-                    if (response.ok) return response.json();
-                    throw new Error('Not logged in');
+                    if (!response.ok) throw new Error("Failed to load article");
+                    return response.json();
                 })
-                .then(user => {
-                    isLoggedIn = true;
-                    username = user.username;
-                })
-                .catch(() => {
-                    isLoggedIn = false;
-                })
-                .finally(() => {
-                    fetch(`/api/article/${articleId}`)
+                .then(article => {
+                    if (article.error) throw new Error(article.error);
+                    document.getElementById("article-title").textContent = article.title;
+                    document.getElementById("article-meta").textContent = `By ${article.author} | Source: ${article.source} | Reading Time: ${article.length} min`;
+                    document.getElementById("article-summary").textContent = article.summary;
+                    document.getElementById("article-body").textContent = article.body;
+
+                    // Fetch the reviews for the article
+                    fetch(`/api/article/${articleId}/reviews`)
                         .then(response => {
-                            if (!response.ok) throw new Error("Failed to load article");
+                            if (!response.ok) throw new Error("Failed to load reviews");
                             return response.json();
                         })
-                        .then(article => {
-                            if (article.error) throw new Error(article.error);
-                            document.getElementById("article-title").textContent = article.title;
-                            document.getElementById("article-meta").textContent = `By ${article.author} | Source: ${article.source} | Reading Time: ${article.length} min`;
-                            document.getElementById("article-summary").textContent = article.summary;
-                            document.getElementById("article-body").textContent = article.body;
-
-                            const mockReviews = [
-                                {
-                                    review_id: 1,
-                                    article_id: articleId,
-                                    verified_username: "Reviewer1",
-                                    overall_rating: 4,
-                                    quality_rating: 4,
-                                    bias_rating: 3,
-                                    accuracy_rating: 5,
-                                    value_rating: 4,
-                                    review: "Solid overview but could use more balanced perspectives."
-                                },
-                                {
-                                    review_id: 2,
-                                    article_id: articleId,
-                                    verified_username: "Reviewer2",
-                                    overall_rating: 3,
-                                    quality_rating: 3,
-                                    bias_rating: 4,
-                                    accuracy_rating: 3,
-                                    value_rating: 3,
-                                    review: "Decent article, but lacks depth in some areas."
-                                }
-                            ];
-
-                            const aggOverall = mockReviews.length > 0
-                                ? mockReviews.reduce((sum, r) => sum + r.overall_rating, 0) / mockReviews.length
-                                : article.rating || 0;
-                    //<!-- test comment-->
-                            const aggQuality = mockReviews.length > 0
-                                ? mockReviews.reduce((sum, r) => sum + r.quality_rating, 0) / mockReviews.length
-                                : 0;
-                            const aggBias = mockReviews.length > 0
-                                ? mockReviews.reduce((sum, r) => sum + r.bias_rating, 0) / mockReviews.length
-                                : 0;
-                            const aggAccuracy = mockReviews.length > 0
-                                ? mockReviews.reduce((sum, r) => sum + r.accuracy_rating, 0) / mockReviews.length
-                                : 0;
-                            const aggValue = mockReviews.length > 0
-                                ? mockReviews.reduce((sum, r) => sum + r.value_rating, 0) / mockReviews.length
-                                : 0;
-
-                            document.getElementById('rating-overall').appendChild(generateStars(aggOverall));
-                            document.getElementById('rating-quality-agg').appendChild(generateStars(aggQuality));
-                            document.getElementById('rating-bias-agg').appendChild(generateStars(aggBias));
-                            document.getElementById('rating-accuracy-agg').appendChild(generateStars(aggAccuracy));
-                            document.getElementById('rating-value-agg').appendChild(generateStars(aggValue));
-
+                        .then(reviews => {
+                            // Clear the existing review list
                             const reviewList = document.getElementById('review-list');
-                            mockReviews.forEach(review => {
+                            reviewList.innerHTML = '';
+
+                            if (reviews.length === 0) {
+                                reviewList.innerHTML = "<p>No reviews yet.</p>";
+                                return;
+                            }
+
+                            reviews.forEach(review => {
                                 reviewList.appendChild(createReviewItem(review));
                             });
-
-                            loadComments();
                         })
                         .catch(error => {
-                            console.error("Error loading article:", error);
-                            document.querySelector(".article-container").innerHTML = `<p>Error loading article.</p>`;
+                            console.error("Error loading reviews:", error);
+                            document.getElementById('review-list').innerHTML = "<p>Failed to load reviews.</p>";
                         });
+
+                    // Display review form for logged-in users
+                    if (isLoggedIn) {
+                        const reviewBox = document.getElementById("review-box");
+                        reviewBox.style.display = "block"; // Make the review box visible for logged-in users
+                    }
+                })
+                .catch(error => {
+                    console.error("Error loading article:", error);
+                    document.querySelector(".article-container").innerHTML = `<p>Error loading article.</p>`;
                 });
+
+            // Submit the review
+            document.getElementById("submit-review").addEventListener("click", function() {
+                const reviewText = document.getElementById("review-body").value.trim();
+
+                if (!reviewText) {
+                    alert("Please write a review before submitting.");
+                    return;
+                }
+
+                const reviewData = {
+                    article_id: articleId,
+                    username: username,
+                    review_body: reviewText,
+                    overall_rating: 3, // Placeholder for ratings, you can update this logic
+                    quality_rating: 3,
+                    bias_rating: 3,
+                    accuracy_rating: 3,
+                    value_rating: 3
+                };
+
+                fetch(`/api/article/${articleId}/reviews`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(reviewData)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Review submitted successfully!");
+                        document.getElementById("review-body").value = ''; // Clear the textarea
+                    } else {
+                        throw new Error("Failed to submit review");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error submitting review:", error);
+                    alert("There was an error submitting your review. Please try again.");
+                });
+            });
+        });
+});
+
+
         
             const commentInput = document.querySelector('.comment-input');
             const charCount = document.getElementById('char-count');

@@ -3,6 +3,7 @@ import random
 from flask import Flask, render_template, redirect, url_for, request, flash, jsonify, session
 import sqlite3
 import json
+
 from flask_session import Session
 
 app = Flask(__name__)
@@ -51,6 +52,16 @@ def init_db():
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         FOREIGN KEY (article_id) REFERENCES articles(id),
                         FOREIGN KEY (user_id) REFERENCES users(id))''')
+        db.execute('''CREATE TABLE IF NOT EXISTS reviews
+                       (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        article_id TEXT NOT NULL,
+                        user_id INTEGER NOT NULL,
+                        username TEXT NOT NULL,
+                        review TEXT NOT NULL,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        FOREIGN KEY (article_id) REFERENCES articles(id),
+                        FOREIGN KEY (user_id) REFERENCES users(id),
+                        UNIQUE(article_id, user_id))''')  # Ensure one review per user per article
         db.commit()
         load_articles_from_json()
 
@@ -220,16 +231,26 @@ def post_comment(article_id):
         return jsonify(dict(new_comment)), 201
     except sqlite3.Error as e:
         return jsonify({"error": "Failed to post comment: " + str(e)}), 500
-
+'''
 @app.route('/article/<article_id>')
 def article_page(article_id):
     db = get_db()
+    article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
+    reviews = db.execute('SELECT username, review FROM reviews WHERE article_id = ?', (article_id,)).fetchall()
+
+    user_review = None
     is_verified = False
     if 'user_id' in session:
         user = db.execute('SELECT verified_code FROM users WHERE id = ?', (session['user_id'],)).fetchone()
         if user and user['verified_code'] != '':
             is_verified = True
-    return render_template('article.html', is_verified=is_verified)
+            user_review = db.execute(
+                'SELECT review FROM reviews WHERE article_id = ? AND user_id = ?',
+                (article_id, session['user_id'])
+            ).fetchone()
+
+    return render_template('article.html', article=article, reviews=reviews, is_verified=is_verified, user_review=user_review)
+'''
 
 @app.route('/browse')
 def browse():
@@ -321,13 +342,31 @@ def categories():
         categories[category].append(article)
     return render_template('categories.html', categories=categories)
 
-@app.route('/article/<int:article_id>', endpoint='view_article')
+
+@app.route('/article/<article_id>')
 def view_article(article_id):
     db = get_db()
     article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
+
     if article is None:
         return render_template('404.html'), 404
-    return render_template('article.html', article=article)
+
+    reviews = db.execute('SELECT username, review FROM reviews WHERE article_id = ?', (article_id,)).fetchall()
+
+    user_review = None
+    is_verified = False
+    if 'user_id' in session:
+        user = db.execute('SELECT verified_code FROM users WHERE id = ?', (session['user_id'],)).fetchone()
+        if user and user['verified_code'] != '':
+            is_verified = True
+            user_review = db.execute(
+                'SELECT review FROM reviews WHERE article_id = ? AND user_id = ?',
+                (article_id, session['user_id'])
+            ).fetchone()
+
+    return render_template('article.html', article=article, reviews=reviews, is_verified=is_verified,
+                           user_review=user_review)
+
 
 @app.route('/explore')
 def explore():
@@ -348,6 +387,55 @@ def logout():
     flash('You have been logged out.', 'success')
     print("Debug: User logged out, session cleared")
     return redirect(url_for('index'))
+
+
+@app.route('/submit_review', methods=['POST'])
+def submit_review():
+    # Ensure user is logged in
+    if 'user_id' not in session:
+        return jsonify({'error': 'User not logged in'}), 401
+
+    # Get review data from the form (or the request body for JSON)
+    article_id = request.form.get('article_id')
+    overall_rating = request.form.get('overall_rating')
+    quality_rating = request.form.get('quality_rating')
+    bias_rating = request.form.get('bias_rating')
+    accuracy_rating = request.form.get('accuracy_rating')
+    value_rating = request.form.get('value_rating')
+    review_text = request.form.get('review_text')
+
+    if not all([article_id, overall_rating, quality_rating, bias_rating, accuracy_rating, value_rating, review_text]):
+        return jsonify({'error': 'Missing required fields'}), 400
+
+    # Connect to the database
+    conn = sqlite3.connect('your_database.db')
+    cursor = conn.cursor()
+
+    # Insert the review into the database
+    cursor.execute('''INSERT INTO reviews (article_id, user_id, overall_rating, quality_rating, bias_rating, accuracy_rating, value_rating, review_text)
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
+                   (article_id, session['user_id'], overall_rating, quality_rating, bias_rating, accuracy_rating,
+                    value_rating, review_text))
+
+    conn.commit()
+    conn.close()
+
+    # Return a response (optional, you could redirect to article page or send success message)
+    flash('Review submitted successfully!', 'success')
+    return jsonify({'message': 'Review submitted successfully'}), 200
+
+
+@app.route('/api/article/<article_id>/reviews', methods=['GET'])
+def get_reviews(article_id):
+    db = get_db()
+    reviews = db.execute('''
+        SELECT username, review, created_at FROM reviews 
+        WHERE article_id = ? ORDER BY created_at DESC
+    ''', (article_id,)).fetchall()
+
+    reviews_list = [dict(review) for review in reviews]
+    return jsonify({"reviews": reviews_list})
+
 
 if __name__ == '__main__':
     init_db()
