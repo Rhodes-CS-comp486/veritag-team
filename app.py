@@ -69,22 +69,29 @@ import sqlite3
 
 
 def insert_test_reviews():
-    # Test values
     db = get_db()
     reviews = [
-        ('article_1', 1, 'john_doe', 5, 'Excellent article! Very informative and well-written.'),
-        ('article_2', 2, 'jane_smith', 4, 'Good article, but could use more examples.'),
-        ('article_3', 3, 'mark_jones', 3, 'Average article. Needs improvement in clarity.'),
-        ('article_4', 4, 'emily_brown', 2, 'Not very helpful. Couldn\'t follow the arguments.'),
-        ('article_5', 5, 'alice_williams', 1, 'Poorly written and hard to understand.')
+        ('1', 1, 'john_doe', 5, 'Excellent article! Very informative and well-written.'),
+        ('2', 2, 'jane_smith', 4, 'Good article, but could use more examples.'),
+        ('3', 3, 'mark_jones', 3, 'Average article. Needs improvement in clarity.'),
+        ('4', 4, 'emily_brown', 2, 'Not very helpful. Couldn\'t follow the arguments.'),
+        ('5', 5, 'alice_williams', 1, 'Poorly written and hard to understand.')
     ]
 
-    # Insert test reviews
     for review in reviews:
-        db.execute('''
-            INSERT INTO reviews (article_id, user_id, username, rating, text)
-            VALUES (?, ?, ?, ?, ?)
-        ''', review)
+        article_id, user_id, username, rating, text = review
+
+        # Check if review already exists
+        existing_review = db.execute('''
+            SELECT 1 FROM reviews 
+            WHERE article_id = ? AND user_id = ?
+        ''', (article_id, user_id)).fetchone()
+
+        if not existing_review:  # Only insert if review doesn't exist
+            db.execute('''
+                INSERT INTO reviews (article_id, user_id, username, rating, text)
+                VALUES (?, ?, ?, ?, ?)
+            ''', review)
 
     db.commit()
 
@@ -384,6 +391,60 @@ def logout():
     flash('You have been logged out.', 'success')
     print("Debug: User logged out, session cleared")
     return redirect(url_for('index'))
+
+def get_article_by_id(article_id):
+    db = get_db()
+    article = db.execute("SELECT * FROM articles WHERE id = ?", (article_id,)).fetchone()
+    return article
+
+
+@app.route('/reviews')
+def reviews_page():
+    db = get_db()
+    article_id = request.args.get('article_id')
+
+    if not article_id:
+        return "Article ID is required", 400
+
+    article = get_article_by_id(article_id)  # Fetch article details
+    if not article:
+        return "Article not found", 404
+
+    user_id = session.get('user_id')  # Get user_id from session
+    user = None  # Default to None if not logged in
+
+    if user_id:  # Fetch user details if logged in
+        user = db.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
+
+    # Fetch all reviews for this article
+    reviews = db.execute('SELECT * FROM reviews WHERE article_id = ?', (article_id,)).fetchall()
+
+    return render_template("reviews.html", article=article, user=user, reviews=reviews)
+
+
+@app.route('/submit_review', methods=['POST'])
+def submit_review():
+    db = get_db()
+
+    user_id = session.get('user_id')
+    if not user_id:
+        return "Unauthorized", 403
+
+    article_id = request.form.get('article_id')
+    rating = request.form.get('rating')
+    text = request.form.get('text')
+
+    if not (article_id and rating and text):
+        return "Missing fields", 400
+
+    db.execute('''
+        INSERT INTO reviews (article_id, user_id, username, rating, text)
+        VALUES (?, ?, ?, ?, ?)
+    ''', (article_id, user_id, session.get('username'), rating, text))
+
+    db.commit()
+    return redirect(url_for('reviews_page', article_id=article_id))
+
 
 if __name__ == '__main__':
     init_db()

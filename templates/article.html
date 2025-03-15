@@ -459,7 +459,8 @@
 
         <div class="article-summary" id="article-summary"></div>
         <button class="read-more" onclick="toggleBody()">Read More</button>
-        <button id="view-reviews" style="display: none;" onclick="redirectToReviews()">
+        <button id="view-reviews-btn">Read Reviews</button>
+
     View Reviews
         </button>
         <div class="article-body" id="article-body"></div>
@@ -477,6 +478,10 @@
     </div>
 
     <script>
+        document.getElementById("view-reviews-btn").addEventListener("click", function() {
+    const articleId = "{{ article.id }}"; // Assuming Jinja2 template
+    window.location.href = `/reviews?article_id=${articleId}`;
+});
         document.addEventListener("DOMContentLoaded", function () {
         const userIsLoggedIn = /* Logic to check if user is logged in */ true;
         const articleId = /* Get the article ID from the page */ "123";

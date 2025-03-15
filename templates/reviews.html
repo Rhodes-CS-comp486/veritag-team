@@ -1,62 +1,179 @@
-<!-- reviews.html - Reviews Page -->
 <!DOCTYPE html>
 <html lang="en">
+<style>
+    body.dark-theme {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+h1, h2 {
+    color: #ffffff;
+}
+
+.back-button {
+    color: #90caf9;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.back-button:hover {
+    text-decoration: underline;
+}
+
+.reviews-section {
+    margin-top: 20px;
+}
+
+.review-list {
+    list-style: none;
+    padding: 0;
+}
+
+.review-item {
+    background-color: #252525;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+}
+
+.review-username {
+    font-weight: bold;
+    color: #bb86fc;
+}
+
+.review-rating {
+    color: #ffd700;
+}
+
+.review-text {
+    margin: 10px 0;
+}
+
+.review-date {
+    font-size: 12px;
+    color: #bdbdbd;
+}
+
+.no-reviews {
+    font-style: italic;
+    color: #bdbdbd;
+}
+
+.review-form {
+    margin-top: 30px;
+    padding: 15px;
+    background-color: #252525;
+    border-radius: 6px;
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #666;
+    border-radius: 4px;
+    background-color: #333;
+    color: #fff;
+}
+
+.submit-btn {
+    background-color: #bb86fc;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.submit-btn:hover {
+    background-color: #9c64fc;
+}
+
+.login-prompt {
+    text-align: center;
+    font-size: 14px;
+    color: #ff8c00;
+}
+
+</style>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reviews</title>
+    <title>Reviews - {{ article.title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body>
-    <h1>Article Reviews</h1>
-    <div id="reviews-list"></div>
+<body class="dark-theme">
+    <div class="container">
+        <header>
+            <h1>Reviews for "{{ article.title }}"</h1>
+            <a href="{{ url_for('article_page', article_id=article.id) }}" class="back-button">← Back to Article</a>
+        </header>
 
-    <div id="review-form" style="display: none;">
-        <h2>Submit a Review</h2>
-        <input type="number" id="rating" min="1" max="5" placeholder="Rating (1-5)">
-        <textarea id="review-text" placeholder="Write your review..."></textarea>
-        <button onclick="submitReview()">Submit</button>
+        <section class="reviews-section">
+            {% if reviews %}
+                <h2>Reader Reviews</h2>
+                <ul class="review-list">
+                    {% for review in reviews %}
+                        <li class="review-item">
+                            <div class="review-header">
+                                <strong class="review-username">{{ review.username }}</strong>
+                                <span class="review-rating">⭐ {{ review.rating }}/5</span>
+                            </div>
+                            <p class="review-text">{{ review.text }}</p>
+                            <small class="review-date">Posted on {{ review.created_at }}</small>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="no-reviews">No reviews yet. Be the first to review!</p>
+            {% endif %}
+        </section>
+
+        {% if user %}
+            <section class="review-form">
+                <h2>Leave a Review</h2>
+                <form action="{{ url_for('submit_review') }}" method="POST">
+                    <input type="hidden" name="article_id" value="{{ article.id }}">
+                    <label for="rating">Rating (1-5):</label>
+                    <input type="number" id="rating" name="rating" min="1" max="5" required>
+                    <label for="review_text">Your Review:</label>
+                    <textarea id="review_text" name="text" rows="4" required></textarea>
+                    <button type="submit" class="submit-btn">Submit Review</button>
+                </form>
+            </section>
+        {% else %}
+            <p class="login-prompt">Log in to leave a review.</p>
+        {% endif %}
     </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const urlParams = new URLSearchParams(window.location.search);
-            const articleId = urlParams.get("article_id");
-            const userIsVerified = /* Logic to check if user is verified */ true;
-
-            fetchReviews(articleId);
-
-            if (userIsVerified) {
-                document.getElementById("review-form").style.display = "block";
-            }
-        });
-
-        function fetchReviews(articleId) {
-            fetch(`/api/reviews?article_id=${articleId}`)
-                .then(response => response.json())
-                .then(data => {
-                    const reviewsList = document.getElementById("reviews-list");
-                    reviewsList.innerHTML = "";
-                    data.forEach(review => {
-                        const reviewElement = document.createElement("div");
-                        reviewElement.innerHTML = `<strong>${review.username}</strong>: ${review.rating}/5 - ${review.text}`;
-                        reviewsList.appendChild(reviewElement);
-                    });
-                });
-        }
-
-        function submitReview() {
-            const articleId = new URLSearchParams(window.location.search).get("article_id");
-            const rating = document.getElementById("rating").value;
-            const text = document.getElementById("review-text").value;
-
-            fetch("/api/reviews", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ article_id: articleId, rating, text })
-            })
-            .then(response => response.json())
-            .then(() => fetchReviews(articleId));
-        }
-    </script>
 </body>
 </html>
