@@ -422,6 +422,18 @@
             border: 1px solid rgba(255, 68, 68, 0.3);
             animation: fadeIn 0.3s ease-in;
         }
+        .view-reviews-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
 
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -459,10 +471,9 @@
 
         <div class="article-summary" id="article-summary"></div>
         <button class="read-more" onclick="toggleBody()">Read More</button>
-        <button id="view-reviews-btn">Read Reviews</button>
+        <button id="view-reviews-btn">Reviews</button>
 
-    View Reviews
-        </button>
+
         <div class="article-body" id="article-body"></div>
 
         <div class="comments-section">
