@@ -51,8 +51,44 @@ def init_db():
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         FOREIGN KEY (article_id) REFERENCES articles(id),
                         FOREIGN KEY (user_id) REFERENCES users(id))''')
+        db.execute('''CREATE TABLE IF NOT EXISTS reviews
+                       (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        article_id TEXT NOT NULL,
+                        user_id INTEGER NOT NULL,
+                        username TEXT NOT NULL,
+                        rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
+                        text TEXT NOT NULL,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        FOREIGN KEY (article_id) REFERENCES articles(id),
+                        FOREIGN KEY (user_id) REFERENCES users(id))''')
         db.commit()
         load_articles_from_json()
+
+
+import sqlite3
+
+
+def insert_test_reviews():
+    # Test values
+    db = get_db()
+    reviews = [
+        ('article_1', 1, 'john_doe', 5, 'Excellent article! Very informative and well-written.'),
+        ('article_2', 2, 'jane_smith', 4, 'Good article, but could use more examples.'),
+        ('article_3', 3, 'mark_jones', 3, 'Average article. Needs improvement in clarity.'),
+        ('article_4', 4, 'emily_brown', 2, 'Not very helpful. Couldn\'t follow the arguments.'),
+        ('article_5', 5, 'alice_williams', 1, 'Poorly written and hard to understand.')
+    ]
+
+    # Insert test reviews
+    for review in reviews:
+        db.execute('''
+            INSERT INTO reviews (article_id, user_id, username, rating, text)
+            VALUES (?, ?, ?, ?, ?)
+        ''', review)
+
+    db.commit()
+
+
 
 def load_articles_from_json():
     json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dev-articles.json')
@@ -351,6 +387,7 @@ def logout():
 
 if __name__ == '__main__':
     init_db()
+    insert_test_reviews()
     app.run(debug=True)
 else:
     # Initialize when imported

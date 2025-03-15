@@ -439,7 +439,7 @@
 
         <div class="article-header" id="article-title">Loading...</div>
         <div class="article-meta" id="article-meta"></div>
-        
+
         <div class="rating-card" onclick="this.classList.toggle('flipped')">
             <div class="card-inner">
                 <div class="card-front">
@@ -459,6 +459,9 @@
 
         <div class="article-summary" id="article-summary"></div>
         <button class="read-more" onclick="toggleBody()">Read More</button>
+        <button id="view-reviews" style="display: none;" onclick="redirectToReviews()">
+    View Reviews
+        </button>
         <div class="article-body" id="article-body"></div>
 
         <div class="comments-section">
@@ -474,6 +477,18 @@
     </div>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const userIsLoggedIn = /* Logic to check if user is logged in */ true;
+        const articleId = /* Get the article ID from the page */ "123";
+
+        if (userIsLoggedIn) {
+            document.getElementById("view-reviews").style.display = "block";
+        }
+    });
+
+    function redirectToReviews() {
+        window.location.href = `/reviews.html?article_id=${articleId}`;
+    }
         function generateStars(rating) {
             const container = document.createElement('span');
             const fullStars = Math.floor(rating);
@@ -564,16 +579,16 @@
 
         document.addEventListener("DOMContentLoaded", function() {
             const articleId = window.location.pathname.split("/").pop();
-        
+
             if (!articleId || isNaN(articleId)) {
                 console.error("Invalid article ID:", articleId);
                 document.querySelector(".article-container").innerHTML = `<p>Error loading article.</p>`;
                 return;
             }
-        
+
             let isLoggedIn = false;
             let username = null;
-        
+
             fetch('/api/user', { credentials: 'include' })
                 .then(response => {
                     if (response.ok) return response.json();

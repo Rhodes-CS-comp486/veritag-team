@@ -1,0 +1,62 @@
+<!-- reviews.html - Reviews Page -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews</title>
+</head>
+<body>
+    <h1>Article Reviews</h1>
+    <div id="reviews-list"></div>
+
+    <div id="review-form" style="display: none;">
+        <h2>Submit a Review</h2>
+        <input type="number" id="rating" min="1" max="5" placeholder="Rating (1-5)">
+        <textarea id="review-text" placeholder="Write your review..."></textarea>
+        <button onclick="submitReview()">Submit</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const articleId = urlParams.get("article_id");
+            const userIsVerified = /* Logic to check if user is verified */ true;
+
+            fetchReviews(articleId);
+
+            if (userIsVerified) {
+                document.getElementById("review-form").style.display = "block";
+            }
+        });
+
+        function fetchReviews(articleId) {
+            fetch(`/api/reviews?article_id=${articleId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const reviewsList = document.getElementById("reviews-list");
+                    reviewsList.innerHTML = "";
+                    data.forEach(review => {
+                        const reviewElement = document.createElement("div");
+                        reviewElement.innerHTML = `<strong>${review.username}</strong>: ${review.rating}/5 - ${review.text}`;
+                        reviewsList.appendChild(reviewElement);
+                    });
+                });
+        }
+
+        function submitReview() {
+            const articleId = new URLSearchParams(window.location.search).get("article_id");
+            const rating = document.getElementById("rating").value;
+            const text = document.getElementById("review-text").value;
+
+            fetch("/api/reviews", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ article_id: articleId, rating, text })
+            })
+            .then(response => response.json())
+            .then(() => fetchReviews(articleId));
+        }
+    </script>
+</body>
+</html>
