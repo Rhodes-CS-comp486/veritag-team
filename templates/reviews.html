@@ -147,7 +147,7 @@ input, textarea {
                         <li class="review-item">
                             <div class="review-header">
                                 <strong class="review-username">{{ review.username }}</strong>
-                                <span class="review-rating">⭐ {{ review.rating }}/5</span>
+                                <span class="review-rating">⭐ {{ review.overall_rating }}/5</span>
                             </div>
                             <p class="review-text">{{ review.text }}</p>
                             <small class="review-date">Posted on {{ review.created_at }}</small>
@@ -163,13 +163,26 @@ input, textarea {
             <section class="review-form">
                 <h2>Leave a Review</h2>
                 <form action="{{ url_for('submit_review') }}" method="POST">
-                    <input type="hidden" name="article_id" value="{{ article.id }}">
-                    <label for="rating">Rating (1-5):</label>
-                    <input type="number" id="rating" name="rating" min="1" max="5" required>
-                    <label for="review_text">Your Review:</label>
-                    <textarea id="review_text" name="text" rows="4" required></textarea>
-                    <button type="submit" class="submit-btn">Submit Review</button>
+                    <input type="hidden" name="article_id" value="{{ article['id'] }}">
+
+                    <label for="bias">Bias Rating (1-5):</label>
+                    <input type="number" id="bias" name="bias" min="1" max="5" required>
+
+                    <label for="accuracy">Accuracy Rating (1-5):</label>
+                    <input type="number" id="accuracy" name="accuracy" min="1" max="5" required>
+
+                    <label for="quality">Quality Rating (1-5):</label>
+                    <input type="number" id="quality" name="quality" min="1" max="5" required>
+
+                    <label for="value">Value Rating (1-5):</label>
+                    <input type="number" id="value" name="value" min="1" max="5" required>
+
+                    <label for="text">Review Comment:</label>
+                    <textarea id="text" name="text" required></textarea>
+
+                    <button type="submit">Submit Review</button>
                 </form>
+
             </section>
         {% else %}
             <p class="login-prompt">Log in to leave a review.</p>

@@ -51,16 +51,21 @@ def init_db():
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         FOREIGN KEY (article_id) REFERENCES articles(id),
                         FOREIGN KEY (user_id) REFERENCES users(id))''')
-        db.execute('''CREATE TABLE IF NOT EXISTS reviews
-                       (id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        article_id TEXT NOT NULL,
-                        user_id INTEGER NOT NULL,
-                        username TEXT NOT NULL,
-                        rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
-                        text TEXT NOT NULL,
-                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                        FOREIGN KEY (article_id) REFERENCES articles(id),
-                        FOREIGN KEY (user_id) REFERENCES users(id))''')
+        db.execute('''CREATE TABLE IF NOT EXISTS reviews (
+                                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                article_id TEXT NOT NULL,
+                                user_id INTEGER NOT NULL,
+                                username TEXT NOT NULL,
+                                bias INTEGER NOT NULL,
+                                accuracy INTEGER NOT NULL,
+                                quality INTEGER NOT NULL,
+                                value INTEGER NOT NULL,
+                                overall_rating REAL NOT NULL,
+                                text TEXT NOT NULL,
+                                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                FOREIGN KEY (article_id) REFERENCES articles(id),
+                                FOREIGN KEY (user_id) REFERENCES users(id)
+                              )''')
         db.commit()
         load_articles_from_json()
 
@@ -424,31 +429,35 @@ def reviews_page():
 
 @app.route('/submit_review', methods=['POST'])
 def submit_review():
-    db = get_db()
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
 
-    user_id = session.get('user_id')
-    if not user_id:
-        return "Unauthorized", 403
-
+    user_id = session['user_id']
     article_id = request.form.get('article_id')
-    rating = request.form.get('rating')
+    bias = int(request.form.get('bias'))
+    accuracy = int(request.form.get('accuracy'))
+    quality = int(request.form.get('quality'))
+    value = int(request.form.get('value'))
     text = request.form.get('text')
 
-    if not (article_id and rating and text):
-        return "Missing fields", 400
+    # Calculate the overall rating
+    overall_rating = (bias + accuracy + quality + value) / 4.0
 
+    # Insert review into database
+    db = get_db()
     db.execute('''
-        INSERT INTO reviews (article_id, user_id, username, rating, text)
-        VALUES (?, ?, ?, ?, ?)
-    ''', (article_id, user_id, session.get('username'), rating, text))
+        INSERT INTO reviews (article_id, user_id, username, bias, accuracy, quality, value, overall_rating, text)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (article_id, user_id, session['username'], bias, accuracy, quality, value, overall_rating, text))
 
     db.commit()
+
     return redirect(url_for('reviews_page', article_id=article_id))
 
 
 if __name__ == '__main__':
     init_db()
-    insert_test_reviews()
+    #insert_test_reviews()
     app.run(debug=True)
 else:
     # Initialize when imported
