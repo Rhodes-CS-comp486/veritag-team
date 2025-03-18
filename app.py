@@ -24,6 +24,8 @@ def get_db():
 def init_db():
     with app.app_context():
         db = get_db()
+        # Drop the comments table if it exists to ensure the schema is updated
+        db.execute('DROP TABLE IF EXISTS comments')
         db.execute('''CREATE TABLE IF NOT EXISTS articles
                        (id TEXT PRIMARY KEY,
                         title TEXT NOT NULL,
@@ -48,6 +50,7 @@ def init_db():
                         username TEXT NOT NULL,
                         text TEXT NOT NULL,
                         votes INTEGER DEFAULT 0,
+                        verified BOOLEAN DEFAULT 0,
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         FOREIGN KEY (article_id) REFERENCES articles(id),
                         FOREIGN KEY (user_id) REFERENCES users(id))''')
@@ -225,7 +228,7 @@ def get_article(article_id):
 def get_comments(article_id):
     db = get_db()
     comments = db.execute(
-        'SELECT id, username, text, votes, created_at FROM comments WHERE article_id = ? ORDER BY created_at DESC',
+        'SELECT id, username, text, votes, verified, created_at FROM comments WHERE article_id = ? ORDER BY created_at DESC',
         (article_id,)
     ).fetchall()
     comments_list = [dict(comment) for comment in comments]
@@ -233,41 +236,44 @@ def get_comments(article_id):
 
 @app.route('/api/article/<article_id>/comments', methods=['POST'])
 def post_comment(article_id):
-    data = request.get_json()
-    if not data or 'text' not in data:
-        return jsonify({"error": "Comment text is required"}), 400
+    try:
+        data = request.get_json()
+        if not data or 'text' not in data:
+            return jsonify({"error": "Comment text is required"}), 400
 
-    comment_text = data['text']
-    db = get_db()
-    article = db.execute('SELECT id FROM articles WHERE id = ?', (article_id,)).fetchone()
-    if not article:
-        return jsonify({"error": "Article not found"}), 404
+        comment_text = data['text']
+        db = get_db()
+        article = db.execute('SELECT id FROM articles WHERE id = ?', (article_id,)).fetchone()
+        if not article:
+            return jsonify({"error": "Article not found"}), 404
 
-    user_id = session.get('user_id')
-    username = session.get('username')
+        user_id = session.get('user_id')
+        username = session.get('username')
 
-    if user_id and username:
-        user = db.execute('SELECT verified_code FROM users WHERE id = ?', (user_id,)).fetchone()
-        if user and user['verified_code'] != '':
-            username = session['username']
+        verified = False  # Default to not verified
+        if user_id and username:
+            user = db.execute('SELECT verified_code FROM users WHERE id = ?', (user_id,)).fetchone()
+            if user and user['verified_code'] != '':
+                verified = True  # Mark comment as verified
         else:
             username = f"Anonymous{random.randint(1, 1000)}"
-    else:
-        username = f"Anonymous{random.randint(1, 1000)}"
 
-    try:
         cursor = db.execute(
-            'INSERT INTO comments (article_id, user_id, username, text) VALUES (?, ?, ?, ?)',
-            (article_id, user_id, username, comment_text)
+            'INSERT INTO comments (article_id, user_id, username, text, verified) VALUES (?, ?, ?, ?, ?)',
+            (article_id, user_id, username, comment_text, verified)
         )
         db.commit()
         new_comment = db.execute(
-            'SELECT id, username, text, votes, created_at FROM comments WHERE id = ?',
+            'SELECT id, username, text, votes, verified, created_at FROM comments WHERE id = ?',
             (cursor.lastrowid,)
         ).fetchone()
         return jsonify(dict(new_comment)), 201
     except sqlite3.Error as e:
+        print(f"Database error: {e}")  # Log database errors
         return jsonify({"error": "Failed to post comment: " + str(e)}), 500
+    except Exception as e:
+        print(f"Unexpected error: {e}")  # Log unexpected errors
+        return jsonify({"error": "An unexpected error occurred: " + str(e)}), 500
 
 @app.route('/article/<article_id>')
 def article_page(article_id):

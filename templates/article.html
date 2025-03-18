@@ -439,6 +439,18 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
+        .verified-comment {
+            background: rgba(255, 215, 0, 0.1); /* Light gold background for verified comments */
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .verified-badge {
+            color: #FFD700; /* Gold color for the badge */
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body>
@@ -726,22 +738,26 @@
                 fetch(`/api/article/${articleId}/comments`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: commentText }),
+                    body: JSON.stringify({ text: commentText }), // Ensure correct JSON format
                     credentials: 'include'
                 })
                 .then(response => {
-                    if (!response.ok) throw new Error('Failed to post comment');
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw new Error(err.error || 'Failed to post comment');
+                        });
+                    }
                     return response.json();
                 })
                 .then(comment => {
-                    addComment(comment.text, comment.votes, false, false, comment.username);
+                    addComment(comment.text, comment.votes, false, false, comment.username, comment.verified);
                     commentInput.value = '';
                     charCount.textContent = '500 characters remaining';
                     warning.style.display = 'none';
                 })
                 .catch(error => {
                     console.error('Error posting comment:', error);
-                    warning.textContent = 'Error posting comment. Please try again.';
+                    warning.textContent = error.message || 'Error posting comment. Please try again.';
                     warning.style.display = 'block';
                 });
             });
@@ -752,19 +768,25 @@
                     .then(data => {
                         commentList.innerHTML = '';
                         data.comments.forEach(comment => {
-                            addComment(comment.text, comment.votes, false, false, comment.username);
+                            addComment(comment.text, comment.votes, false, false, comment.username, comment.verified);
                         });
                     })
                     .catch(error => console.error('Error loading comments:', error));
             }
         
-            function addComment(text, initialVotes = 0, hasVoted = false, isUpvote = false, usernameOverride) {
+            function addComment(text, initialVotes = 0, hasVoted = false, isUpvote = false, usernameOverride, isVerified = false) {
                 const commentDiv = document.createElement('div');
                 commentDiv.className = 'comment';
+                if (isVerified) {
+                    commentDiv.classList.add('verified-comment'); // Add special class for verified comments
+                }
         
                 const usernameDiv = document.createElement('div');
                 usernameDiv.className = 'comment-username';
                 usernameDiv.textContent = usernameOverride || (isLoggedIn && username ? username : `Anonymous${Math.floor(Math.random() * 1000) + 1}`);
+                if (isVerified) {
+                    usernameDiv.innerHTML += ' <span class="verified-badge">✔ Verified</span>'; // Add verified badge
+                }
         
                 const commentText = document.createElement('div');
                 commentText.className = 'comment-text';
