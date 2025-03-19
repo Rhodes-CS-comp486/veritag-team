@@ -462,6 +462,30 @@ def submit_review():
     return redirect(url_for('reviews_page', article_id=article_id))
 
 
+@app.route('/api/article_ratings/<int:article_id>')
+def get_article_ratings(article_id):
+    db = get_db()
+    ratings = db.execute('''
+        SELECT AVG(bias_rating) as avg_bias, 
+               AVG(accuracy_rating) as avg_accuracy, 
+               AVG(quality_rating) as avg_quality, 
+               AVG(value_rating) as avg_value, 
+               AVG(overall_rating) as avg_overall
+        FROM reviews WHERE article_id = ?
+    ''', (article_id,)).fetchone()
+
+    if not ratings or ratings['avg_overall'] is None:
+        return jsonify({"error": "No ratings available"}), 404
+
+    return jsonify({
+        "bias": round(ratings['avg_bias'], 2),
+        "accuracy": round(ratings['avg_accuracy'], 2),
+        "quality": round(ratings['avg_quality'], 2),
+        "value": round(ratings['avg_value'], 2),
+        "overall": round(ratings['avg_overall'], 2)
+    })
+
+
 if __name__ == '__main__':
     init_db()
     app.run(debug=True)
