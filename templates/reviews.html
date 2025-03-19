@@ -1,192 +1,429 @@
+<!-- Test commit -->
 <!DOCTYPE html>
 <html lang="en">
-<style>
-    body.dark-theme {
-    background-color: #121212;
-    color: #e0e0e0;
-    font-family: Arial, sans-serif;
-}
-
-.container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #1e1e1e;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-}
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-h1, h2 {
-    color: #ffffff;
-}
-
-.back-button {
-    color: #90caf9;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.back-button:hover {
-    text-decoration: underline;
-}
-
-.reviews-section {
-    margin-top: 20px;
-}
-
-.review-list {
-    list-style: none;
-    padding: 0;
-}
-
-.review-item {
-    background-color: #252525;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 6px;
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
-}
-
-.review-header {
-    display: flex;
-    justify-content: space-between;
-    font-size: 16px;
-}
-
-.review-username {
-    font-weight: bold;
-    color: #bb86fc;
-}
-
-.review-rating {
-    color: #ffd700;
-}
-
-.review-text {
-    margin: 10px 0;
-}
-
-.review-date {
-    font-size: 12px;
-    color: #bdbdbd;
-}
-
-.no-reviews {
-    font-style: italic;
-    color: #bdbdbd;
-}
-
-.review-form {
-    margin-top: 30px;
-    padding: 15px;
-    background-color: #252525;
-    border-radius: 6px;
-}
-
-label {
-    display: block;
-    margin: 10px 0 5px;
-}
-
-input, textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #666;
-    border-radius: 4px;
-    background-color: #333;
-    color: #fff;
-}
-
-.submit-btn {
-    background-color: #bb86fc;
-    color: #fff;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-    width: 100%;
-}
-
-.submit-btn:hover {
-    background-color: #9c64fc;
-}
-
-.login-prompt {
-    text-align: center;
-    font-size: 14px;
-    color: #ff8c00;
-}
-
-</style>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reviews - {{ article.title }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body class="dark-theme">
-    <div class="container">
-        <header>
-            <h1>Reviews for "{{ article.title }}"</h1>
-            <a href="{{ url_for('article_page', article_id=article.id) }}" class="back-button">← Back to Article</a>
-        </header>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        <section class="reviews-section">
-            {% if reviews %}
-                <h2>Reader Reviews</h2>
-                <ul class="review-list">
-                    {% for review in reviews %}
-                        <li class="review-item">
-                            <div class="review-header">
-                                <strong class="review-username">{{ session.username }}</strong>
-                                <span class="review-rating">⭐ {{ review.overall_rating }}/5</span>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #000 0%, #1a1630 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 2rem;
+            overflow-x: hidden;
+        }
+
+        .article-container {
+            max-width: 900px;
+            margin: 5rem auto 2rem;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(12px);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(176, 136, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(176, 136, 255, 0.1) 0%, transparent 70%);
+            animation: glow 15s infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes glow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(10%, 10%) scale(1.1); }
+        }
+
+        .article-header {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .article-meta {
+            color: #ccc;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .article-meta strong {
+            font-weight: 700;
+        }
+
+        .star {
+            color: #B088FF;
+            margin: 0 4px;
+            font-size: 18px;
+        }
+
+        .half-star {
+            color: #B088FF;
+            margin: 0 4px;
+            font-size: 18px;
+            position: relative;
+            display: inline-block;
+            width: 18px;
+            overflow: hidden;
+        }
+
+        .half-star::before {
+            content: '★';
+            position: absolute;
+            color: #B088FF;
+            width: 50%;
+            overflow: hidden;
+        }
+
+        .empty-star {
+            color: transparent;
+            -webkit-text-stroke: 1px #B088FF;
+            margin: 0 4px;
+            font-size: 18px;
+        }
+
+        .review-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem; /* Increased spacing between entries */
+        }
+
+        .review-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1rem; /* Slightly increased padding */
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .review-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .review-username {
+            color: #B088FF;
+            font-weight: 500;
+        }
+
+        .overall-rating {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #B088FF;
+        }
+
+        .review-details {
+            display: none;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .review-item.active .review-details {
+            display: flex;
+        }
+
+        .rating-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .review-rating-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .review-text-container {
+            flex: 2;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .review-text-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #B088FF;
+        }
+
+        .review-text {
+            font-size: 0.9rem;
+            color: #ddd;
+        }
+
+        .review-date {
+            font-size: 0.85rem;
+            color: #ccc;
+            margin-top: 0.5rem;
+        }
+
+        .no-reviews {
+            font-style: italic;
+            color: #ddd;
+            font-size: 1.1rem;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .review-form {
+            margin-top: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .review-form h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            background: linear-gradient(to right, #B088FF, transparent);
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+        }
+
+        label {
+            display: block;
+            margin: 0.5rem 0 0.25rem;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        input, textarea {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s;
+            margin-bottom: 0.75rem;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #B088FF;
+            box-shadow: 0 0 10px rgba(176, 136, 255, 0.3);
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(45deg, #ff8e8e, #ffb4b4);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .back-button {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .back-button:hover {
+            background: rgba(176, 136, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(176, 136, 255, 0.3);
+            border-color: #B088FF;
+        }
+
+        .login-prompt {
+            text-align: center;
+            font-size: 1rem;
+            color: #ff8c00;
+            padding: 1rem;
+            background: rgba(255, 140, 0, 0.1);
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="article-container">
+        <a href="{{ url_for('article_page', article_id=article.id) }}" class="back-button"><i class="fas fa-arrow-left"></i> Back to Article</a>
+
+        <div class="article-header">Reviews for "{{ article.title }}"</div>
+        <div class="article-meta">By <strong>{{ article.author }}</strong> | Source: {{ article.source }}</div>
+
+        {% if reviews %}
+            <ul class="review-list">
+                {% for review in reviews %}
+                    <li class="review-item">
+                        <div class="review-header">
+                            {% if authors %}
+                                    
+                                {% if authors[review.user_id] %}
+                                    <span class="review-username">{{ authors[review.user_id] }}</span>
+                                {% else %}
+                                    <span class="review-username">User {{ review.user_id }}</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="review-username">Anonymous</span>
+                            {% endif %}
+                            <span class="overall-rating">{{ "%.1f"|format(review.overall_rating) }} / 5</span>
+                        </div>
+                        <div class="review-details">
+                            <div class="rating-breakdown">
+                                <div class="review-rating-row">
+                                    <span>Bias:</span>
+                                    {% set full_stars = review.bias_rating|int %}
+                                    {% set has_half = review.bias_rating - full_stars >= 0.5 %}
+                                    {% for i in range(5) %}
+                                        {% if i < full_stars %}
+                                            <span class="star">★</span>
+                                        {% elif i == full_stars and has_half %}
+                                            <span class="half-star">★</span>
+                                        {% else %}
+                                            <span class="empty-star">★</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="review-rating-row">
+                                    <span>Accuracy:</span>
+                                    {% set full_stars = review.accuracy_rating|int %}
+                                    {% set has_half = review.accuracy_rating - full_stars >= 0.5 %}
+                                    {% for i in range(5) %}
+                                        {% if i < full_stars %}
+                                            <span class="star">★</span>
+                                        {% elif i == full_stars and has_half %}
+                                            <span class="half-star">★</span>
+                                        {% else %}
+                                            <span class="empty-star">★</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="review-rating-row">
+                                    <span>Quality:</span>
+                                    {% set full_stars = review.quality_rating|int %}
+                                    {% set has_half = review.quality_rating - full_stars >= 0.5 %}
+                                    {% for i in range(5) %}
+                                        {% if i < full_stars %}
+                                            <span class="star">★</span>
+                                        {% elif i == full_stars and has_half %}
+                                            <span class="half-star">★</span>
+                                        {% else %}
+                                            <span class="empty-star">★</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="review-rating-row">
+                                    <span>Value:</span>
+                                    {% set full_stars = review.value_rating|int %}
+                                    {% set has_half = review.value_rating - full_stars >= 0.5 %}
+                                    {% for i in range(5) %}
+                                        {% if i < full_stars %}
+                                            <span class="star">★</span>
+                                        {% elif i == full_stars and has_half %}
+                                            <span class="half-star">★</span>
+                                        {% else %}
+                                            <span class="empty-star">★</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
                             </div>
-                            <p class="review-text">{{ review.review }}</p>
-                            <small class="review-date">Posted on {{ review.created_at }}</small>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="no-reviews">No reviews yet. Be the first to review!</p>
-            {% endif %}
-        </section>
+                            <div class="review-text-container">
+                                <div class="review-text-label">Review</div>
+                                <div class="review-text">{{ review.review }}</div>
+                                <div class="review-date">Posted on {{ review.created_at }}</div>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="no-reviews">No reviews yet. Be the first to review!</p>
+        {% endif %}
 
         {% if user %}
             <section class="review-form">
                 <h2>Leave a Review</h2>
                 <form action="{{ url_for('submit_review') }}" method="POST">
                     <input type="hidden" name="article_id" value="{{ article['id'] }}">
-
                     <label for="bias">Bias Rating (1-5):</label>
-                    <input type="number" id="bias" name="bias" min="1" max="5" required>
-
+                    <input type="number" id="bias" name="bias" min="1" max="5" step="0.5" required>
                     <label for="accuracy">Accuracy Rating (1-5):</label>
-                    <input type="number" id="accuracy" name="accuracy" min="1" max="5" required>
-
+                    <input type="number" id="accuracy" name="accuracy" min="1" max="5" step="0.5" required>
                     <label for="quality">Quality Rating (1-5):</label>
-                    <input type="number" id="quality" name="quality" min="1" max="5" required>
-
+                    <input type="number" id="quality" name="quality" min="1" max="5" step="0.5" required>
                     <label for="value">Value Rating (1-5):</label>
-                    <input type="number" id="value" name="value" min="1" max="5" required>
-
+                    <input type="number" id="value" name="value" min="1" max="5" step="0.5" required>
                     <label for="text">Review Comment:</label>
                     <textarea id="text" name="text" required></textarea>
-
-                    <button type="submit">Submit Review</button>
+                    <button type="submit" class="submit-btn">Submit Review</button>
                 </form>
-
             </section>
         {% else %}
             <p class="login-prompt">Log in to leave a review.</p>
         {% endif %}
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const reviewItems = document.querySelectorAll('.review-item');
+            reviewItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (e.target.closest('.review-details')) return;
+                    this.classList.toggle('active');
+                });
+            });
+        });
+    </script>
 </body>
 </html>

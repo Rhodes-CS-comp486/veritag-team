@@ -423,8 +423,14 @@ def reviews_page():
 
     # Fetch all reviews for this article
     reviews = db.execute('SELECT * FROM reviews WHERE article_id = ?', (article_id,)).fetchall()
-
-    return render_template("reviews.html", article=article, user=user, reviews=reviews)
+    authors = {}
+    for review in reviews:
+        print("author: ", review['user_id'])
+        author = str(db.execute('SELECT username FROM users WHERE id = ?', (review['user_id'],)).fetchone())
+        authors[review['user_id']] = author
+    
+    print("authors: ", authors[2])
+    return render_template("reviews.html", article=article, user=user, reviews=reviews, authors=authors)
 
 
 @app.route('/submit_review', methods=['POST'])
