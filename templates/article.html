@@ -439,6 +439,41 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
+        .verified-comment {
+            background: rgba(255, 215, 0, 0.1); /* Light gold background for verified comments */
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .verified-badge {
+            color: #FFD700; /* Gold color for the badge */
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+        .ratings-box {
+    background-color: #1e1e1e; /* Dark background for dark theme */
+    color: #fff; /* White text */
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+    max-width: 300px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.ratings-box h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+}
+
+.ratings-box p {
+    margin: 5px 0;
+    font-size: 16px;
+}
+
     </style>
 </head>
 <body>
@@ -451,23 +486,11 @@
 
         <div class="article-header" id="article-title">Loading...</div>
         <div class="article-meta" id="article-meta"></div>
-
-        <div class="rating-card" onclick="this.classList.toggle('flipped')">
-            <div class="card-inner">
-                <div class="card-front">
-                    <div class="overall-rating" id="rating-overall"></div>
-                    <div class="subcategory-ratings">
-                        <div class="subcategory-row"><span>Quality:</span><span id="rating-quality-agg"></span></div>
-                        <div class="subcategory-row"><span>Bias:</span><span id="rating-bias-agg"></span></div>
-                        <div class="subcategory-row"><span>Accuracy:</span><span id="rating-accuracy-agg"></span></div>
-                        <div class="subcategory-row"><span>Value:</span><span id="rating-value-agg"></span></div>
-                    </div>
-                </div>
-                <div class="card-back">
-                    <div class="review-list" id="review-list"></div>
-                </div>
-            </div>
+        <div id="ratings-section" class="ratings-box">
+            <p>Loading ratings...</p>
         </div>
+
+
 
         <div class="article-summary" id="article-summary"></div>
         <button class="read-more" onclick="toggleBody()">Read More</button>
@@ -486,7 +509,6 @@
             </div>
             <div class="comment-list" id="comment-list"></div>
         </div>
-    </div>
 
     <script>
         document.getElementById("view-reviews-btn").addEventListener("click", function() {
@@ -502,20 +524,33 @@
         }
     });
 
+       document.addEventListener("DOMContentLoaded", function() {
+    const articleId = window.location.pathname.split("/").pop();
+
+    fetch(`/api/article_ratings/${articleId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                document.getElementById("ratings-section").innerHTML = "<p>No ratings yet.</p>";
+            } else {
+                document.getElementById("ratings-section").innerHTML = `
+                    <h3>Article Ratings</h3>
+                    <p><strong>Bias:</strong> ${data.bias}/5</p>
+                    <p><strong>Accuracy:</strong> ${data.accuracy}/5</p>
+                    <p><strong>Quality:</strong> ${data.quality}/5</p>
+                    <p><strong>Value:</strong> ${data.value}/5</p>
+                    <p><strong>Overall:</strong> ${data.overall}/5</p>
+                `;
+            }
+        })
+        .catch(error => console.error("Error fetching ratings:", error));
+});
+
+
     function redirectToReviews() {
         window.location.href = `/reviews.html?article_id=${articleId}`;
     }
-        function generateStars(rating) {
-            const container = document.createElement('span');
-            const fullStars = Math.floor(rating);
-            for (let i = 0; i < 5; i++) {
-                const star = document.createElement('span');
-                star.textContent = '★';
-                star.className = i < fullStars ? 'star' : 'empty-star';
-                container.appendChild(star);
-            }
-            return container;
-        }
+
 
         function toggleBody() {
             const body = document.getElementById('article-body');
@@ -529,69 +564,6 @@
             }
         }
 
-        function createReviewItem(review) {
-            const item = document.createElement('div');
-            item.className = 'review-item';
-
-            const header = document.createElement('div');
-            header.className = 'review-header';
-
-            const username = document.createElement('span');
-            username.className = 'review-username';
-            username.textContent = review.verified_username;
-
-            const overall = generateStars(review.overall_rating);
-
-            header.appendChild(username);
-            header.appendChild(overall);
-
-            const details = document.createElement('div');
-            details.className = 'review-details';
-
-            const ratings = document.createElement('div');
-            ratings.className = 'review-ratings';
-
-            const qualityRow = document.createElement('div');
-            qualityRow.className = 'review-rating-row';
-            qualityRow.innerHTML = '<span>Quality:</span>';
-            qualityRow.appendChild(generateStars(review.quality_rating));
-            ratings.appendChild(qualityRow);
-
-            const biasRow = document.createElement('div');
-            biasRow.className = 'review-rating-row';
-            biasRow.innerHTML = '<span>Bias:</span>';
-            biasRow.appendChild(generateStars(review.bias_rating));
-            ratings.appendChild(biasRow);
-
-            const accuracyRow = document.createElement('div');
-            accuracyRow.className = 'review-rating-row';
-            accuracyRow.innerHTML = '<span>Accuracy:</span>';
-            accuracyRow.appendChild(generateStars(review.accuracy_rating));
-            ratings.appendChild(accuracyRow);
-
-            const valueRow = document.createElement('div');
-            valueRow.className = 'review-rating-row';
-            valueRow.innerHTML = '<span>Value:</span>';
-            valueRow.appendChild(generateStars(review.value_rating));
-            ratings.appendChild(valueRow);
-
-            const text = document.createElement('div');
-            text.className = 'review-text';
-            text.textContent = review.review;
-
-            details.appendChild(ratings);
-            details.appendChild(text);
-
-            item.appendChild(header);
-            item.appendChild(details);
-
-            item.addEventListener('click', (e) => {
-                e.stopPropagation();
-                details.classList.toggle('show');
-            });
-
-            return item;
-        }
 
         document.addEventListener("DOMContentLoaded", function() {
             const articleId = window.location.pathname.split("/").pop();
@@ -604,6 +576,7 @@
 
             let isLoggedIn = false;
             let username = null;
+            let isUserVerified = false; // Store the current user's verification status
 
             fetch('/api/user', { credentials: 'include' })
                 .then(response => {
@@ -613,6 +586,7 @@
                 .then(user => {
                     isLoggedIn = true;
                     username = user.username;
+                    isUserVerified = user.verified || false; // Assume the backend includes a 'verified' field
                 })
                 .catch(() => {
                     isLoggedIn = false;
@@ -630,58 +604,7 @@
                             document.getElementById("article-summary").textContent = article.summary;
                             document.getElementById("article-body").textContent = article.body;
 
-                            const mockReviews = [
-                                {
-                                    review_id: 1,
-                                    article_id: articleId,
-                                    verified_username: "Reviewer1",
-                                    overall_rating: 4,
-                                    quality_rating: 4,
-                                    bias_rating: 3,
-                                    accuracy_rating: 5,
-                                    value_rating: 4,
-                                    review: "Solid overview but could use more balanced perspectives."
-                                },
-                                {
-                                    review_id: 2,
-                                    article_id: articleId,
-                                    verified_username: "Reviewer2",
-                                    overall_rating: 3,
-                                    quality_rating: 3,
-                                    bias_rating: 4,
-                                    accuracy_rating: 3,
-                                    value_rating: 3,
-                                    review: "Decent article, but lacks depth in some areas."
-                                }
-                            ];
 
-                            const aggOverall = mockReviews.length > 0
-                                ? mockReviews.reduce((sum, r) => sum + r.overall_rating, 0) / mockReviews.length
-                                : article.rating || 0;
-                    //<!-- test comment-->
-                            const aggQuality = mockReviews.length > 0
-                                ? mockReviews.reduce((sum, r) => sum + r.quality_rating, 0) / mockReviews.length
-                                : 0;
-                            const aggBias = mockReviews.length > 0
-                                ? mockReviews.reduce((sum, r) => sum + r.bias_rating, 0) / mockReviews.length
-                                : 0;
-                            const aggAccuracy = mockReviews.length > 0
-                                ? mockReviews.reduce((sum, r) => sum + r.accuracy_rating, 0) / mockReviews.length
-                                : 0;
-                            const aggValue = mockReviews.length > 0
-                                ? mockReviews.reduce((sum, r) => sum + r.value_rating, 0) / mockReviews.length
-                                : 0;
-
-                            document.getElementById('rating-overall').appendChild(generateStars(aggOverall));
-                            document.getElementById('rating-quality-agg').appendChild(generateStars(aggQuality));
-                            document.getElementById('rating-bias-agg').appendChild(generateStars(aggBias));
-                            document.getElementById('rating-accuracy-agg').appendChild(generateStars(aggAccuracy));
-                            document.getElementById('rating-value-agg').appendChild(generateStars(aggValue));
-
-                            const reviewList = document.getElementById('review-list');
-                            mockReviews.forEach(review => {
-                                reviewList.appendChild(createReviewItem(review));
-                            });
 
                             loadComments();
                         })
@@ -726,22 +649,26 @@
                 fetch(`/api/article/${articleId}/comments`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: commentText }),
+                    body: JSON.stringify({ text: commentText }), // Ensure correct JSON format
                     credentials: 'include'
                 })
                 .then(response => {
-                    if (!response.ok) throw new Error('Failed to post comment');
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw new Error(err.error || 'Failed to post comment');
+                        });
+                    }
                     return response.json();
                 })
                 .then(comment => {
-                    addComment(comment.text, comment.votes, false, false, comment.username);
+                    addComment(comment.text, comment.upvotes, comment.downvotes, comment.username, comment.verified, comment.id);
                     commentInput.value = '';
                     charCount.textContent = '500 characters remaining';
                     warning.style.display = 'none';
                 })
                 .catch(error => {
                     console.error('Error posting comment:', error);
-                    warning.textContent = 'Error posting comment. Please try again.';
+                    warning.textContent = error.message || 'Error posting comment. Please try again.';
                     warning.style.display = 'block';
                 });
             });
@@ -752,79 +679,119 @@
                     .then(data => {
                         commentList.innerHTML = '';
                         data.comments.forEach(comment => {
-                            addComment(comment.text, comment.votes, false, false, comment.username);
+                            addComment(comment.text, comment.upvotes, comment.downvotes, comment.username, comment.verified, comment.id);
                         });
                     })
                     .catch(error => console.error('Error loading comments:', error));
             }
         
-            function addComment(text, initialVotes = 0, hasVoted = false, isUpvote = false, usernameOverride) {
+            function addComment(text, initialUpvotes = 0, initialDownvotes = 0, usernameOverride, isVerified = false, commentId) {
                 const commentDiv = document.createElement('div');
                 commentDiv.className = 'comment';
-        
+                if (isVerified) {
+                    commentDiv.classList.add('verified-comment');
+                }
+
                 const usernameDiv = document.createElement('div');
                 usernameDiv.className = 'comment-username';
-                usernameDiv.textContent = usernameOverride || (isLoggedIn && username ? username : `Anonymous${Math.floor(Math.random() * 1000) + 1}`);
-        
+                usernameDiv.textContent = usernameOverride || `Anonymous${Math.floor(Math.random() * 1000) + 1}`;
+                if (isVerified) {
+                    usernameDiv.innerHTML += ' <span class="verified-badge">✔ Verified</span>';
+                }
+
                 const commentText = document.createElement('div');
                 commentText.className = 'comment-text';
                 commentText.textContent = text;
-        
+
                 const voteDiv = document.createElement('div');
                 voteDiv.className = 'vote-buttons';
-        
+
                 const upvote = document.createElement('button');
                 upvote.className = 'vote-btn upvote';
                 upvote.innerHTML = '<i class="fas fa-arrow-up"></i>';
-                if (isUpvote && hasVoted) upvote.classList.add('voted');
-        
+
                 const voteCount = document.createElement('span');
                 voteCount.className = 'vote-count';
-                voteCount.textContent = initialVotes;
-        
+                voteCount.textContent = initialUpvotes - initialDownvotes;
+
                 const downvote = document.createElement('button');
                 downvote.className = 'vote-btn downvote';
                 downvote.innerHTML = '<i class="fas fa-arrow-down"></i>';
-                if (!isUpvote && hasVoted) downvote.classList.add('voted');
-        
-                let votes = initialVotes;
-                let voted = hasVoted;
-        
+
+                let currentVote = null; // Track the user's current vote
+
                 upvote.onclick = () => {
-                    if (!voted) {
-                        votes = 1;
-                        voted = true;
+                    if (currentVote === 'upvote') return; // Prevent multiple upvotes
+                    fetch(`/api/comment/${commentId}/vote`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ vote_type: 'upvote' }),
+                        credentials: 'include'
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(err => { throw new Error(err.error); });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        voteCount.textContent = data.upvotes - data.downvotes;
+                        currentVote = 'upvote';
                         upvote.classList.add('voted');
                         downvote.classList.remove('voted');
-                    } else if (upvote.classList.contains('voted')) {
-                        votes = 0;
-                        voted = false;
-                        upvote.classList.remove('voted');
-                    }
-                    voteCount.textContent = votes;
-                    // TODO: Add API call to update votes on server
+                    })
+                    .catch(error => console.error('Error updating upvote:', error));
                 };
-        
+
                 downvote.onclick = () => {
-                    if (!voted) {
-                        votes = -1;
-                        voted = true;
+                    if (currentVote === 'downvote') return; // Prevent multiple downvotes
+                    fetch(`/api/comment/${commentId}/vote`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ vote_type: 'downvote' }),
+                        credentials: 'include'
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(err => { throw new Error(err.error); });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        voteCount.textContent = data.upvotes - data.downvotes;
+                        currentVote = 'downvote';
                         downvote.classList.add('voted');
                         upvote.classList.remove('voted');
-                    } else if (downvote.classList.contains('voted')) {
-                        votes = 0;
-                        voted = false;
-                        downvote.classList.remove('voted');
-                    }
-                    voteCount.textContent = votes;
-                    // TODO: Add API call to update votes on server
+                    })
+                    .catch(error => console.error('Error updating downvote:', error));
                 };
-        
+
                 voteDiv.append(upvote, voteCount, downvote);
                 commentDiv.append(usernameDiv, commentText, voteDiv);
-                commentList.prepend(commentDiv);
+                document.getElementById('comment-list').prepend(commentDiv);
             }
-            
+
+            function updateVoteOnServer(commentId, voteChange) {
+                fetch(`/api/comment/${commentId}/vote`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ vote_change: voteChange }),
+                    credentials: 'include'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to update vote');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Vote updated on server:', data.votes);
+                })
+                .catch(error => {
+                    console.error('Error updating vote:', error);
+                    alert('Failed to save vote. Please try again.');
+                });
+            }
         });
     </script>
 </body>

@@ -24,6 +24,9 @@ def get_db():
 def init_db():
     with app.app_context():
         db = get_db()
+        # Drop the comments and reviews tables if they exist to ensure the schema is updated
+        db.execute('DROP TABLE IF EXISTS comments')
+        db.execute('DROP TABLE IF EXISTS reviews')
         db.execute('''CREATE TABLE IF NOT EXISTS articles
                        (id TEXT PRIMARY KEY,
                         title TEXT NOT NULL,
@@ -47,7 +50,9 @@ def init_db():
                         user_id INTEGER,
                         username TEXT NOT NULL,
                         text TEXT NOT NULL,
-                        votes INTEGER DEFAULT 0,
+                        upvotes INTEGER DEFAULT 0,
+                        downvotes INTEGER DEFAULT 0,
+                        verified BOOLEAN DEFAULT 0,
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         FOREIGN KEY (article_id) REFERENCES articles(id),
                         FOREIGN KEY (user_id) REFERENCES users(id))''')
@@ -65,17 +70,26 @@ def init_db():
                                 FOREIGN KEY (article_id) REFERENCES articles(id),
                                 FOREIGN KEY (user_id) REFERENCES users(id)
                               )''')
+        db.execute('''CREATE TABLE IF NOT EXISTS comment_votes (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        comment_id INTEGER NOT NULL,
+                        user_id INTEGER NOT NULL,
+                        vote_type TEXT NOT NULL, -- 'upvote' or 'downvote'
+                        UNIQUE(comment_id, user_id),
+                        FOREIGN KEY (comment_id) REFERENCES comments(id),
+                        FOREIGN KEY (user_id) REFERENCES users(id)
+                      )''')
         db.commit()
         load_articles_from_json()
         load_reviews_from_json()
 
 def load_reviews_from_json():
     json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dev-reviews.json')
-    
+
     if not os.path.exists(json_file):
         print("Error: File does not exist!")
         return
-    
+
     with open(json_file, 'r', encoding='utf-8') as file:
         content = file.read()
         if not content.strip():
@@ -104,7 +118,6 @@ def load_reviews_from_json():
 def load_articles_from_json():
     json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dev-articles.json')
     lorem_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'lorem.txt')
-
     try:
         LoremShort, LoremMedium, LoremLong = read_lorem_file(lorem_file)
     except FileNotFoundError:
@@ -203,8 +216,15 @@ def about():
 @app.route('/api/user')
 def get_user():
     if 'user_id' in session:
-        return jsonify({"username": session['username']})
-    return jsonify({}), 401
+        db = get_db()
+        user = db.execute('SELECT username, verified_code FROM users WHERE id = ?', (session['user_id'],)).fetchone()
+        if user:
+            return jsonify({
+                "username": user['username'],
+                "verified": user['verified_code'] != ''  # Return true if verified_code is non-empty
+            })
+        return jsonify({}), 404  # User not found in DB (shouldn't happen with valid session)
+    return jsonify({}), 401  # Not logged in
 
 @app.route('/api/articles')
 def get_articles():
@@ -225,7 +245,12 @@ def get_article(article_id):
 def get_comments(article_id):
     db = get_db()
     comments = db.execute(
-        'SELECT id, username, text, votes, created_at FROM comments WHERE article_id = ? ORDER BY created_at DESC',
+        '''SELECT c.id, c.username, c.text, c.upvotes, c.downvotes, c.created_at, 
+                  CASE WHEN u.verified_code != '' THEN 1 ELSE 0 END AS verified
+           FROM comments c
+           LEFT JOIN users u ON c.user_id = u.id
+           WHERE c.article_id = ?
+           ORDER BY c.created_at DESC''',
         (article_id,)
     ).fetchall()
     comments_list = [dict(comment) for comment in comments]
@@ -245,11 +270,12 @@ def post_comment(article_id):
 
     user_id = session.get('user_id')
     username = session.get('username')
+    is_verified = False
 
     if user_id and username:
         user = db.execute('SELECT verified_code FROM users WHERE id = ?', (user_id,)).fetchone()
         if user and user['verified_code'] != '':
-            username = session['username']
+            is_verified = True
         else:
             username = f"Anonymous{random.randint(1, 1000)}"
     else:
@@ -262,12 +288,64 @@ def post_comment(article_id):
         )
         db.commit()
         new_comment = db.execute(
-            'SELECT id, username, text, votes, created_at FROM comments WHERE id = ?',
+            'SELECT id, username, text, upvotes, downvotes, created_at FROM comments WHERE id = ?',
             (cursor.lastrowid,)
         ).fetchone()
-        return jsonify(dict(new_comment)), 201
+        return jsonify({
+            "id": new_comment['id'],
+            "username": new_comment['username'],
+            "text": new_comment['text'],
+            "upvotes": new_comment['upvotes'],
+            "downvotes": new_comment['downvotes'],
+            "created_at": new_comment['created_at'],
+            "verified": is_verified  # Include verified status in response
+        }), 201
     except sqlite3.Error as e:
         return jsonify({"error": "Failed to post comment: " + str(e)}), 500
+
+@app.route('/api/comment/<int:comment_id>/vote', methods=['POST'])
+def vote_comment(comment_id):
+    if 'user_id' not in session:
+        return jsonify({"error": "User not logged in"}), 401
+
+    data = request.get_json()
+    vote_type = data.get('vote_type')  # 'upvote' or 'downvote'
+    user_id = session['user_id']
+    db = get_db()
+
+    # Check if the user has already voted on this comment
+    existing_vote = db.execute(
+        'SELECT vote_type FROM comment_votes WHERE comment_id = ? AND user_id = ?',
+        (comment_id, user_id)
+    ).fetchone()
+
+    if existing_vote:
+        if existing_vote['vote_type'] == vote_type:
+            return jsonify({"error": "You have already voted this way"}), 400
+        else:
+            # Change the vote type
+            db.execute(
+                'UPDATE comment_votes SET vote_type = ? WHERE comment_id = ? AND user_id = ?',
+                (vote_type, comment_id, user_id)
+            )
+            if vote_type == 'upvote':
+                db.execute('UPDATE comments SET upvotes = upvotes + 1, downvotes = downvotes - 1 WHERE id = ?', (comment_id,))
+            else:
+                db.execute('UPDATE comments SET upvotes = upvotes - 1, downvotes = downvotes + 1 WHERE id = ?', (comment_id,))
+    else:
+        # Add a new vote
+        db.execute(
+            'INSERT INTO comment_votes (comment_id, user_id, vote_type) VALUES (?, ?, ?)',
+            (comment_id, user_id, vote_type)
+        )
+        if vote_type == 'upvote':
+            db.execute('UPDATE comments SET upvotes = upvotes + 1 WHERE id = ?', (comment_id,))
+        else:
+            db.execute('UPDATE comments SET downvotes = downvotes + 1 WHERE id = ?', (comment_id,))
+
+    db.commit()
+    updated_comment = db.execute('SELECT upvotes, downvotes FROM comments WHERE id = ?', (comment_id,)).fetchone()
+    return jsonify({"upvotes": updated_comment['upvotes'], "downvotes": updated_comment['downvotes']})
 
 @app.route('/article/<article_id>')
 def article_page(article_id):
@@ -287,10 +365,7 @@ def browse():
         user = db.execute('SELECT username, email FROM users WHERE id = ?', (session['user_id'],)).fetchone()
         if user:
             user_info = dict(user)
-        else:
-            print(f"Debug: No user found for user_id={session['user_id']} in browse")
     articles = db.execute('SELECT id, title, source, author, length, category, summary, body, publication_date, rating FROM articles').fetchall()
-    print(f"Debug: browse - user_info={user_info}, session={session}")
     return render_template('browse.html', articles=articles, user_info=user_info)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -302,17 +377,15 @@ def login():
         db = get_db()
         user = db.execute('SELECT * FROM users WHERE username = ? AND password = ?', (username, password)).fetchone()
         if user:
-            session.permanent = True  # Ensure session persists
+            session.permanent = True
             session['user_id'] = user['id']
             session['username'] = user['username']
             session['verified_code'] = user['verified_code']
             flash('Login successful!', 'success')
-            print(f"Debug: User logged in - user_id={user['id']}, username={username}, verified_code={user['verified_code']}, session={session}")
             return redirect(url_for('browse'))
         else:
             error = True
             flash('Invalid username or password.', 'error')
-            print(f"Debug: Login failed for username={username}")
     return render_template('login.html', error=error)
 
 @app.route('/verified_login', methods=['GET', 'POST'])
@@ -324,17 +397,15 @@ def verified_login():
         db = get_db()
         user = db.execute('SELECT * FROM users WHERE username = ? AND password = ? AND verified_code != ""', (username, password)).fetchone()
         if user:
-            session.permanent = True  # Ensure session persists
+            session.permanent = True
             session['user_id'] = user['id']
             session['username'] = user['username']
             session['verified_code'] = user['verified_code']
             flash('Verified login successful!', 'success')
-            print(f"Debug: Verified user logged in - user_id={user['id']}, username={username}, verified_code={user['verified_code']}, session={session}")
             return redirect(url_for('browse_verified'))
         else:
             error = True
             flash('Invalid username, password, or not a verified account.', 'error')
-            print(f"Debug: Verified login failed for username={username}")
     return render_template('verified_login.html', error=error)
 
 @app.route('/browse_verified', methods=['POST', 'GET'])
@@ -346,11 +417,6 @@ def browse_verified():
         user = db.execute('SELECT username, email FROM users WHERE id = ?', (session['user_id'],)).fetchone()
         if user:
             user_info = dict(user)
-        else:
-            print(f"Debug: No user found for user_id={session['user_id']} in browse_verified")
-    else:
-        print("Debug: No user_id in session for browse_verified")
-    print(f"Debug: browse_verified - user_info={user_info}, session={session}, articles_count={len(articles)}")
     return render_template('browse_verified.html', user_info=user_info, articles=articles)
 
 @app.route('/community')
@@ -394,7 +460,6 @@ def db_contents():
 def logout():
     session.clear()
     flash('You have been logged out.', 'success')
-    print("Debug: User logged out, session cleared")
     return redirect(url_for('index'))
 
 def get_article_by_id(article_id):
@@ -410,18 +475,13 @@ def reviews_page():
 
     if not article_id:
         return "Article ID is required", 400
-
-    article = get_article_by_id(article_id)  # Fetch article details
+    article = get_article_by_id(article_id)
     if not article:
         return "Article not found", 404
-
-    user_id = session.get('user_id')  # Get user_id from session
-    user = None  # Default to None if not logged in
-
-    if user_id:  # Fetch user details if logged in
+    user_id = session.get('user_id')
+    user = None
+    if user_id:
         user = db.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
-
-    # Fetch all reviews for this article
     reviews = db.execute('SELECT * FROM reviews WHERE article_id = ?', (article_id,)).fetchall()
     authors = {}
     for review in reviews:
@@ -459,6 +519,30 @@ def submit_review():
     db.commit()
 
     return redirect(url_for('reviews_page', article_id=article_id))
+
+
+@app.route('/api/article_ratings/<int:article_id>')
+def get_article_ratings(article_id):
+    db = get_db()
+    ratings = db.execute('''
+        SELECT AVG(bias_rating) as avg_bias, 
+               AVG(accuracy_rating) as avg_accuracy, 
+               AVG(quality_rating) as avg_quality, 
+               AVG(value_rating) as avg_value, 
+               AVG(overall_rating) as avg_overall
+        FROM reviews WHERE article_id = ?
+    ''', (article_id,)).fetchone()
+
+    if not ratings or ratings['avg_overall'] is None:
+        return jsonify({"error": "No ratings available"}), 404
+
+    return jsonify({
+        "bias": round(ratings['avg_bias'], 2),
+        "accuracy": round(ratings['avg_accuracy'], 2),
+        "quality": round(ratings['avg_quality'], 2),
+        "value": round(ratings['avg_value'], 2),
+        "overall": round(ratings['avg_overall'], 2)
+    })
 
 
 if __name__ == '__main__':
