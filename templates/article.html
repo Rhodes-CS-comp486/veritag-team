@@ -577,6 +577,7 @@
 
             let isLoggedIn = false;
             let username = null;
+            let isUserVerified = false; // Store the current user's verification status
 
             fetch('/api/user', { credentials: 'include' })
                 .then(response => {
@@ -586,6 +587,7 @@
                 .then(user => {
                     isLoggedIn = true;
                     username = user.username;
+                    isUserVerified = user.verified || false; // Assume the backend includes a 'verified' field
                 })
                 .catch(() => {
                     isLoggedIn = false;
@@ -690,14 +692,14 @@
                 if (isVerified) {
                     commentDiv.classList.add('verified-comment'); // Add special class for verified comments
                 }
-        
+
                 const usernameDiv = document.createElement('div');
                 usernameDiv.className = 'comment-username';
                 usernameDiv.textContent = usernameOverride || (isLoggedIn && username ? username : `Anonymous${Math.floor(Math.random() * 1000) + 1}`);
                 if (isVerified) {
                     usernameDiv.innerHTML += ' <span class="verified-badge">✔ Verified</span>'; // Add verified badge
                 }
-        
+
                 const commentText = document.createElement('div');
                 commentText.className = 'comment-text';
                 commentText.textContent = text;
@@ -723,30 +725,52 @@
                 let voted = hasVoted;
         
                 upvote.onclick = () => {
+                    let voteChange;
                     if (!voted) {
                         votes = 1;
                         voted = true;
+                        currentVote = 1;
                         upvote.classList.add('voted');
                         downvote.classList.remove('voted');
                     } else if (upvote.classList.contains('voted')) {
                         votes = 0;
                         voted = false;
+                        currentVote = 0;
                         upvote.classList.remove('voted');
+                    } else {
+                        voteChange = 2;
+                        votes += 2;
+                        voted = true;
+                        currentVote = 1;
+                        upvote.classList.add('voted');
+                        downvote.classList.remove('voted');
                     }
+
                     voteCount.textContent = votes;
                     // TODO: Add API call to update votes on server
                 };
         
                 downvote.onclick = () => {
+                    let voteChange;
                     if (!voted) {
                         votes = -1;
                         voted = true;
+                        currentVote = -1;
                         downvote.classList.add('voted');
                         upvote.classList.remove('voted');
                     } else if (downvote.classList.contains('voted')) {
-                        votes = 0;
+                        voteChange = 1;
+                        votes += 1;
                         voted = false;
+                        currentVote = 0;
                         downvote.classList.remove('voted');
+                    } else {
+                        voteChange = -2;
+                        votes -= 2;
+                        voted = true;
+                        currentVote = -1;
+                        downvote.classList.add('voted');
+                        upvote.classList.remove('voted');
                     }
                     voteCount.textContent = votes;
                     // TODO: Add API call to update votes on server
@@ -756,7 +780,28 @@
                 commentDiv.append(usernameDiv, commentText, voteDiv);
                 commentList.prepend(commentDiv);
             }
-            
+
+            function updateVoteOnServer(commentId, voteChange) {
+                fetch(`/api/comment/${commentId}/vote`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ vote_change: voteChange }),
+                    credentials: 'include'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to update vote');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Vote updated on server:', data.votes);
+                })
+                .catch(error => {
+                    console.error('Error updating vote:', error);
+                    alert('Failed to save vote. Please try again.');
+                });
+            }
         });
     </script>
 </body>
