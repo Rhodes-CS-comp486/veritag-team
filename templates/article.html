@@ -422,6 +422,7 @@
             border: 1px solid rgba(255, 68, 68, 0.3);
             animation: fadeIn 0.3s ease-in;
         }
+
         .view-reviews-btn {
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
@@ -438,6 +439,18 @@
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
+        }
+
+        .verified-comment {
+            background: rgba(255, 215, 0, 0.1); /* Light gold background for verified comments */
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .verified-badge {
+            color: #FFD700; /* Gold color for the badge */
+            font-weight: bold;
+            font-size: 0.85rem;
         }
     </style>
 </head>
@@ -471,8 +484,7 @@
 
         <div class="article-summary" id="article-summary"></div>
         <button class="read-more" onclick="toggleBody()">Read More</button>
-        <button id="view-reviews-btn">Reviews</button>
-
+        <button id="view-reviews-btn" class="view-reviews-btn">Reviews</button>
 
         <div class="article-body" id="article-body"></div>
 
@@ -490,21 +502,10 @@
 
     <script>
         document.getElementById("view-reviews-btn").addEventListener("click", function() {
-    const articleId = "{{ article.id }}"; // Assuming Jinja2 template
-    window.location.href = `/reviews?article_id=${articleId}`;
-});
-        document.addEventListener("DOMContentLoaded", function () {
-        const userIsLoggedIn = /* Logic to check if user is logged in */ true;
-        const articleId = /* Get the article ID from the page */ "123";
+            const articleId = window.location.pathname.split("/").pop();
+            window.location.href = `/reviews?article_id=${articleId}`;
+        });
 
-        if (userIsLoggedIn) {
-            document.getElementById("view-reviews").style.display = "block";
-        }
-    });
-
-    function redirectToReviews() {
-        window.location.href = `/reviews.html?article_id=${articleId}`;
-    }
         function generateStars(rating) {
             const container = document.createElement('span');
             const fullStars = Math.floor(rating);
@@ -604,6 +605,7 @@
 
             let isLoggedIn = false;
             let username = null;
+            let isUserVerified = false; // Store the current user's verification status
 
             fetch('/api/user', { credentials: 'include' })
                 .then(response => {
@@ -613,6 +615,7 @@
                 .then(user => {
                     isLoggedIn = true;
                     username = user.username;
+                    isUserVerified = user.verified || false; // Assume the backend includes a 'verified' field
                 })
                 .catch(() => {
                     isLoggedIn = false;
@@ -658,7 +661,6 @@
                             const aggOverall = mockReviews.length > 0
                                 ? mockReviews.reduce((sum, r) => sum + r.overall_rating, 0) / mockReviews.length
                                 : article.rating || 0;
-                    //<!-- test comment-->
                             const aggQuality = mockReviews.length > 0
                                 ? mockReviews.reduce((sum, r) => sum + r.quality_rating, 0) / mockReviews.length
                                 : 0;
@@ -690,22 +692,22 @@
                             document.querySelector(".article-container").innerHTML = `<p>Error loading article.</p>`;
                         });
                 });
-        
+
             const commentInput = document.querySelector('.comment-input');
             const charCount = document.getElementById('char-count');
             const commentSubmit = document.querySelector('.comment-submit');
             const commentList = document.getElementById('comment-list');
             const warning = document.getElementById('comment-warning');
-        
+
             commentInput.addEventListener('input', () => {
                 const remaining = 500 - commentInput.value.length;
                 charCount.textContent = `${remaining} characters remaining`;
             });
-        
+
             commentSubmit.addEventListener('click', () => {
                 const commentText = commentInput.value.trim();
                 if (!commentText) return;
-        
+
                 const offensiveWords = [
                     'badword1', 'badword2', 'spam',
                     'jerk', 'idiot', 'stupid',
@@ -714,7 +716,7 @@
                 ];
                 const lowerText = commentText.toLowerCase();
                 const isOffensive = offensiveWords.some(word => lowerText.includes(word));
-        
+
                 if (isOffensive) {
                     warning.textContent = lowerText.includes('sewanee')
                         ? 'Warning: Comment contains offensive language or spam and cannot be posted. Only legitimate colleges will be tolerated.'
@@ -722,7 +724,7 @@
                     warning.style.display = 'block';
                     return;
                 }
-        
+
                 fetch(`/api/article/${articleId}/comments`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -730,101 +732,167 @@
                     credentials: 'include'
                 })
                 .then(response => {
-                    if (!response.ok) throw new Error('Failed to post comment');
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw new Error(err.error || 'Failed to post comment');
+                        });
+                    }
                     return response.json();
                 })
                 .then(comment => {
-                    addComment(comment.text, comment.votes, false, false, comment.username);
+                    addComment(
+                        comment.text,
+                        comment.votes,
+                        false,
+                        false,
+                        comment.username,
+                        isLoggedIn ? isUserVerified : comment.verified, // Use current user's verified status if logged in
+                        comment.id
+                    );
                     commentInput.value = '';
                     charCount.textContent = '500 characters remaining';
                     warning.style.display = 'none';
                 })
                 .catch(error => {
                     console.error('Error posting comment:', error);
-                    warning.textContent = 'Error posting comment. Please try again.';
+                    warning.textContent = error.message || 'Error posting comment. Please try again.';
                     warning.style.display = 'block';
                 });
             });
-        
+
             function loadComments() {
                 fetch(`/api/article/${articleId}/comments`)
                     .then(response => response.json())
                     .then(data => {
                         commentList.innerHTML = '';
                         data.comments.forEach(comment => {
-                            addComment(comment.text, comment.votes, false, false, comment.username);
+                            addComment(comment.text, comment.votes, false, false, comment.username, comment.verified, comment.id);
                         });
                     })
                     .catch(error => console.error('Error loading comments:', error));
             }
-        
-            function addComment(text, initialVotes = 0, hasVoted = false, isUpvote = false, usernameOverride) {
+
+            function addComment(text, initialVotes = 0, hasVoted = false, isUpvote = false, usernameOverride, isVerified = false, commentId) {
                 const commentDiv = document.createElement('div');
                 commentDiv.className = 'comment';
-        
+                if (isVerified) {
+                    commentDiv.classList.add('verified-comment');
+                }
+
                 const usernameDiv = document.createElement('div');
                 usernameDiv.className = 'comment-username';
                 usernameDiv.textContent = usernameOverride || (isLoggedIn && username ? username : `Anonymous${Math.floor(Math.random() * 1000) + 1}`);
-        
+                if (isVerified) {
+                    usernameDiv.innerHTML += ' <span class="verified-badge">✔ Verified</span>';
+                }
+
                 const commentText = document.createElement('div');
                 commentText.className = 'comment-text';
                 commentText.textContent = text;
-        
+
                 const voteDiv = document.createElement('div');
                 voteDiv.className = 'vote-buttons';
-        
+
                 const upvote = document.createElement('button');
                 upvote.className = 'vote-btn upvote';
                 upvote.innerHTML = '<i class="fas fa-arrow-up"></i>';
                 if (isUpvote && hasVoted) upvote.classList.add('voted');
-        
+
                 const voteCount = document.createElement('span');
                 voteCount.className = 'vote-count';
                 voteCount.textContent = initialVotes;
-        
+
                 const downvote = document.createElement('button');
                 downvote.className = 'vote-btn downvote';
                 downvote.innerHTML = '<i class="fas fa-arrow-down"></i>';
                 if (!isUpvote && hasVoted) downvote.classList.add('voted');
-        
+
                 let votes = initialVotes;
                 let voted = hasVoted;
-        
+                let currentVote = isUpvote ? 1 : (hasVoted ? -1 : 0);
+
                 upvote.onclick = () => {
+                    let voteChange;
                     if (!voted) {
-                        votes = 1;
+                        voteChange = 1;
+                        votes += 1;
                         voted = true;
+                        currentVote = 1;
                         upvote.classList.add('voted');
                         downvote.classList.remove('voted');
                     } else if (upvote.classList.contains('voted')) {
-                        votes = 0;
+                        voteChange = -1;
+                        votes -= 1;
                         voted = false;
+                        currentVote = 0;
                         upvote.classList.remove('voted');
-                    }
-                    voteCount.textContent = votes;
-                    // TODO: Add API call to update votes on server
-                };
-        
-                downvote.onclick = () => {
-                    if (!voted) {
-                        votes = -1;
+                    } else {
+                        voteChange = 2;
+                        votes += 2;
                         voted = true;
+                        currentVote = 1;
+                        upvote.classList.add('voted');
+                        downvote.classList.remove('voted');
+                    }
+
+                    voteCount.textContent = votes;
+                    updateVoteOnServer(commentId, voteChange);
+                };
+
+                downvote.onclick = () => {
+                    let voteChange;
+                    if (!voted) {
+                        voteChange = -1;
+                        votes -= 1;
+                        voted = true;
+                        currentVote = -1;
                         downvote.classList.add('voted');
                         upvote.classList.remove('voted');
                     } else if (downvote.classList.contains('voted')) {
-                        votes = 0;
+                        voteChange = 1;
+                        votes += 1;
                         voted = false;
+                        currentVote = 0;
                         downvote.classList.remove('voted');
+                    } else {
+                        voteChange = -2;
+                        votes -= 2;
+                        voted = true;
+                        currentVote = -1;
+                        downvote.classList.add('voted');
+                        upvote.classList.remove('voted');
                     }
+
                     voteCount.textContent = votes;
-                    // TODO: Add API call to update votes on server
+                    updateVoteOnServer(commentId, voteChange);
                 };
-        
+
                 voteDiv.append(upvote, voteCount, downvote);
                 commentDiv.append(usernameDiv, commentText, voteDiv);
                 commentList.prepend(commentDiv);
             }
-            
+
+            function updateVoteOnServer(commentId, voteChange) {
+                fetch(`/api/comment/${commentId}/vote`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ vote_change: voteChange }),
+                    credentials: 'include'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to update vote');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Vote updated on server:', data.votes);
+                })
+                .catch(error => {
+                    console.error('Error updating vote:', error);
+                    alert('Failed to save vote. Please try again.');
+                });
+            }
         });
     </script>
 </body>

@@ -69,39 +69,6 @@ def init_db():
         db.commit()
         load_articles_from_json()
 
-
-import sqlite3
-
-
-def insert_test_reviews():
-    db = get_db()
-    reviews = [
-        ('1', 1, 'john_doe', 5, 'Excellent article! Very informative and well-written.'),
-        ('2', 2, 'jane_smith', 4, 'Good article, but could use more examples.'),
-        ('3', 3, 'mark_jones', 3, 'Average article. Needs improvement in clarity.'),
-        ('4', 4, 'emily_brown', 2, 'Not very helpful. Couldn\'t follow the arguments.'),
-        ('5', 5, 'alice_williams', 1, 'Poorly written and hard to understand.')
-    ]
-
-    for review in reviews:
-        article_id, user_id, username, rating, text = review
-
-        # Check if review already exists
-        existing_review = db.execute('''
-            SELECT 1 FROM reviews 
-            WHERE article_id = ? AND user_id = ?
-        ''', (article_id, user_id)).fetchone()
-
-        if not existing_review:  # Only insert if review doesn't exist
-            db.execute('''
-                INSERT INTO reviews (article_id, user_id, username, rating, text)
-                VALUES (?, ?, ?, ?, ?)
-            ''', review)
-
-    db.commit()
-
-
-
 def load_articles_from_json():
     json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dev-articles.json')
     lorem_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'lorem.txt')
@@ -203,8 +170,15 @@ def about():
 @app.route('/api/user')
 def get_user():
     if 'user_id' in session:
-        return jsonify({"username": session['username']})
-    return jsonify({}), 401
+        db = get_db()
+        user = db.execute('SELECT username, verified_code FROM users WHERE id = ?', (session['user_id'],)).fetchone()
+        if user:
+            return jsonify({
+                "username": user['username'],
+                "verified": user['verified_code'] != ''  # Return true if verified_code is non-empty
+            })
+        return jsonify({}), 404  # User not found in DB (shouldn't happen with valid session)
+    return jsonify({}), 401  # Not logged in
 
 @app.route('/api/articles')
 def get_articles():
@@ -213,7 +187,7 @@ def get_articles():
     articles_list = [dict(article) for article in articles]
     return jsonify({"articles": articles_list})
 
-@app.route('/api/article/<int:article_id>', endpoint='article')
+@app.route('/api/article/<article_id>', endpoint='article')
 def get_article(article_id):
     db = get_db()
     article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
@@ -225,7 +199,12 @@ def get_article(article_id):
 def get_comments(article_id):
     db = get_db()
     comments = db.execute(
-        'SELECT id, username, text, votes, created_at FROM comments WHERE article_id = ? ORDER BY created_at DESC',
+        '''SELECT c.id, c.username, c.text, c.votes, c.created_at, 
+                  CASE WHEN u.verified_code != '' THEN 1 ELSE 0 END AS verified
+           FROM comments c
+           LEFT JOIN users u ON c.user_id = u.id
+           WHERE c.article_id = ?
+           ORDER BY c.created_at DESC''',
         (article_id,)
     ).fetchall()
     comments_list = [dict(comment) for comment in comments]
@@ -245,11 +224,12 @@ def post_comment(article_id):
 
     user_id = session.get('user_id')
     username = session.get('username')
+    is_verified = False
 
     if user_id and username:
         user = db.execute('SELECT verified_code FROM users WHERE id = ?', (user_id,)).fetchone()
         if user and user['verified_code'] != '':
-            username = session['username']
+            is_verified = True
         else:
             username = f"Anonymous{random.randint(1, 1000)}"
     else:
@@ -265,9 +245,26 @@ def post_comment(article_id):
             'SELECT id, username, text, votes, created_at FROM comments WHERE id = ?',
             (cursor.lastrowid,)
         ).fetchone()
-        return jsonify(dict(new_comment)), 201
+        return jsonify({
+            "id": new_comment['id'],
+            "username": new_comment['username'],
+            "text": new_comment['text'],
+            "votes": new_comment['votes'],
+            "created_at": new_comment['created_at'],
+            "verified": is_verified  # Include verified status in response
+        }), 201
     except sqlite3.Error as e:
         return jsonify({"error": "Failed to post comment: " + str(e)}), 500
+
+@app.route('/api/comment/<int:comment_id>/vote', methods=['POST'])
+def vote_comment(comment_id):
+    data = request.get_json()
+    vote_change = data.get('vote_change')  # e.g., 1 for upvote, -1 for downvote
+    db = get_db()
+    db.execute('UPDATE comments SET votes = votes + ? WHERE id = ?', (vote_change, comment_id))
+    db.commit()
+    new_votes = db.execute('SELECT votes FROM comments WHERE id = ?', (comment_id,)).fetchone()['votes']
+    return jsonify({"votes": new_votes})
 
 @app.route('/article/<article_id>')
 def article_page(article_id):
@@ -287,10 +284,7 @@ def browse():
         user = db.execute('SELECT username, email FROM users WHERE id = ?', (session['user_id'],)).fetchone()
         if user:
             user_info = dict(user)
-        else:
-            print(f"Debug: No user found for user_id={session['user_id']} in browse")
     articles = db.execute('SELECT id, title, source, author, length, category, summary, body, publication_date, rating FROM articles').fetchall()
-    print(f"Debug: browse - user_info={user_info}, session={session}")
     return render_template('browse.html', articles=articles, user_info=user_info)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -302,17 +296,15 @@ def login():
         db = get_db()
         user = db.execute('SELECT * FROM users WHERE username = ? AND password = ?', (username, password)).fetchone()
         if user:
-            session.permanent = True  # Ensure session persists
+            session.permanent = True
             session['user_id'] = user['id']
             session['username'] = user['username']
             session['verified_code'] = user['verified_code']
             flash('Login successful!', 'success')
-            print(f"Debug: User logged in - user_id={user['id']}, username={username}, verified_code={user['verified_code']}, session={session}")
             return redirect(url_for('browse'))
         else:
             error = True
             flash('Invalid username or password.', 'error')
-            print(f"Debug: Login failed for username={username}")
     return render_template('login.html', error=error)
 
 @app.route('/verified_login', methods=['GET', 'POST'])
@@ -324,17 +316,15 @@ def verified_login():
         db = get_db()
         user = db.execute('SELECT * FROM users WHERE username = ? AND password = ? AND verified_code != ""', (username, password)).fetchone()
         if user:
-            session.permanent = True  # Ensure session persists
+            session.permanent = True
             session['user_id'] = user['id']
             session['username'] = user['username']
             session['verified_code'] = user['verified_code']
             flash('Verified login successful!', 'success')
-            print(f"Debug: Verified user logged in - user_id={user['id']}, username={username}, verified_code={user['verified_code']}, session={session}")
             return redirect(url_for('browse_verified'))
         else:
             error = True
             flash('Invalid username, password, or not a verified account.', 'error')
-            print(f"Debug: Verified login failed for username={username}")
     return render_template('verified_login.html', error=error)
 
 @app.route('/browse_verified', methods=['POST', 'GET'])
@@ -346,11 +336,6 @@ def browse_verified():
         user = db.execute('SELECT username, email FROM users WHERE id = ?', (session['user_id'],)).fetchone()
         if user:
             user_info = dict(user)
-        else:
-            print(f"Debug: No user found for user_id={session['user_id']} in browse_verified")
-    else:
-        print("Debug: No user_id in session for browse_verified")
-    print(f"Debug: browse_verified - user_info={user_info}, session={session}, articles_count={len(articles)}")
     return render_template('browse_verified.html', user_info=user_info, articles=articles)
 
 @app.route('/community')
@@ -369,14 +354,6 @@ def categories():
         categories[category].append(article)
     return render_template('categories.html', categories=categories)
 
-@app.route('/article/<int:article_id>', endpoint='view_article')
-def view_article(article_id):
-    db = get_db()
-    article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
-    if article is None:
-        return render_template('404.html'), 404
-    return render_template('article.html', article=article)
-
 @app.route('/explore')
 def explore():
     return render_template('browse.html')
@@ -394,7 +371,6 @@ def db_contents():
 def logout():
     session.clear()
     flash('You have been logged out.', 'success')
-    print("Debug: User logged out, session cleared")
     return redirect(url_for('index'))
 
 def get_article_by_id(article_id):
@@ -402,36 +378,26 @@ def get_article_by_id(article_id):
     article = db.execute("SELECT * FROM articles WHERE id = ?", (article_id,)).fetchone()
     return article
 
-
 @app.route('/reviews')
 def reviews_page():
     db = get_db()
     article_id = request.args.get('article_id')
-
     if not article_id:
         return "Article ID is required", 400
-
-    article = get_article_by_id(article_id)  # Fetch article details
+    article = get_article_by_id(article_id)
     if not article:
         return "Article not found", 404
-
-    user_id = session.get('user_id')  # Get user_id from session
-    user = None  # Default to None if not logged in
-
-    if user_id:  # Fetch user details if logged in
+    user_id = session.get('user_id')
+    user = None
+    if user_id:
         user = db.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
-
-    # Fetch all reviews for this article
     reviews = db.execute('SELECT * FROM reviews WHERE article_id = ?', (article_id,)).fetchall()
-
     return render_template("reviews.html", article=article, user=user, reviews=reviews)
-
 
 @app.route('/submit_review', methods=['POST'])
 def submit_review():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-
     user_id = session['user_id']
     article_id = request.form.get('article_id')
     bias = int(request.form.get('bias'))
@@ -439,27 +405,19 @@ def submit_review():
     quality = int(request.form.get('quality'))
     value = int(request.form.get('value'))
     text = request.form.get('text')
-
-    # Calculate the overall rating
     overall_rating = (bias + accuracy + quality + value) / 4.0
-
-    # Insert review into database
     db = get_db()
-    db.execute('''
-        INSERT INTO reviews (article_id, user_id, username, bias, accuracy, quality, value, overall_rating, text)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ''', (article_id, user_id, session['username'], bias, accuracy, quality, value, overall_rating, text))
-
+    db.execute(
+        '''INSERT INTO reviews (article_id, user_id, username, bias, accuracy, quality, value, overall_rating, text)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+        (article_id, user_id, session['username'], bias, accuracy, quality, value, overall_rating, text)
+    )
     db.commit()
-
     return redirect(url_for('reviews_page', article_id=article_id))
-
 
 if __name__ == '__main__':
     init_db()
-    #insert_test_reviews()
     app.run(debug=True)
 else:
-    # Initialize when imported
     with app.app_context():
         init_db()
