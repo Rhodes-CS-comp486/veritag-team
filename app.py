@@ -24,8 +24,9 @@ def get_db():
 def init_db():
     with app.app_context():
         db = get_db()
-        # Drop the comments table if it exists to ensure the schema is updated
+        # Drop the comments and reviews tables if they exist to ensure the schema is updated
         db.execute('DROP TABLE IF EXISTS comments')
+        db.execute('DROP TABLE IF EXISTS reviews')
         db.execute('''CREATE TABLE IF NOT EXISTS articles
                        (id TEXT PRIMARY KEY,
                         title TEXT NOT NULL,
