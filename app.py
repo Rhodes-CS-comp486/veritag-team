@@ -485,11 +485,12 @@ def reviews_page():
     reviews = db.execute('SELECT * FROM reviews WHERE article_id = ?', (article_id,)).fetchall()
     authors = {}
     for review in reviews:
-        print("author: ", review['user_id'])
-        author = str(db.execute('SELECT username FROM users WHERE id = ?', (review['user_id'],)).fetchone())
-        authors[review['user_id']] = author
-    
-    print("authors: ", authors[2])
+        author = db.execute('SELECT * FROM users WHERE id = ?', (review['user_id'],)).fetchone()
+        if author:
+            authors[review['user_id']] = author['username']
+        else:
+            authors[review['user_id']] = 'User ' + str(review['user_id'])
+
     return render_template("reviews.html", article=article, user=user, reviews=reviews, authors=authors)
 
 
@@ -500,10 +501,10 @@ def submit_review():
 
     user_id = session['user_id']
     article_id = request.form.get('article_id')
-    bias = int(request.form.get('bias'))
-    accuracy = int(request.form.get('accuracy'))
-    quality = int(request.form.get('quality'))
-    value = int(request.form.get('value'))
+    bias = float(request.form.get('bias'))
+    accuracy = float(request.form.get('accuracy'))
+    quality = float(request.form.get('quality'))
+    value = float(request.form.get('value'))
     text = request.form.get('text')
 
     # Calculate the overall rating
