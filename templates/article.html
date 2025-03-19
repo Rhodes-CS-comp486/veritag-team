@@ -509,7 +509,6 @@
             </div>
             <div class="comment-list" id="comment-list"></div>
         </div>
-    </div>
 
     <script>
         document.getElementById("view-reviews-btn").addEventListener("click", function() {
@@ -662,7 +661,7 @@
                     return response.json();
                 })
                 .then(comment => {
-                    addComment(comment.text, comment.votes, false, false, comment.username, comment.verified);
+                    addComment(comment.text, comment.upvotes, comment.downvotes, comment.username, comment.verified, comment.id);
                     commentInput.value = '';
                     charCount.textContent = '500 characters remaining';
                     warning.style.display = 'none';
@@ -680,105 +679,96 @@
                     .then(data => {
                         commentList.innerHTML = '';
                         data.comments.forEach(comment => {
-                            addComment(comment.text, comment.votes, false, false, comment.username, comment.verified);
+                            addComment(comment.text, comment.upvotes, comment.downvotes, comment.username, comment.verified, comment.id);
                         });
                     })
                     .catch(error => console.error('Error loading comments:', error));
             }
         
-            function addComment(text, initialVotes = 0, hasVoted = false, isUpvote = false, usernameOverride, isVerified = false) {
+            function addComment(text, initialUpvotes = 0, initialDownvotes = 0, usernameOverride, isVerified = false, commentId) {
                 const commentDiv = document.createElement('div');
                 commentDiv.className = 'comment';
                 if (isVerified) {
-                    commentDiv.classList.add('verified-comment'); // Add special class for verified comments
+                    commentDiv.classList.add('verified-comment');
                 }
 
                 const usernameDiv = document.createElement('div');
                 usernameDiv.className = 'comment-username';
-                usernameDiv.textContent = usernameOverride || (isLoggedIn && username ? username : `Anonymous${Math.floor(Math.random() * 1000) + 1}`);
+                usernameDiv.textContent = usernameOverride || `Anonymous${Math.floor(Math.random() * 1000) + 1}`;
                 if (isVerified) {
-                    usernameDiv.innerHTML += ' <span class="verified-badge">✔ Verified</span>'; // Add verified badge
+                    usernameDiv.innerHTML += ' <span class="verified-badge">✔ Verified</span>';
                 }
 
                 const commentText = document.createElement('div');
                 commentText.className = 'comment-text';
                 commentText.textContent = text;
-        
+
                 const voteDiv = document.createElement('div');
                 voteDiv.className = 'vote-buttons';
-        
+
                 const upvote = document.createElement('button');
                 upvote.className = 'vote-btn upvote';
                 upvote.innerHTML = '<i class="fas fa-arrow-up"></i>';
-                if (isUpvote && hasVoted) upvote.classList.add('voted');
-        
+
                 const voteCount = document.createElement('span');
                 voteCount.className = 'vote-count';
-                voteCount.textContent = initialVotes;
-        
+                voteCount.textContent = initialUpvotes - initialDownvotes;
+
                 const downvote = document.createElement('button');
                 downvote.className = 'vote-btn downvote';
                 downvote.innerHTML = '<i class="fas fa-arrow-down"></i>';
-                if (!isUpvote && hasVoted) downvote.classList.add('voted');
-        
-                let votes = initialVotes;
-                let voted = hasVoted;
-        
-                upvote.onclick = () => {
-                    let voteChange;
-                    if (!voted) {
-                        votes = 1;
-                        voted = true;
-                        currentVote = 1;
-                        upvote.classList.add('voted');
-                        downvote.classList.remove('voted');
-                    } else if (upvote.classList.contains('voted')) {
-                        votes = 0;
-                        voted = false;
-                        currentVote = 0;
-                        upvote.classList.remove('voted');
-                    } else {
-                        voteChange = 2;
-                        votes += 2;
-                        voted = true;
-                        currentVote = 1;
-                        upvote.classList.add('voted');
-                        downvote.classList.remove('voted');
-                    }
 
-                    voteCount.textContent = votes;
-                    // TODO: Add API call to update votes on server
-                };
-        
-                downvote.onclick = () => {
-                    let voteChange;
-                    if (!voted) {
-                        votes = -1;
-                        voted = true;
-                        currentVote = -1;
-                        downvote.classList.add('voted');
-                        upvote.classList.remove('voted');
-                    } else if (downvote.classList.contains('voted')) {
-                        voteChange = 1;
-                        votes += 1;
-                        voted = false;
-                        currentVote = 0;
+                let currentVote = null; // Track the user's current vote
+
+                upvote.onclick = () => {
+                    if (currentVote === 'upvote') return; // Prevent multiple upvotes
+                    fetch(`/api/comment/${commentId}/vote`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ vote_type: 'upvote' }),
+                        credentials: 'include'
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(err => { throw new Error(err.error); });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        voteCount.textContent = data.upvotes - data.downvotes;
+                        currentVote = 'upvote';
+                        upvote.classList.add('voted');
                         downvote.classList.remove('voted');
-                    } else {
-                        voteChange = -2;
-                        votes -= 2;
-                        voted = true;
-                        currentVote = -1;
+                    })
+                    .catch(error => console.error('Error updating upvote:', error));
+                };
+
+                downvote.onclick = () => {
+                    if (currentVote === 'downvote') return; // Prevent multiple downvotes
+                    fetch(`/api/comment/${commentId}/vote`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ vote_type: 'downvote' }),
+                        credentials: 'include'
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(err => { throw new Error(err.error); });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        voteCount.textContent = data.upvotes - data.downvotes;
+                        currentVote = 'downvote';
                         downvote.classList.add('voted');
                         upvote.classList.remove('voted');
-                    }
-                    voteCount.textContent = votes;
-                    // TODO: Add API call to update votes on server
+                    })
+                    .catch(error => console.error('Error updating downvote:', error));
                 };
-        
+
                 voteDiv.append(upvote, voteCount, downvote);
                 commentDiv.append(usernameDiv, commentText, voteDiv);
-                commentList.prepend(commentDiv);
+                document.getElementById('comment-list').prepend(commentDiv);
             }
 
             function updateVoteOnServer(commentId, voteChange) {

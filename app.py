@@ -50,7 +50,8 @@ def init_db():
                         user_id INTEGER,
                         username TEXT NOT NULL,
                         text TEXT NOT NULL,
-                        votes INTEGER DEFAULT 0,
+                        upvotes INTEGER DEFAULT 0,
+                        downvotes INTEGER DEFAULT 0,
                         verified BOOLEAN DEFAULT 0,
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         FOREIGN KEY (article_id) REFERENCES articles(id),
@@ -69,6 +70,15 @@ def init_db():
                                 FOREIGN KEY (article_id) REFERENCES articles(id),
                                 FOREIGN KEY (user_id) REFERENCES users(id)
                               )''')
+        db.execute('''CREATE TABLE IF NOT EXISTS comment_votes (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        comment_id INTEGER NOT NULL,
+                        user_id INTEGER NOT NULL,
+                        vote_type TEXT NOT NULL, -- 'upvote' or 'downvote'
+                        UNIQUE(comment_id, user_id),
+                        FOREIGN KEY (comment_id) REFERENCES comments(id),
+                        FOREIGN KEY (user_id) REFERENCES users(id)
+                      )''')
         db.commit()
         load_articles_from_json()
         load_reviews_from_json()
@@ -235,7 +245,7 @@ def get_article(article_id):
 def get_comments(article_id):
     db = get_db()
     comments = db.execute(
-        '''SELECT c.id, c.username, c.text, c.votes, c.created_at, 
+        '''SELECT c.id, c.username, c.text, c.upvotes, c.downvotes, c.created_at, 
                   CASE WHEN u.verified_code != '' THEN 1 ELSE 0 END AS verified
            FROM comments c
            LEFT JOIN users u ON c.user_id = u.id
@@ -278,14 +288,15 @@ def post_comment(article_id):
         )
         db.commit()
         new_comment = db.execute(
-            'SELECT id, username, text, votes, created_at FROM comments WHERE id = ?',
+            'SELECT id, username, text, upvotes, downvotes, created_at FROM comments WHERE id = ?',
             (cursor.lastrowid,)
         ).fetchone()
         return jsonify({
             "id": new_comment['id'],
             "username": new_comment['username'],
             "text": new_comment['text'],
-            "votes": new_comment['votes'],
+            "upvotes": new_comment['upvotes'],
+            "downvotes": new_comment['downvotes'],
             "created_at": new_comment['created_at'],
             "verified": is_verified  # Include verified status in response
         }), 201
@@ -294,13 +305,47 @@ def post_comment(article_id):
 
 @app.route('/api/comment/<int:comment_id>/vote', methods=['POST'])
 def vote_comment(comment_id):
+    if 'user_id' not in session:
+        return jsonify({"error": "User not logged in"}), 401
+
     data = request.get_json()
-    vote_change = data.get('vote_change')  # e.g., 1 for upvote, -1 for downvote
+    vote_type = data.get('vote_type')  # 'upvote' or 'downvote'
+    user_id = session['user_id']
     db = get_db()
-    db.execute('UPDATE comments SET votes = votes + ? WHERE id = ?', (vote_change, comment_id))
+
+    # Check if the user has already voted on this comment
+    existing_vote = db.execute(
+        'SELECT vote_type FROM comment_votes WHERE comment_id = ? AND user_id = ?',
+        (comment_id, user_id)
+    ).fetchone()
+
+    if existing_vote:
+        if existing_vote['vote_type'] == vote_type:
+            return jsonify({"error": "You have already voted this way"}), 400
+        else:
+            # Change the vote type
+            db.execute(
+                'UPDATE comment_votes SET vote_type = ? WHERE comment_id = ? AND user_id = ?',
+                (vote_type, comment_id, user_id)
+            )
+            if vote_type == 'upvote':
+                db.execute('UPDATE comments SET upvotes = upvotes + 1, downvotes = downvotes - 1 WHERE id = ?', (comment_id,))
+            else:
+                db.execute('UPDATE comments SET upvotes = upvotes - 1, downvotes = downvotes + 1 WHERE id = ?', (comment_id,))
+    else:
+        # Add a new vote
+        db.execute(
+            'INSERT INTO comment_votes (comment_id, user_id, vote_type) VALUES (?, ?, ?)',
+            (comment_id, user_id, vote_type)
+        )
+        if vote_type == 'upvote':
+            db.execute('UPDATE comments SET upvotes = upvotes + 1 WHERE id = ?', (comment_id,))
+        else:
+            db.execute('UPDATE comments SET downvotes = downvotes + 1 WHERE id = ?', (comment_id,))
+
     db.commit()
-    new_votes = db.execute('SELECT votes FROM comments WHERE id = ?', (comment_id,)).fetchone()['votes']
-    return jsonify({"votes": new_votes})
+    updated_comment = db.execute('SELECT upvotes, downvotes FROM comments WHERE id = ?', (comment_id,)).fetchone()
+    return jsonify({"upvotes": updated_comment['upvotes'], "downvotes": updated_comment['downvotes']})
 
 @app.route('/article/<article_id>')
 def article_page(article_id):
