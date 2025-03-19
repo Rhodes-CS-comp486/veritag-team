@@ -146,10 +146,10 @@ input, textarea {
                     {% for review in reviews %}
                         <li class="review-item">
                             <div class="review-header">
-                                <strong class="review-username">{{ review.username }}</strong>
+                                <strong class="review-username">{{ session.username }}</strong>
                                 <span class="review-rating">⭐ {{ review.overall_rating }}/5</span>
                             </div>
-                            <p class="review-text">{{ review.text }}</p>
+                            <p class="review-text">{{ review.review }}</p>
                             <small class="review-date">Posted on {{ review.created_at }}</small>
                         </li>
                     {% endfor %}

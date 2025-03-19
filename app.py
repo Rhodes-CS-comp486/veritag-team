@@ -55,59 +55,59 @@ def init_db():
                         FOREIGN KEY (article_id) REFERENCES articles(id),
                         FOREIGN KEY (user_id) REFERENCES users(id))''')
         db.execute('''CREATE TABLE IF NOT EXISTS reviews (
-                                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                review_id INTEGER PRIMARY KEY AUTOINCREMENT,
                                 article_id TEXT NOT NULL,
                                 user_id INTEGER NOT NULL,
-                                username TEXT NOT NULL,
-                                bias INTEGER NOT NULL,
-                                accuracy INTEGER NOT NULL,
-                                quality INTEGER NOT NULL,
-                                value INTEGER NOT NULL,
+                                bias_rating INTEGER NOT NULL,
+                                accuracy_rating INTEGER NOT NULL,
+                                quality_rating INTEGER NOT NULL,
+                                value_rating INTEGER NOT NULL,
                                 overall_rating REAL NOT NULL,
-                                text TEXT NOT NULL,
+                                review TEXT NOT NULL,
                                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                 FOREIGN KEY (article_id) REFERENCES articles(id),
                                 FOREIGN KEY (user_id) REFERENCES users(id)
                               )''')
         db.commit()
         load_articles_from_json()
+        load_reviews_from_json()
 
+def load_reviews_from_json():
+    json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dev-reviews.json')
+    
+    if not os.path.exists(json_file):
+        print("Error: File does not exist!")
+        return
+    
+    with open(json_file, 'r', encoding='utf-8') as file:
+        content = file.read()
+        if not content.strip():
+            print("Error: File is empty or contains only whitespace!")
+            return
+        try:
+            reviews = json.loads(content)  # Use json.loads since we read the content
+        except json.JSONDecodeError as e:
+            print(f"JSON parsing error: {e}")
+            return
 
-import sqlite3
-
-
-def insert_test_reviews():
     db = get_db()
-    reviews = [
-        ('1', 1, 'john_doe', 5, 'Excellent article! Very informative and well-written.'),
-        ('2', 2, 'jane_smith', 4, 'Good article, but could use more examples.'),
-        ('3', 3, 'mark_jones', 3, 'Average article. Needs improvement in clarity.'),
-        ('4', 4, 'emily_brown', 2, 'Not very helpful. Couldn\'t follow the arguments.'),
-        ('5', 5, 'alice_williams', 1, 'Poorly written and hard to understand.')
-    ]
-
+    cursor = db.cursor()
     for review in reviews:
-        article_id, user_id, username, rating, text = review
-
-        # Check if review already exists
-        existing_review = db.execute('''
-            SELECT 1 FROM reviews 
-            WHERE article_id = ? AND user_id = ?
-        ''', (article_id, user_id)).fetchone()
-
-        if not existing_review:  # Only insert if review doesn't exist
-            db.execute('''
-                INSERT INTO reviews (article_id, user_id, username, rating, text)
-                VALUES (?, ?, ?, ?, ?)
-            ''', review)
-
+        cursor.execute(
+            '''INSERT OR IGNORE INTO reviews (review_id, article_id, user_id, created_at, overall_rating, 
+               quality_rating, bias_rating, accuracy_rating, value_rating, review) 
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+            (review["review_id"], review["article_id"], review["user_id"], review["created_at"],
+             review["overall_rating"], review["quality_rating"], review["bias_rating"],
+             review["accuracy_rating"], review["value_rating"], review["review"])
+        )
     db.commit()
-
-
+    db.close()
 
 def load_articles_from_json():
     json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dev-articles.json')
     lorem_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'lorem.txt')
+
     try:
         LoremShort, LoremMedium, LoremLong = read_lorem_file(lorem_file)
     except FileNotFoundError:
@@ -452,9 +452,9 @@ def submit_review():
     # Insert review into database
     db = get_db()
     db.execute('''
-        INSERT INTO reviews (article_id, user_id, username, bias, accuracy, quality, value, overall_rating, text)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ''', (article_id, user_id, session['username'], bias, accuracy, quality, value, overall_rating, text))
+        INSERT INTO reviews (article_id, user_id, bias_rating, accuracy_rating, quality_rating, value_rating, overall_rating, review)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (article_id, user_id, bias, accuracy, quality, value, overall_rating, text))
 
     db.commit()
 
@@ -463,7 +463,6 @@ def submit_review():
 
 if __name__ == '__main__':
     init_db()
-    #insert_test_reviews()
     app.run(debug=True)
 else:
     # Initialize when imported
