@@ -286,7 +286,7 @@
             text-decoration: none;
             border-radius: 4px;
             transition: background 0.2s;
-        }
+        }d
 
         .user-menu-item:hover {
             background: rgba(176, 136, 255, 0.2);
@@ -655,7 +655,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (grid) {
                     grid.innerHTML = articles.map(article => createArticleCard(article)).join('');
                 }
-                updateArticleDisplay(); // Replace filterArticles() with this
+                updateArticleDisplay();
             })
             .catch(error => console.error("Error loading articles:", error));
     }, 2000);
@@ -669,6 +669,7 @@ document.addEventListener("DOMContentLoaded", function() {
             data-summary="${article.summary}"
             data-image="${article.image}""
             data-category="${article.category}"
+            data-publication_date="${article.publication_date}"
             data-rating=article.rating>
             <div class="card-inner">
                 <div class="card-front" style="background-image: url('${article.image || "/api/placeholder/400/400"}')">

@@ -1,0 +1,72 @@
+    [
+      {
+        "id": 1,
+        "username": "john_doe",
+        "email": "john.doe@example.com",
+        "password": "abc123",
+        "verified_code": "12345"
+      },
+      {
+        "id": 2,
+        "username": "jane_smith",
+        "email": "jane.smith@example.com",
+        "password": "xyz789",
+        "verified_code": "12345"
+      },
+      {
+        "id": 3,
+        "username": "bob_jones",
+        "email": "bob.jones@example.com",
+        "password": "pass12",
+        "verified_code": "12345"
+      },
+      {
+        "id": 4,
+        "username": "alice_w",
+        "email": "alice.w@example.com",
+        "password": "qwerty",
+        "verified_code": "12345"
+      },
+      {
+        "id": 5,
+        "username": "mike_89",
+        "email": "mike89@example.com",
+        "password": "mk321",
+        "verified_code": "12345"
+      },
+      {
+        "id": 6,
+        "username": "sarah_p",
+        "email": "sarah.p@example.com",
+        "password": "sp456",
+        "verified_code": "12345"
+      },
+      {
+        "id": 7,
+        "username": "tom_hanks",
+        "email": "tom.hanks@example.com",
+        "password": "th789",
+        "verified_code": "12345"
+      },
+      {
+        "id": 8,
+        "username": "emma_watson",
+        "email": "emma.watson@example.com",
+        "password": "ew101",
+        "verified_code": "12345"
+      },
+      {
+        "id": 9,
+        "username": "peter_parker",
+        "email": "peter.p@example.com",
+        "password": "pp222",
+        "verified_code": "12345"
+      },
+      {
+        "id": 10,
+        "username": "lisa_m",
+        "email": "lisa.m@example.com",
+        "password": "lm333",
+        "verified_code": "12345"
+      }
+    ]

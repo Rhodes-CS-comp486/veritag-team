@@ -82,6 +82,9 @@ def init_db():
         db.commit()
         load_articles_from_json()
         load_reviews_from_json()
+        load_users_from_json()
+        fix_ratings()
+
 
 def load_reviews_from_json():
     json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dev-reviews.json')
@@ -147,6 +150,47 @@ def load_articles_from_json():
             (article["id"], article["title"], article["author"], article["category"], length_int,
              article["summary"], article["rating"], article["source"], article["publication_date"], body)
         )
+    db.commit()
+    db.close()
+
+def load_users_from_json():
+    json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dev-users.json')
+
+    if not os.path.exists(json_file):
+        print("Error: File does not exist!")
+        return
+
+    with open(json_file, 'r', encoding='utf-8') as file:
+        content = file.read()
+        if not content.strip():
+            print("Error: File is empty or contains only whitespace!")
+            return
+        try:
+            users = json.loads(content)  # Use json.loads since we read the content
+        except json.JSONDecodeError as e:
+            print(f"JSON parsing error: {e}")
+            return
+
+    db = get_db()
+    cursor = db.cursor()
+    for user in users:
+        cursor.execute(
+            '''INSERT OR IGNORE INTO users (id, username, email, password, verified_code) 
+               VALUES (?, ?, ?, ?, ?)''',
+            (user["id"], user["username"], user["email"], user["password"], user["verified_code"])
+        )
+    db.commit()
+    db.close()
+
+def fix_ratings():
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute('SELECT article_id FROM reviews GROUP BY article_id')
+    article_ids = cursor.fetchall()
+    for article_id in article_ids:
+        cursor.execute('SELECT AVG(overall_rating) FROM reviews WHERE article_id = ?', (article_id['article_id'],))
+        avg_rating = cursor.fetchone()
+        cursor.execute('UPDATE articles SET rating = ? WHERE id = ?', (("{:.2f}".format(avg_rating[0]), article_id['article_id'])))
     db.commit()
     db.close()
 
