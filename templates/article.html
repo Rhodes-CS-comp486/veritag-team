@@ -1,4 +1,3 @@
-<!-- Test commit -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -72,142 +71,96 @@
             z-index: 1;
         }
 
-        .rating-card {
+        .ratings-box {
             position: relative;
-            z-index: 1;
-            margin-bottom: 2rem;
-            perspective: 1000px;
-            width: 100%;
-            height: 200px;
-            cursor: pointer;
-        }
-
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-
-        .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .card-front {
-            display: flex;
-            padding: 1rem;
-        }
-
-        .overall-rating {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-        }
-
-        .subcategory-ratings {
-            flex: 2;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding-left: 1rem;
-            font-size: 0.9rem;
-        }
-
-        .subcategory-row {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin: 0.25rem 0;
-        }
-
-        .card-back {
-            background: rgba(176, 136, 255, 0.1);
-            transform: rotateY(180deg);
-            padding: 1rem;
-            overflow-y: auto;
-        }
-
-        .rating-card.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .star {
-            color: #B088FF;
-            margin: 0 4px;
-        }
-
-        .empty-star {
-            color: transparent;
-            -webkit-text-stroke: 1px #B088FF;
-            margin: 0 4px;
-        }
-
-        .review-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .review-item {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 0.75rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .review-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .review-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            width: 100%;
+            height: 220px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 2.5rem 1rem 1rem 1rem;
+            margin-bottom: 2rem;
         }
 
-        .review-username {
+        .ratings-title {
+            position: absolute;
+            top: 0.5rem;
+            left: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
             color: #B088FF;
-            font-weight: 500;
+            z-index: 1;
         }
 
-        .review-details {
-            display: none;
-            margin-top: 0.5rem;
-            padding-top: 0.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        .rating-third {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
         }
 
-        .review-details.show {
-            display: block;
-        }
-
-        .review-ratings {
+        .overall-rating {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .review-rating-row {
-            display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
         }
 
-        .review-text {
+        .overall-rating .rating-value {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #B088FF;
+        }
+
+        .overall-rating .rating-label {
             font-size: 0.9rem;
             color: #ddd;
+            margin-top: 0.25rem;
+        }
+
+        .button-container {
+            flex: 1;
+        }
+
+        .reviews-btn {
+            background: rgba(176, 136, 255, 0.3);
+            color: #fff;
+            padding: 1rem 2rem; /* Increased padding for larger size */
+            border-radius: 10px; /* Slightly larger radius */
+            border: 2px solid #B088FF; /* Thicker border */
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem; /* Larger font size */
+            font-weight: 600; /* Bolder text */
+        }
+
+        .reviews-btn:hover {
+            background: rgba(176, 136, 255, 0.6); /* Brighter hover effect */
+            transform: translateY(-3px); /* Slightly more lift */
+            box-shadow: 0 6px 20px rgba(176, 136, 255, 0.5); /* Stronger shadow */
+        }
+
+        .subcategory-ratings {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 1.1rem; /* Increased font size */
+            text-align: left; /* Changed to left for readability */
+            color: #fff; /* Brighter text */
+            padding-left: 1rem; /* Added padding for alignment */
+        }
+
+        .subcategory-ratings p {
+            margin: 0.5rem 0; /* Increased spacing between items */
+            font-weight: 500; /* Bolder text */
+        }
+
+        .subcategory-ratings strong {
+            color: #B088FF; /* Highlighted labels in purple */
+            font-weight: 700; /* Even bolder labels */
         }
 
         .article-summary {
@@ -230,6 +183,10 @@
             background: rgba(255, 255, 255, 0.02);
             border-radius: 8px;
             display: none;
+        }
+
+        .article-body.visible {
+            display: block;
         }
 
         .read-more {
@@ -422,18 +379,6 @@
             border: 1px solid rgba(255, 68, 68, 0.3);
             animation: fadeIn 0.3s ease-in;
         }
-        .view-reviews-btn {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            z-index: 1;
-            font-weight: 500;
-        }
 
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -441,39 +386,16 @@
         }
 
         .verified-comment {
-            background: rgba(255, 215, 0, 0.1); /* Light gold background for verified comments */
-            border: 1px solid rgba(255, 215, 0, 0.3);
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .verified-badge {
-            color: #FFD700; /* Gold color for the badge */
+            color: #FFD700;
             font-weight: bold;
             font-size: 0.85rem;
         }
-        .ratings-box {
-    background-color: #1e1e1e; /* Dark background for dark theme */
-    color: #fff; /* White text */
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
-    max-width: 300px;
-    margin: 20px auto;
-    text-align: center;
-}
-
-.ratings-box h3 {
-    margin-bottom: 10px;
-    font-size: 18px;
-    border-bottom: 1px solid #444;
-    padding-bottom: 5px;
-}
-
-.ratings-box p {
-    margin: 5px 0;
-    font-size: 16px;
-}
-
     </style>
 </head>
 <body>
@@ -487,16 +409,21 @@
         <div class="article-header" id="article-title">Loading...</div>
         <div class="article-meta" id="article-meta"></div>
         <div id="ratings-section" class="ratings-box">
-            <p>Loading ratings...</p>
+            <div class="ratings-title">Aggregate Data</div>
+            <div class="rating-third overall-rating" id="rating-overall-digit">
+                <span class="rating-value">Loading...</span>
+                <span class="rating-label">Overall</span>
+            </div>
+            <div class="rating-third button-container">
+                <button id="view-reviews-btn" class="reviews-btn">Reviews</button>
+            </div>
+            <div class="rating-third subcategory-ratings" id="rating-breakdown">
+                <p>Loading ratings...</p>
+            </div>
         </div>
 
-
-
         <div class="article-summary" id="article-summary"></div>
-        <button class="read-more" onclick="toggleBody()">Read More</button>
-        <button id="view-reviews-btn">Reviews</button>
-
-
+        <button class="read-more" id="read-more-btn">Read More</button>
         <div class="article-body" id="article-body"></div>
 
         <div class="comments-section">
@@ -509,62 +436,9 @@
             </div>
             <div class="comment-list" id="comment-list"></div>
         </div>
+    </div>
 
     <script>
-        document.getElementById("view-reviews-btn").addEventListener("click", function() {
-    const articleId = "{{ article.id }}"; // Assuming Jinja2 template
-    window.location.href = `/reviews?article_id=${articleId}`;
-});
-        document.addEventListener("DOMContentLoaded", function () {
-        const userIsLoggedIn = /* Logic to check if user is logged in */ true;
-        const articleId = /* Get the article ID from the page */ "123";
-
-        if (userIsLoggedIn) {
-            document.getElementById("view-reviews").style.display = "block";
-        }
-    });
-
-       document.addEventListener("DOMContentLoaded", function() {
-    const articleId = window.location.pathname.split("/").pop();
-
-    fetch(`/api/article_ratings/${articleId}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                document.getElementById("ratings-section").innerHTML = "<p>No ratings yet.</p>";
-            } else {
-                document.getElementById("ratings-section").innerHTML = `
-                    <h3>Article Ratings</h3>
-                    <p><strong>Bias:</strong> ${data.bias}/5</p>
-                    <p><strong>Accuracy:</strong> ${data.accuracy}/5</p>
-                    <p><strong>Quality:</strong> ${data.quality}/5</p>
-                    <p><strong>Value:</strong> ${data.value}/5</p>
-                    <p><strong>Overall:</strong> ${data.overall}/5</p>
-                `;
-            }
-        })
-        .catch(error => console.error("Error fetching ratings:", error));
-});
-
-
-    function redirectToReviews() {
-        window.location.href = `/reviews.html?article_id=${articleId}`;
-    }
-
-
-        function toggleBody() {
-            const body = document.getElementById('article-body');
-            const button = document.querySelector('.read-more');
-            if (body.style.display === 'block') {
-                body.style.display = 'none';
-                button.textContent = 'Read More';
-            } else {
-                body.style.display = 'block';
-                button.textContent = 'Show Less';
-            }
-        }
-
-
         document.addEventListener("DOMContentLoaded", function() {
             const articleId = window.location.pathname.split("/").pop();
 
@@ -576,8 +450,9 @@
 
             let isLoggedIn = false;
             let username = null;
-            let isUserVerified = false; // Store the current user's verification status
+            let isUserVerified = false;
 
+            // Fetch user info
             fetch('/api/user', { credentials: 'include' })
                 .then(response => {
                     if (response.ok) return response.json();
@@ -586,12 +461,13 @@
                 .then(user => {
                     isLoggedIn = true;
                     username = user.username;
-                    isUserVerified = user.verified || false; // Assume the backend includes a 'verified' field
+                    isUserVerified = user.verified || false;
                 })
                 .catch(() => {
                     isLoggedIn = false;
                 })
                 .finally(() => {
+                    // Fetch article data
                     fetch(`/api/article/${articleId}`)
                         .then(response => {
                             if (!response.ok) throw new Error("Failed to load article");
@@ -602,33 +478,78 @@
                             document.getElementById("article-title").textContent = article.title;
                             document.getElementById("article-meta").textContent = `By ${article.author} | Source: ${article.source} | Reading Time: ${article.length} min`;
                             document.getElementById("article-summary").textContent = article.summary;
-                            document.getElementById("article-body").textContent = article.body;
-
-
-
-                            loadComments();
+                            document.getElementById("article-body").textContent = article.body || "No full text available.";
                         })
                         .catch(error => {
                             console.error("Error loading article:", error);
                             document.querySelector(".article-container").innerHTML = `<p>Error loading article.</p>`;
                         });
+
+                    // Fetch ratings data
+                    fetch(`/api/article_ratings/${articleId}`)
+                        .then(response => {
+                            if (!response.ok) throw new Error("Failed to load ratings");
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.error) {
+                                document.querySelector("#rating-overall-digit .rating-value").textContent = "N/A";
+                                document.getElementById("rating-breakdown").innerHTML = "<p>No ratings yet.</p>";
+                            } else {
+                                document.querySelector("#rating-overall-digit .rating-value").textContent = `${data.overall.toFixed(1)} / 5`;
+                                document.getElementById("rating-breakdown").innerHTML = `
+                                    <p><strong>Bias:</strong> ${data.bias}/5</p>
+                                    <p><strong>Accuracy:</strong> ${data.accuracy}/5</p>
+                                    <p><strong>Quality:</strong> ${data.quality}/5</p>
+                                    <p><strong>Value:</strong> ${data.value}/5</p>
+                                `;
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error fetching ratings:", error);
+                            document.querySelector("#rating-overall-digit .rating-value").textContent = "Error";
+                            document.getElementById("rating-breakdown").innerHTML = "<p>Error loading ratings.</p>";
+                        });
+
+                    // Set up Reviews button
+                    document.getElementById("view-reviews-btn").addEventListener("click", function() {
+                        window.location.href = `/reviews?article_id=${articleId}`;
+                    });
+
+                    // Set up Read More button
+                    const readMoreBtn = document.getElementById("read-more-btn");
+                    const articleBody = document.getElementById("article-body");
+
+                    readMoreBtn.addEventListener("click", function() {
+                        if (articleBody.classList.contains("visible")) {
+                            articleBody.classList.remove("visible");
+                            readMoreBtn.textContent = "Read More";
+                        } else {
+                            articleBody.classList.add("visible");
+                            readMoreBtn.textContent = "Show Less";
+                        }
+                    });
+
+                    // Load comments
+                    loadComments();
                 });
-        
+
+            // Comment form handling
             const commentInput = document.querySelector('.comment-input');
             const charCount = document.getElementById('char-count');
             const commentSubmit = document.querySelector('.comment-submit');
             const commentList = document.getElementById('comment-list');
             const warning = document.getElementById('comment-warning');
-        
+
             commentInput.addEventListener('input', () => {
                 const remaining = 500 - commentInput.value.length;
                 charCount.textContent = `${remaining} characters remaining`;
             });
-        
+
             commentSubmit.addEventListener('click', () => {
                 const commentText = commentInput.value.trim();
                 if (!commentText) return;
-        
+
                 const offensiveWords = [
                     'badword1', 'badword2', 'spam',
                     'jerk', 'idiot', 'stupid',
@@ -637,7 +558,7 @@
                 ];
                 const lowerText = commentText.toLowerCase();
                 const isOffensive = offensiveWords.some(word => lowerText.includes(word));
-        
+
                 if (isOffensive) {
                     warning.textContent = lowerText.includes('sewanee')
                         ? 'Warning: Comment contains offensive language or spam and cannot be posted. Only legitimate colleges will be tolerated.'
@@ -645,18 +566,16 @@
                     warning.style.display = 'block';
                     return;
                 }
-        
+
                 fetch(`/api/article/${articleId}/comments`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: commentText }), // Ensure correct JSON format
+                    body: JSON.stringify({ text: commentText }),
                     credentials: 'include'
                 })
                 .then(response => {
                     if (!response.ok) {
-                        return response.json().then(err => {
-                            throw new Error(err.error || 'Failed to post comment');
-                        });
+                        return response.json().then(err => { throw new Error(err.error || 'Failed to post comment'); });
                     }
                     return response.json();
                 })
@@ -672,7 +591,7 @@
                     warning.style.display = 'block';
                 });
             });
-        
+
             function loadComments() {
                 fetch(`/api/article/${articleId}/comments`)
                     .then(response => response.json())
@@ -684,7 +603,7 @@
                     })
                     .catch(error => console.error('Error loading comments:', error));
             }
-        
+
             function addComment(text, initialUpvotes = 0, initialDownvotes = 0, usernameOverride, isVerified = false, commentId) {
                 const commentDiv = document.createElement('div');
                 commentDiv.className = 'comment';
@@ -718,10 +637,10 @@
                 downvote.className = 'vote-btn downvote';
                 downvote.innerHTML = '<i class="fas fa-arrow-down"></i>';
 
-                let currentVote = null; // Track the user's current vote
+                let currentVote = null;
 
                 upvote.onclick = () => {
-                    if (currentVote === 'upvote') return; // Prevent multiple upvotes
+                    if (currentVote === 'upvote') return;
                     fetch(`/api/comment/${commentId}/vote`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -737,14 +656,14 @@
                     .then(data => {
                         voteCount.textContent = data.upvotes - data.downvotes;
                         currentVote = 'upvote';
-                        upvote.classList.add('voted');
-                        downvote.classList.remove('voted');
+                        upvote.className = 'vote-btn upvote voted';
+                        downvote.className = 'vote-btn downvote';
                     })
                     .catch(error => console.error('Error updating upvote:', error));
                 };
 
                 downvote.onclick = () => {
-                    if (currentVote === 'downvote') return; // Prevent multiple downvotes
+                    if (currentVote === 'downvote') return;
                     fetch(`/api/comment/${commentId}/vote`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -760,37 +679,15 @@
                     .then(data => {
                         voteCount.textContent = data.upvotes - data.downvotes;
                         currentVote = 'downvote';
-                        downvote.classList.add('voted');
-                        upvote.classList.remove('voted');
+                        downvote.className = 'vote-btn downvote voted';
+                        upvote.className = 'vote-btn upvote';
                     })
                     .catch(error => console.error('Error updating downvote:', error));
                 };
 
                 voteDiv.append(upvote, voteCount, downvote);
                 commentDiv.append(usernameDiv, commentText, voteDiv);
-                document.getElementById('comment-list').prepend(commentDiv);
-            }
-
-            function updateVoteOnServer(commentId, voteChange) {
-                fetch(`/api/comment/${commentId}/vote`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ vote_change: voteChange }),
-                    credentials: 'include'
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to update vote');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Vote updated on server:', data.votes);
-                })
-                .catch(error => {
-                    console.error('Error updating vote:', error);
-                    alert('Failed to save vote. Please try again.');
-                });
+                commentList.prepend(commentDiv);
             }
         });
     </script>
