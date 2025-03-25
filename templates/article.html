@@ -612,7 +612,8 @@
                         const sortedComments = data.comments.sort((a, b) => {
                             const votesA = a.upvotes - a.downvotes;
                             const votesB = b.upvotes - b.downvotes;
-                            return votesB - votesA; // Descending order
+                            //return votesB - votesA; // Descending order
+                            return votesA - votesB
                         });
     
                         commentList.innerHTML = '';
