@@ -443,7 +443,7 @@
             <p class="no-reviews">No reviews yet. Be the first to review!</p>
         {% endif %}
 
-        {% if user %}
+        {% if user.verified_code %}
             <section class="review-form">
                 <h2>Leave a Review</h2>
                 <form action="{{ url_for('submit_review') }}" method="POST">
