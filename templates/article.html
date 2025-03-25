@@ -646,133 +646,46 @@
 
                 const voteCount = document.createElement('span');
                 voteCount.className = 'vote-count';
-
-                // Retrieve stored vote state for this comment
-                const storedVoteKey = `comment_vote_${commentId}`;
-                const storedVote = localStorage.getItem(storedVoteKey);
-                let currentVote = storedVote || null;
-
-                // Initialize vote count, ensuring it's within -100 to 100 range
-                let voteValue = Math.max(-100, Math.min(100,
-                    parseInt(localStorage.getItem(`comment_vote_value_${commentId}`) || '0')
-                ));
-
-                voteCount.textContent = voteValue;
+                voteCount.textContent = initialUpvotes - initialDownvotes;
 
                 const downvote = document.createElement('button');
                 downvote.className = 'vote-btn downvote';
                 downvote.innerHTML = '<i class="fas fa-arrow-down"></i>';
 
-                // Disable voting buttons by default
-                upvote.disabled = true;
-                downvote.disabled = true;
-                upvote.title = 'Login to vote';
-                downvote.title = 'Login to vote';
+                let currentVote = null; // Track the user's current vote
 
-                // Check user login status and voting permissions
-                fetch('/api/user', { credentials: 'include' })
-                    .then(response => {
-                        if (response.ok) return response.json();
-                        throw new Error('Not logged in');
-                    })
-                // Modify the voting section in the existing script
-                    .then(user => {
-                        // Check if user can vote based on account type
-                        let canVote = user.verified !== undefined; // This allows both verified and normal accounts to vote
+                upvote.onclick = () => {
+                    const newVote = currentVote === 'upvote' ? null : 'upvote'; // Toggle upvote
+                    updateVote(commentId, newVote, voteCount, upvote, downvote);
+                };
 
-                        // Update voting button permissions
-                        upvote.disabled = !canVote;
-                        downvote.disabled = !canVote;
-
-                        // Update tooltips
-                        upvote.title = canVote ? '' : 'Login to vote';
-                        downvote.title = canVote ? '' : 'Login to vote';
-
-                        // Enable voting if user has an account
-                        if (canVote) {
-                            // Apply stored vote styling
-                            if (currentVote === 'upvote') {
-                                upvote.classList.add('voted');
-                            } else if (currentVote === 'downvote') {
-                                downvote.classList.add('voted');
-                            }
-
-                            upvote.onclick = () => {
-                                if (!canVote || upvote.disabled) return;
-
-                                if (voteValue < 100) {
-                                    voteValue = Math.min(100, voteValue + 1);
-
-                                    // Update styling
-                                    upvote.classList.add('voted');
-                                    downvote.classList.remove('voted');
-                                    currentVote = 'upvote';
-
-                                    // Update vote count display
-                                    voteCount.textContent = voteValue;
-
-                                    // Update local storage
-                                    localStorage.setItem(storedVoteKey, currentVote);
-                                    localStorage.setItem(`comment_vote_value_${commentId}`, voteValue);
-
-                                    // Send vote to server
-                                    fetch(`/api/comment/${commentId}/vote`, {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify({
-                                            vote_type: 'upvote',
-                                            vote_value: voteValue
-                                        }),
-                                        credentials: 'include'
-                                    }).catch(error => console.error('Error updating vote:', error));
-                                }
-                            };
-
-                            downvote.onclick = () => {
-                                if (!canVote || downvote.disabled) return;
-
-                                if (voteValue > -100) {
-                                    voteValue = Math.max(-100, voteValue - 1);
-
-                                    // Update styling
-                                    downvote.classList.add('voted');
-                                    upvote.classList.remove('voted');
-                                    currentVote = 'downvote';
-
-                                    // Update vote count display
-                                    voteCount.textContent = voteValue;
-
-                                    // Update local storage
-                                    localStorage.setItem(storedVoteKey, currentVote);
-                                    localStorage.setItem(`comment_vote_value_${commentId}`, voteValue);
-
-                                    // Send vote to server
-                                    fetch(`/api/comment/${commentId}/vote`, {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify({
-                                            vote_type: 'downvote',
-                                            vote_value: voteValue
-                                        }),
-                                        credentials: 'include'
-                                    }).catch(error => console.error('Error updating vote:', error));
-                                }
-                            };
-                        } else {
-                            // Keeps buttons disabled and with login tooltip
-                            upvote.classList.add('disabled');
-                            downvote.classList.add('disabled');
-                        }
-                    })
-                    .catch(() => {
-                        // Keeps buttons disabled and with login tooltip
-                        upvote.classList.add('disabled');
-                        downvote.classList.add('disabled');
-                    });
+                downvote.onclick = () => {
+                    const newVote = currentVote === 'downvote' ? null : 'downvote'; // Toggle downvote
+                    updateVote(commentId, newVote, voteCount, upvote, downvote);
+                };
 
                 voteDiv.append(upvote, voteCount, downvote);
                 commentDiv.append(usernameDiv, commentText, voteDiv);
-                commentList.prepend(commentDiv);
+                document.getElementById('comment-list').prepend(commentDiv);
+
+                function updateVote(commentId, newVote, voteCount, upvote, downvote) {
+                    fetch(`/api/comment/${commentId}/vote`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ vote_type: newVote }),
+                        credentials: 'include'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        voteCount.textContent = data.upvotes - data.downvotes;
+                        currentVote = newVote;
+
+                        // Update button styles
+                        upvote.classList.toggle('voted', currentVote === 'upvote');
+                        downvote.classList.toggle('voted', currentVote === 'downvote');
+                    })
+                    .catch(error => console.error('Error updating vote:', error));
+                }
             }
         });
     </script>

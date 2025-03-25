@@ -353,7 +353,7 @@ def vote_comment(comment_id):
         return jsonify({"error": "User not logged in"}), 401
 
     data = request.get_json()
-    vote_type = data.get('vote_type')  # 'upvote' or 'downvote'
+    vote_type = data.get('vote_type')  # 'upvote', 'downvote', or None (to remove vote)
     user_id = session['user_id']
     db = get_db()
 
@@ -364,9 +364,14 @@ def vote_comment(comment_id):
     ).fetchone()
 
     if existing_vote:
-        if existing_vote['vote_type'] == vote_type:
-            return jsonify({"error": "You have already voted this way"}), 400
-        else:
+        if vote_type is None:
+            # Remove the existing vote
+            db.execute('DELETE FROM comment_votes WHERE comment_id = ? AND user_id = ?', (comment_id, user_id))
+            if existing_vote['vote_type'] == 'upvote':
+                db.execute('UPDATE comments SET upvotes = upvotes - 1 WHERE id = ?', (comment_id,))
+            else:
+                db.execute('UPDATE comments SET downvotes = downvotes - 1 WHERE id = ?', (comment_id,))
+        elif existing_vote['vote_type'] != vote_type:
             # Change the vote type
             db.execute(
                 'UPDATE comment_votes SET vote_type = ? WHERE comment_id = ? AND user_id = ?',
@@ -377,15 +382,16 @@ def vote_comment(comment_id):
             else:
                 db.execute('UPDATE comments SET upvotes = upvotes - 1, downvotes = downvotes + 1 WHERE id = ?', (comment_id,))
     else:
-        # Add a new vote
-        db.execute(
-            'INSERT INTO comment_votes (comment_id, user_id, vote_type) VALUES (?, ?, ?)',
-            (comment_id, user_id, vote_type)
-        )
-        if vote_type == 'upvote':
-            db.execute('UPDATE comments SET upvotes = upvotes + 1 WHERE id = ?', (comment_id,))
-        else:
-            db.execute('UPDATE comments SET downvotes = downvotes + 1 WHERE id = ?', (comment_id,))
+        if vote_type is not None:
+            # Add a new vote
+            db.execute(
+                'INSERT INTO comment_votes (comment_id, user_id, vote_type) VALUES (?, ?, ?)',
+                (comment_id, user_id, vote_type)
+            )
+            if vote_type == 'upvote':
+                db.execute('UPDATE comments SET upvotes = upvotes + 1 WHERE id = ?', (comment_id,))
+            else:
+                db.execute('UPDATE comments SET downvotes = downvotes + 1 WHERE id = ?', (comment_id,))
 
     db.commit()
     updated_comment = db.execute('SELECT upvotes, downvotes FROM comments WHERE id = ?', (comment_id,)).fetchone()
