@@ -428,12 +428,16 @@
 
         <div class="comments-section">
             <h3>Comments</h3>
-            <div class="comment-form">
-                <textarea class="comment-input" maxlength="500" placeholder="Share your thoughts (max 500 characters)"></textarea>
-                <div id="char-count">500 characters remaining</div>
-                <button class="comment-submit">Post Comment</button>
-                <div class="warning" id="comment-warning" style="display: none;"></div>
-            </div>
+            {% if user_info.username %}
+                <div class="comment-form">
+                    <textarea class="comment-input" maxlength="500" placeholder="Share your thoughts (max 500 characters)"></textarea>
+                    <div id="char-count">500 characters remaining</div>
+                    <button class="comment-submit">Post Comment</button>
+                    <div class="warning" id="comment-warning" style="display: none;"></div>
+                </div>
+            {% else %} 
+                <div class="warning">Please log in to post comments.</div>
+            {% endif %}
             <div class="comment-list" id="comment-list"></div>
         </div>
     </div>

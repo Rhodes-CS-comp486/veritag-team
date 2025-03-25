@@ -407,10 +407,12 @@ def article_page(article_id):
     db = get_db()
     is_verified = False
     if 'user_id' in session:
-        user = db.execute('SELECT verified_code FROM users WHERE id = ?', (session['user_id'],)).fetchone()
+        user = db.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],)).fetchone()
+        if user:
+            user_info = dict(user)
         if user and user['verified_code'] != '':
             is_verified = True
-    return render_template('article.html', is_verified=is_verified)
+    return render_template('article.html', is_verified=is_verified, user_info=user_info)
 
 @app.route('/browse')
 def browse():
@@ -494,9 +496,14 @@ def categories():
 def view_article(article_id):
     db = get_db()
     article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
+    user_info = None
+    if 'user_id' in session:
+        user = db.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],)).fetchone()
+        if user:
+            user_info = dict(user)
     if article is None:
         return render_template('404.html'), 404
-    return render_template('article.html', article=article)
+    return render_template('article.html', article=article, user_info=user_info)
 
 @app.route('/explore')
 def explore():
