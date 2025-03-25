@@ -288,6 +288,11 @@ def get_article(article_id):
 @app.route('/api/article/<article_id>/comments', methods=['GET'])
 def get_comments(article_id):
     db = get_db()
+    # Check if the article exists
+    article = db.execute('SELECT id FROM articles WHERE id = ?', (article_id,)).fetchone()
+    if not article:
+        return jsonify({"error": "Article not found"}), 404
+
     comments = db.execute(
         '''SELECT c.id, c.username, c.text, c.upvotes, c.downvotes, c.created_at, 
                   CASE WHEN u.verified_code != '' THEN 1 ELSE 0 END AS verified
