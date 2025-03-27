@@ -273,7 +273,16 @@ def get_user():
 @app.route('/api/articles')
 def get_articles():
     db = get_db()
-    articles = db.execute('SELECT id, title, source, author, length, category, rating, body, summary, publication_date FROM articles').fetchall()
+    articles = db.execute('''
+        SELECT a.id, a.title, a.source, a.author, a.length, a.category, 
+               COALESCE(AVG(r.overall_rating), 0) AS rating, 
+               a.body, a.summary, a.publication_date
+        FROM articles a
+        LEFT JOIN reviews r ON a.id = r.article_id
+        GROUP BY a.id
+        ORDER BY a.publication_date DESC
+    ''').fetchall()
+
     articles_list = [dict(article) for article in articles]
     return jsonify({"articles": articles_list})
 

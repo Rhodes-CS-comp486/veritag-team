@@ -687,7 +687,8 @@ document.addEventListener("DOMContentLoaded", function() {
                             <strong>Published:</strong> ${article.publication_date}<br>
                         </div>
                         <div class="article-summary">${article.summary}</div>
-                       <div class="rating-badge">Rating: ${Number(article.rating)} ★</div>
+                       <div class="rating-badge">Rating: ${Number(article.rating).toFixed(1)} ★</div>
+
 
                     </div>
                 </div>
