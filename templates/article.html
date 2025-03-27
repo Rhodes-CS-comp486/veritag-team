@@ -120,6 +120,9 @@
             color: #ddd;
             margin-top: 0.25rem;
         }
+        .rating-value.no-ratings {
+            font-size: 2rem; /* Half of the original 4rem */
+        }
 
         .button-container {
             flex: 1;
@@ -518,7 +521,9 @@
                         })
                         .then(data => {
                             if (data.error) {
-                                document.querySelector("#rating-overall-digit .rating-value").textContent = "N/A";
+                                const ratingValue = document.querySelector("#rating-overall-digit .rating-value");
+                                ratingValue.textContent = "No Ratings Yet";
+                                ratingValue.classList.add("no-ratings"); // Add the class here
                                 document.getElementById("rating-breakdown").innerHTML = "<p>No ratings yet.</p>";
                             } else {
                                 document.querySelector("#rating-overall-digit .rating-value").textContent = `${data.overall.toFixed(1)} / 5`;
@@ -532,10 +537,11 @@
                         })
                         .catch(error => {
                             console.error("Error fetching ratings:", error);
-                            document.querySelector("#rating-overall-digit .rating-value").textContent = "Error";
-                            document.getElementById("rating-breakdown").innerHTML = "<p>Error loading ratings.</p>";
+                            const ratingValue = document.querySelector("#rating-overall-digit .rating-value");
+                            ratingValue.textContent = "No Ratings Yet";
+                            ratingValue.classList.add("no-ratings"); // Add the class here too
+                            document.getElementById("rating-breakdown").innerHTML = "<p>No Ratings Yet.</p>";
                         });
-    
                     // Set up Reviews button
                     document.getElementById("view-reviews-btn").addEventListener("click", function() {
                         window.location.href = `/reviews?article_id=${articleId}`;
