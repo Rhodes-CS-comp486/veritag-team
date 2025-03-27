@@ -474,7 +474,7 @@ def verified_login():
             flash('Invalid username, password, or not a verified account.', 'error')
     return render_template('verified_login.html', error=error)
 
-@app.route('/browse_verified', methods=['POST', 'GET'])
+@app.route('/browse', methods=['POST', 'GET'])
 def browse_verified():
     db = get_db()
     user_info = None
@@ -483,7 +483,7 @@ def browse_verified():
         user = db.execute('SELECT username, email FROM users WHERE id = ?', (session['user_id'],)).fetchone()
         if user:
             user_info = dict(user)
-    return render_template('browse_verified.html', user_info=user_info, articles=articles)
+    return render_template('browse.html', user_info=user_info, articles=articles)
 
 @app.route('/community')
 def community():
