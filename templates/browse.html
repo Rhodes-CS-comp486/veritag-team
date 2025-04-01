@@ -59,6 +59,7 @@
             color: #fff;
             text-decoration: none;
             font-size: 1rem;
+            backdrop-filter: blur(10px);
             padding: 0.5rem 1rem;
             border-radius: 6px;
             transition: all 0.2s;
@@ -73,161 +74,69 @@
             background: rgba(176, 136, 255, 0.2);
         }
 
-        .nav-link-featured {
-            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
-            padding: 0.5rem 1.2rem;
-            border-radius: 6px;
-            font-weight: 500;
-        }
-
-        .nav-link-featured:hover {
-            background: linear-gradient(45deg, #ff8e8e, #ffb4b4);
-            transform: translateY(-1px);
-        }
-
-        .filter-dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .filter-trigger {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .filter-trigger:hover {
-            background: rgba(176, 136, 255, 0.2);;
-            border-color: rgba(200, 165, 255, 0.4);
-        }
-
-        .filter-menu {
-            position: absolute;
-            top: 100%;
-            max-height: 66vh;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            left: 0;
-            margin-top: 0.5rem;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            min-width: 300px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1rem;
-        }
-        .collapsible {
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.875rem;
-            margin-bottom: 0.5rem;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: color 0.2s;
-        }
-
-        .collapsible:hover {
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .toggle-icon {
-            font-size: 1rem;
-            font-weight: bold;
-            transition: transform 0.3s;
-        }
-
-        .collapsible.active .toggle-icon {
-            transform: rotate(45deg);
-        }
-
-        .filter-dropdown:hover .filter-menu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .filter-section {
-            margin-bottom: 1.5rem;
-        }
-
-        .filter-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .filter-section-title {
-            font-size: 0.875rem;
-            margin-bottom: 0.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .filter-options {
-            display: none;
-            gap: 0.5rem;
-        }
-
-        .filter-options.active {
-            display: grid;
-        }
-
-        .filter-option {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .filter-option:hover {
-            background: rgba(176, 136, 255, 0.2);
-        }
-
-        .filter-option input[type="radio"] {
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            border-radius: 50%;
-            position: relative;
-        }
-
-        .filter-option input[type="radio"]:checked {
-            border-color: #B088FF;
-        }
-
-        .filter-option input[type="radio"]:checked::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 8px;
-            height: 8px;
-            background: #B088FF;
-            border-radius: 50%;
-        }
-
         .nav-right {
             display: flex;
             align-items: center;
             gap: 1.5rem;
+        }
+
+        .range-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(176, 136, 255, 0.3);
+        }
+
+        .range-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #B088FF;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .range-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            min-width: 2.5rem;
+            text-align: center;
+        }
+
+        .range-slider {
+            position: relative;
+            width: 250px; /* Wider for emphasis */
+            height: 10px; /* Thicker track */
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 5px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .range-fill {
+            position: absolute;
+            height: 100%;
+            background: linear-gradient(90deg, #B088FF, #D4BBFF); /* Gradient for visual pop */
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(176, 136, 255, 0.5);
+        }
+
+        .range-thumb {
+            position: absolute;
+            width: 20px; /* Larger thumbs */
+            height: 20px;
+            background: #B088FF;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            top: -5px; /* Adjusted for larger size */
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .range-thumb:hover {
+            transform: scale(1.2); /* Slight grow effect on hover */
         }
 
         .search-bar {
@@ -273,7 +182,7 @@
             transition: all 0.3s;
         }
 
-        .nav-right:hover .user-menu {
+        .user-section:hover .user-menu {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
@@ -286,7 +195,7 @@
             text-decoration: none;
             border-radius: 4px;
             transition: background 0.2s;
-        }d
+        }
 
         .user-menu-item:hover {
             background: rgba(176, 136, 255, 0.2);
@@ -366,8 +275,6 @@
             width: 100%;
         }
 
-        
-
         .category-badge {
             display: inline-block;
             padding: 0.5rem 1rem;
@@ -388,7 +295,6 @@
             font-size: 1rem;
             font-weight: 500;
             margin-bottom: 1.5rem;
-
         }
 
         .rating-badge {
@@ -428,7 +334,6 @@
             background: #222;
             height: 450px;
         }
-        
 
         @keyframes pulse {
             0%, 100% { opacity: 1; }
@@ -450,7 +355,6 @@
             background: #111;
             color: white;
         }
-
     </style>
 </head>
 <body>
@@ -462,125 +366,24 @@
                 <a href="/categories" class="nav-link">Categories</a>
                 <a href="/community" class="nav-link">Community</a>
                 <a href="/about" class="nav-link">About</a> 
-                
             </div>
         </div>
         <div class="nav-right">
-            <div class="filter-dropdown">
-                <button class="filter-trigger">
-                    <i class="fas fa-filter"></i>
-                    Filters
-                </button>
-                <div class="filter-menu">
-                    <div class="filter-section">
-                        <div class="filter-section-title collapsible">Length <span class="toggle-icon">+</span></div>
-                        <div class="filter-options">
-                            <label class="filter-option">
-                                <input type="radio" name="length" value="all" checked>
-                                <span>All Lengths</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="length" value="Short">
-                                <span>Short (< 5 min)</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="length" value="Medium">
-                                <span>Medium (5-15 min)</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="length" value="Long">
-                                <span>Long (> 15 min)</span>
-                            </label>
-                        </div>
-                    </div>
-            
-                    <div class="filter-section">
-                        <div class="filter-section-title collapsible">Category <span class="toggle-icon">+</span></div>
-                        <div class="filter-options">
-                            <label class="filter-option">
-                                <input type="radio" name="category" value="all" checked>
-                                <span>All Categories</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="category" value="Technology">
-                                <span>Technology</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="category" value="Health">
-                                <span>Health</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="category" value="Science">
-                                <span>Science</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="category" value="Politics">
-                                <span>Politics</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="category" value="Culture">
-                                <span>Culture</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="category" value="Culture">
-                                <span>Business</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="category" value="Culture">
-                                <span>Music</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="category" value="Culture">
-                                <span>Entertainment</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="category" value="Culture">
-                                <span>Sports</span>
-                            </label>
-                        </div>
-                    </div>
-            
-                    <div class="filter-section">
-                        <div class="filter-section-title collapsible">Rating <span class="toggle-icon">+</span></div>
-                        <div class="filter-options">
-                            <label class="filter-option">
-                                <input type="radio" name="rating" value="all" checked>
-                                <span>Any Rating</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="rating" value="5">
-                                <span>5 Stars</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="rating" value="4">
-                                <span>4 Stars</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="rating" value="3">
-                                <span>3 Stars</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="rating" value="0">
-                                <span>2 Stars</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="rating" value="1">
-                                <span>1 Stars</span>
-                            </label>
-                            <label class="filter-option">
-                                <input type="radio" name="rating" value="0">
-                                <span>0 Stars</span>
-                            </label>
-                        </div>
-                    </div>
+            <div class="range-container">
+                <span class="range-label">Rating</span>
+                <span class="range-value" id="min-value">0.00</span>
+                <div class="range-slider">
+                    <div class="range-fill"></div>
+                    <div class="range-thumb" id="min-thumb"></div>
+                    <div class="range-thumb" id="max-thumb"></div>
                 </div>
+                <span class="range-value" id="max-value">5.00</span>
             </div>
             
             <div class="search-bar">
                 <i class="fas fa-search"></i>
                 <input type="text" placeholder="Search articles...">
             </div>
-            
             
             <div class="user-section">
                 {% if user_info %}
@@ -598,7 +401,7 @@
                 </button>
                 <div class="user-menu">
                     <a href="/login" class="user-menu-item">Login</a>
-                    <a href="/create_account" class="user-menu-item">Create Account</a> <!-- Updated href -->
+                    <a href="/create_account" class="user-menu-item">Create Account</a>
                     <a href="/verified_login" class="user-menu-item">Verified Login</a>
                 </div>
                 {% endif %}
@@ -609,156 +412,156 @@
     <div id="articles-container" class="articles-container">
         <div class="articles-grid"></div>
     </div>
+
     <script>
         function updateArticleDisplay() {
-    const searchInput = document.querySelector('.search-bar input').value.toLowerCase().trim();
-    const selectedLength = document.querySelector('input[name="length"]:checked')?.value || 'all';
-    const selectedCategory = document.querySelector('input[name="category"]:checked')?.value || 'all';
-    const selectedRating = document.querySelector('input[name="rating"]:checked')?.value || 'all';
+            const searchInput = document.querySelector('.search-bar input').value.toLowerCase().trim();
+            const minRating = parseFloat(document.getElementById('min-value').textContent);
+            const maxRating = parseFloat(document.getElementById('max-value').textContent);
 
-    const cards = document.querySelectorAll('.article-card');
+            const cards = document.querySelectorAll('.article-card');
 
-    cards.forEach(card => {
-        // Filter conditions
-        const matchesLength = selectedLength === 'all' || card.dataset.length === selectedLength;
-        const matchesCategory = selectedCategory === 'all' || card.dataset.category === selectedCategory;
-        const matchesRating = selectedRating === 'all' || parseFloat(card.dataset.rating) == parseFloat(selectedRating);
+            cards.forEach(card => {
+                const cardRating = parseFloat(card.dataset.rating);
+                const matchesRating = cardRating >= minRating && cardRating <= maxRating;
+                const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
+                const matchesSearch = searchInput === '' || title.startsWith(searchInput);
 
-        // Search condition - check if title starts with the search input
-        const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
-        const matchesSearch = searchInput === '' || title.startsWith(searchInput);
+                card.style.display = (matchesRating && matchesSearch) ? 'block' : 'none';
+            });
+        }
 
-        // Show card only if it matches both filter and search criteria
-        card.style.display = (matchesLength && matchesCategory && matchesRating && matchesSearch) ? 'block' : 'none';
-    });
-}
-
-// Update the DOMContentLoaded event listener
-document.addEventListener("DOMContentLoaded", function() {
-    createLoadingPlaceholders();
-
-    // Add filter event listeners
-    document.querySelectorAll('.filter-option input[type="radio"]').forEach(radio => {
-        radio.addEventListener('change', updateArticleDisplay);
-    });
-
-    // Add search event listener
-    const searchInput = document.querySelector('.search-bar input');
-    searchInput.addEventListener('input', updateArticleDisplay);
-
-    // Simulate loading delay
-    setTimeout(() => {
-        fetch('/api/articles')
-            .then(response => response.json())
-            .then(data => {
-                console.log("Fetched articles:", data);
-                const articles = data.articles;
-                console.log("Parsed articles:", articles);
-
-                const grid = document.querySelector('.articles-grid');
-                if (grid) {
-                    grid.innerHTML = articles.map(article => createArticleCard(article)).join('');
-                }
-                updateArticleDisplay();
-            })
-            .catch(error => console.error("Error loading articles:", error));
-    }, 2000);
-});
         function createArticleCard(article) {
-    return `
-        <a href="/article/${article.id}" class="article-card"
-            data-length="${article.length}"
-            data-author="${article.author}"
-            data-source="${article.source}"
-            data-summary="${article.summary}"
-            data-image="${article.image}""
-            data-category="${article.category}"
-            data-publication_date="${article.publication_date}"
-            data-rating=article.rating>
-            <div class="card-inner">
-                <div class="card-front" style="background-image: url('${article.image || "/api/placeholder/400/400"}')">
-                    <h3 class="card-title">${article.title}</h3>
-                </div>
-                <div class="card-back">
-                    <div class="card-meta">
-                        <div class="meta-top">
-                            <span class="category-badge">${article.category}</span>
-                            <span class="length-badge">${article.length}</span>
+            return `
+                <a href="/article/${article.id}" class="article-card"
+                    data-length="${article.length}"
+                    data-author="${article.author}"
+                    data-source="${article.source}"
+                    data-summary="${article.summary}"
+                    data-image="${article.image}"
+                    data-category="${article.category}"
+                    data-publication_date="${article.publication_date}"
+                    data-rating="${article.rating}">
+                    <div class="card-inner">
+                        <div class="card-front" style="background-image: url('${article.image || "/api/placeholder/400/400"}')">
+                            <h3 class="card-title">${article.title}</h3>
                         </div>
-                        <div class="article-info">
-                            <strong>Author:</strong> ${article.author || 'Test Author'}<br>
-                            <strong>Source:</strong> ${article.source || 'Test Source'}<br>
-                            <strong>Published:</strong> ${article.publication_date}<br>
+                        <div class="card-back">
+                            <div class="card-meta">
+                                <div class="meta-top">
+                                    <span class="category-badge">${article.category}</span>
+                                    <span class="length-badge">${article.length}</span>
+                                </div>
+                                <div class="article-info">
+                                    <strong>Author:</strong> ${article.author || 'Test Author'}<br>
+                                    <strong>Source:</strong> ${article.source || 'Test Source'}<br>
+                                    <strong>Published:</strong> ${article.publication_date}<br>
+                                </div>
+                                <div class="article-summary">${article.summary}</div>
+                                <div class="rating-badge">Rating: ${Number(article.rating).toFixed(1)} ★</div>
+                            </div>
                         </div>
-                        <div class="article-summary">${article.summary}</div>
-                       <div class="rating-badge">Rating: ${Number(article.rating).toFixed(1)} ★</div>
-
-
                     </div>
-                </div>
+                </a>
+            `;
+        }
 
-            </div>
-        </a>
-    `;
-}
+        function createLoadingPlaceholders() {
+            const grid = document.querySelector('.articles-grid');
+            const placeholders = Array(12).fill('<div class="article-card loading-placeholder"></div>').join('');
+            grid.innerHTML = placeholders;
+        }
 
-function createLoadingPlaceholders() {
-    const grid = document.querySelector('.articles-grid');
-    const placeholders = Array(12).fill('<div class="article-card loading-placeholder"></div>').join('');
-    grid.innerHTML = placeholders;
-}
+        document.addEventListener("DOMContentLoaded", function() {
+            createLoadingPlaceholders();
 
-function filterArticles() {
-    const selectedLength = document.querySelector('input[name="length"]:checked')?.value || 'all';
-    const selectedCategory = document.querySelector('input[name="category"]:checked')?.value || 'all';
-    const selectedRating = document.querySelector('input[name="rating"]:checked')?.value || 'all';
+            const minThumb = document.getElementById('min-thumb');
+            const maxThumb = document.getElementById('max-thumb');
+            const rangeFill = document.querySelector('.range-fill');
+            const minValue = document.getElementById('min-value');
+            const maxValue = document.getElementById('max-value');
+            const slider = document.querySelector('.range-slider');
+            const sliderWidth = slider.offsetWidth;
 
-    const cards = document.querySelectorAll('.article-card');
+            let minPos = 0;
+            let maxPos = sliderWidth - 20; // Adjust for larger thumb width
+            const minRating = 0;
+            const maxRating = 5;
+            const step = 0.25;
 
-    cards.forEach(card => {
-        const matchesLength = selectedLength === 'all' || card.dataset.length === selectedLength;
-        const matchesCategory = selectedCategory === 'all' || card.dataset.category === selectedCategory;
-        const matchesRating = selectedRating === 'all' || (parseFloat(card.dataset.rating) >= parseFloat(selectedRating) && parseFloat(card.dataset.rating) <= parseFloat(selectedRating)+1);
+            function snapToStep(value) {
+                return Math.round(value / step) * step;
+            }
 
-        card.style.display = (matchesLength && matchesCategory && matchesRating) ? 'block' : 'none';
-    });
-}
+            function updateSlider() {
+                const minPercent = (minPos / (sliderWidth - 20)) * 100;
+                const maxPercent = (maxPos / (sliderWidth - 20)) * 100;
+                rangeFill.style.left = `${minPercent}%`;
+                rangeFill.style.width = `${maxPercent - minPercent}%`;
 
-document.querySelectorAll('.collapsible').forEach(section => {
-    section.addEventListener('click', () => {
-        const options = section.nextElementSibling;
-        options.classList.toggle('active');
-        section.classList.toggle('active');
-    });
-});
+                let minRatingValue = minRating + (minPos / (sliderWidth - 20)) * (maxRating - minRating);
+                let maxRatingValue = minRating + (maxPos / (sliderWidth - 20)) * (maxRating - minRating);
 
-document.addEventListener("DOMContentLoaded", function() {
-    createLoadingPlaceholders();
+                minRatingValue = snapToStep(minRatingValue);
+                maxRatingValue = snapToStep(maxRatingValue);
 
-    // Add filter event listeners
-    document.querySelectorAll('.filter-option input[type="radio"]').forEach(radio => {
-        radio.addEventListener('change', filterArticles);
-    });
+                minRatingValue = Math.min(minRatingValue, maxRatingValue - step);
+                maxRatingValue = Math.max(maxRatingValue, minRatingValue + step);
 
-    // Simulate loading delay
-    setTimeout(() => {
-        fetch('/api/articles')
-            .then(response => response.json())
-            .then(data => {
-                console.log("Fetched articles:", data);
-                const articles = data.articles;
-                console.log("Parsed articles:", articles);
+                minValue.textContent = minRatingValue.toFixed(2);
+                maxValue.textContent = maxRatingValue.toFixed(2);
 
-                const grid = document.querySelector('.articles-grid');
-                if (grid) {
-                    grid.innerHTML = articles.map(article => createArticleCard(article)).join('');
+                updateArticleDisplay();
+            }
+
+            minThumb.style.left = `${minPos}px`;
+            maxThumb.style.left = `${maxPos}px`;
+            updateSlider();
+
+            let dragging = null;
+
+            minThumb.addEventListener('mousedown', () => dragging = 'min');
+            maxThumb.addEventListener('mousedown', () => dragging = 'max');
+            document.addEventListener('mouseup', () => dragging = null);
+
+            document.addEventListener('mousemove', (e) => {
+                if (!dragging) return;
+
+                const rect = slider.getBoundingClientRect();
+                let newPos = e.clientX - rect.left - 10; // Adjust for larger thumb center
+                newPos = Math.max(0, Math.min(newPos, sliderWidth - 20));
+
+                if (dragging === 'min') {
+                    minPos = Math.min(newPos, maxPos - 10);
+                    minThumb.style.left = `${minPos}px`;
+                } else if (dragging === 'max') {
+                    maxPos = Math.max(newPos, minPos + 10);
+                    maxThumb.style.left = `${maxPos}px`;
                 }
-                filterArticles();
-            })
-            .catch(error => console.error("Error loading articles:", error));
-    }, 2000);
-});
 
+                updateSlider();
+            });
+
+            const searchInput = document.querySelector('.search-bar input');
+            searchInput.addEventListener('input', updateArticleDisplay);
+
+            setTimeout(() => {
+                fetch('/api/articles')
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Fetched articles:", data);
+                        const articles = data.articles;
+                        console.log("Parsed articles:", articles);
+
+                        const grid = document.querySelector('.articles-grid');
+                        if (grid) {
+                            grid.innerHTML = articles.map(article => createArticleCard(article)).join('');
+                        }
+                        updateArticleDisplay();
+                    })
+                    .catch(error => console.error("Error loading articles:", error));
+            }, 2000);
+        });
     </script>
 </body>
 </html>
