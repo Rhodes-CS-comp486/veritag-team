@@ -581,12 +581,12 @@
                 <input type="text" placeholder="Search articles...">
             </div>
             
-            <div class="notification-badge">
-                <i class="fas fa-bell"></i>
-            </div>
             
             <div class="user-section">
                 {% if user_info %}
+                <button class="user-menu-trigger">
+                    <i class="fas fa-user-circle"></i>
+                </button>
                 <div class="user-menu">
                     <div class="user-menu-item">Username: {{ user_info.username }}</div>
                     <div class="user-menu-item">Email: {{ user_info.email }}</div>
@@ -718,7 +718,7 @@ function filterArticles() {
     cards.forEach(card => {
         const matchesLength = selectedLength === 'all' || card.dataset.length === selectedLength;
         const matchesCategory = selectedCategory === 'all' || card.dataset.category === selectedCategory;
-        const matchesRating = selectedRating === 'all' || parseFloat(card.dataset.rating) == parseFloat(selectedRating);
+        const matchesRating = selectedRating === 'all' || (parseFloat(card.dataset.rating) >= parseFloat(selectedRating) && parseFloat(card.dataset.rating) <= parseFloat(selectedRating)+1);
 
         card.style.display = (matchesLength && matchesCategory && matchesRating) ? 'block' : 'none';
     });
