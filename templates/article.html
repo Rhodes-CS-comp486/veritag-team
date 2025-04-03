@@ -424,62 +424,65 @@
             <a href="/browse" class="back-button"><i class="fas fa-arrow-left"></i> Back to Articles</a>
         {% endif %}
 
-        <div class="article-header" id="article-title">Loading...</div>
-        <div class="article-meta" id="article-meta"></div>
-        <div id="ratings-section" class="ratings-box">
-            <div class="ratings-title">Aggregate Data</div>
-            <div class="rating-third overall-rating" id="rating-overall-digit">
-                <span class="rating-value">Loading...</span>
-                <span class="rating-label">Overall</span>
+        {% if article %}
+            <div class="article-header" id="article-title">{{ article.title }}</div>
+            <div class="article-meta" id="article-meta">
+                By {{ article.author }} | Source: {{ article.source }} | Reading Time: {{ article.length }} min | Published: {{ article.publication_date }}
             </div>
-            <div class="rating-third button-container">
-                <button id="view-reviews-btn" class="reviews-btn">Reviews</button>
+            <div id="ratings-section" class="ratings-box">
+                <div class="ratings-title">Aggregate Data</div>
+                <div class="rating-third overall-rating" id="rating-overall-digit">
+                    <span class="rating-value">Loading...</span>
+                    <span class="rating-label">Overall</span>
+                </div>
+                <div class="rating-third button-container">
+                    <button id="view-reviews-btn" class="reviews-btn">Reviews</button>
+                </div>
+                <div class="rating-third subcategory-ratings" id="rating-breakdown">
+                    <p>Loading ratings...</p>
+                </div>
             </div>
-            <div class="rating-third subcategory-ratings" id="rating-breakdown">
-                <p>Loading ratings...</p>
-            </div>
-        </div>
-
-        <div class="article-summary" id="article-summary"></div>
-        <button class="read-more" id="read-more-btn">Read More</button>
-        <div class="article-body" id="article-body"></div>
+            <div class="article-summary" id="article-summary">{{ article.summary }}</div>
+            <button class="read-more" id="read-more-btn">Read More</button>
+            <div class="article-body" id="article-body">{{ article.body }}</div>
+        {% else %}
+            <p>Error loading article.</p>
+        {% endif %}
 
         <div class="comments-section">
             <h3>Comments</h3>
-            {% if user_info.username %}
+            {% if user_info %}
                 <div class="comment-form">
                     <textarea class="comment-input" maxlength="500" placeholder="Share your thoughts (max 500 characters)"></textarea>
                     <div id="char-count">500 characters remaining</div>
                     <button class="comment-submit">Post Comment</button>
                     <div class="warning" id="comment-warning" style="display: none;"></div>
                 </div>
-            {% else %} 
-    <div class="warning">
-        Please log in to post comments.
-        <a href="{{ url_for('login') }}">
-            <button class="login-button">Log In</button>
-        </a>
-    </div>
-{% endif %}
-
+            {% else %}
+                <div class="warning">
+                    Please log in to post comments.
+                    <a href="{{ url_for('login') }}">
+                        <button class="login-button">Log In</button>
+                    </a>
+                </div>
+            {% endif %}
             <div class="comment-list" id="comment-list"></div>
         </div>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const articleId = window.location.pathname.split("/").pop();
-    
+            const articleId = "{{ article.id if article else '' }}";  // Get article ID from Flask
             if (!articleId) {
-                console.error("Invalid article ID:", articleId);
+                console.error("No article ID provided");
                 document.querySelector(".article-container").innerHTML = `<p>Error loading article.</p>`;
                 return;
             }
-    
+
             let isLoggedIn = false;
             let username = null;
             let isUserVerified = false;
-    
+
             // Fetch user info
             fetch('/api/user', { credentials: 'include' })
                 .then(response => {
@@ -495,24 +498,6 @@
                     isLoggedIn = false;
                 })
                 .finally(() => {
-                    // Fetch article data
-                    fetch(`/api/article/${articleId}`)
-                        .then(response => {
-                            if (!response.ok) throw new Error("Failed to load article");
-                            return response.json();
-                        })
-                        .then(article => {
-                            if (article.error) throw new Error(article.error);
-                            document.getElementById("article-title").textContent = article.title;
-                            document.getElementById("article-meta").textContent = `By ${article.author} | Source: ${article.source} | Reading Time: ${article.length} min`;
-                            document.getElementById("article-summary").textContent = article.summary;
-                            document.getElementById("article-body").textContent = article.body || "No full text available.";
-                        })
-                        .catch(error => {
-                            console.error("Error loading article:", error);
-                            document.querySelector(".article-container").innerHTML = `<p>Error loading article: ${error.message}</p>`;
-                        });
-    
                     // Fetch ratings data
                     fetch(`/api/article_ratings/${articleId}`)
                         .then(response => {
@@ -523,7 +508,7 @@
                             if (data.error) {
                                 const ratingValue = document.querySelector("#rating-overall-digit .rating-value");
                                 ratingValue.textContent = "No Ratings Yet";
-                                ratingValue.classList.add("no-ratings"); // Add the class here
+                                ratingValue.classList.add("no-ratings");
                                 document.getElementById("rating-breakdown").innerHTML = "<p>No ratings yet.</p>";
                             } else {
                                 document.querySelector("#rating-overall-digit .rating-value").textContent = `${data.overall.toFixed(1)} / 5`;
@@ -539,18 +524,18 @@
                             console.error("Error fetching ratings:", error);
                             const ratingValue = document.querySelector("#rating-overall-digit .rating-value");
                             ratingValue.textContent = "No Ratings Yet";
-                            ratingValue.classList.add("no-ratings"); // Add the class here too
+                            ratingValue.classList.add("no-ratings");
                             document.getElementById("rating-breakdown").innerHTML = "<p>No Ratings Yet.</p>";
                         });
+
                     // Set up Reviews button
                     document.getElementById("view-reviews-btn").addEventListener("click", function() {
                         window.location.href = `/reviews?article_id=${articleId}`;
                     });
-    
+
                     // Set up Read More button
                     const readMoreBtn = document.getElementById("read-more-btn");
                     const articleBody = document.getElementById("article-body");
-    
                     readMoreBtn.addEventListener("click", function() {
                         if (articleBody.classList.contains("visible")) {
                             articleBody.classList.remove("visible");
@@ -560,69 +545,71 @@
                             readMoreBtn.textContent = "Show Less";
                         }
                     });
-    
+
                     // Load comments
                     loadComments();
                 });
-    
+
             // Comment form handling
             const commentInput = document.querySelector('.comment-input');
-            const charCount = document.getElementById('char-count');
-            const commentSubmit = document.querySelector('.comment-submit');
-            const commentList = document.getElementById('comment-list');
-            const warning = document.getElementById('comment-warning');
-    
-            commentInput.addEventListener('input', () => {
-                const remaining = 500 - commentInput.value.length;
-                charCount.textContent = `${remaining} characters remaining`;
-            });
-    
-            commentSubmit.addEventListener('click', () => {
-                const commentText = commentInput.value.trim();
-                if (!commentText) return;
-    
-                const offensiveWords = [
-                    'badword1', 'badword2', 'spam',
-                    'jerk', 'idiot', 'stupid',
-                    'sewanee', 'yankees', 'michigan',
-                    'friggin', 'frigg', 'friggoff'
-                ];
-                const lowerText = commentText.toLowerCase();
-                const isOffensive = offensiveWords.some(word => lowerText.includes(word));
-    
-                if (isOffensive) {
-                    warning.textContent = lowerText.includes('sewanee')
-                        ? 'Warning: Comment contains offensive language or spam and cannot be posted. Only legitimate colleges will be tolerated.'
-                        : 'Warning: Comment contains offensive language or spam and cannot be posted.';
-                    warning.style.display = 'block';
-                    return;
-                }
-    
-                fetch(`/api/article/${articleId}/comments`, {  // Fixed endpoint here
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: commentText }),
-                    credentials: 'include'
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(err => { throw new Error(err.error || 'Failed to post comment'); });
-                    }
-                    return response.json();
-                })
-                .then(comment => {
-                    addComment(comment.text, comment.upvotes, comment.downvotes, comment.username, comment.verified, comment.id);
-                    commentInput.value = '';
-                    charCount.textContent = '500 characters remaining';
-                    warning.style.display = 'none';
-                })
-                .catch(error => {
-                    console.error('Error posting comment:', error);
-                    warning.textContent = error.message || 'Error posting comment. Please try again.';
-                    warning.style.display = 'block';
+            if (commentInput) {  // Only add listeners if comment form exists
+                const charCount = document.getElementById('char-count');
+                const commentSubmit = document.querySelector('.comment-submit');
+                const commentList = document.getElementById('comment-list');
+                const warning = document.getElementById('comment-warning');
+
+                commentInput.addEventListener('input', () => {
+                    const remaining = 500 - commentInput.value.length;
+                    charCount.textContent = `${remaining} characters remaining`;
                 });
-            });
-    
+
+                commentSubmit.addEventListener('click', () => {
+                    const commentText = commentInput.value.trim();
+                    if (!commentText) return;
+
+                    const offensiveWords = [
+                        'badword1', 'badword2', 'spam',
+                        'jerk', 'idiot', 'stupid',
+                        'sewanee', 'yankees', 'michigan',
+                        'friggin', 'frigg', 'friggoff'
+                    ];
+                    const lowerText = commentText.toLowerCase();
+                    const isOffensive = offensiveWords.some(word => lowerText.includes(word));
+
+                    if (isOffensive) {
+                        warning.textContent = lowerText.includes('sewanee')
+                            ? 'Warning: Comment contains offensive language or spam and cannot be posted. Only legitimate colleges will be tolerated.'
+                            : 'Warning: Comment contains offensive language or spam and cannot be posted.';
+                        warning.style.display = 'block';
+                        return;
+                    }
+
+                    fetch(`/api/article/${articleId}/comments`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ text: commentText }),
+                        credentials: 'include'
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(err => { throw new Error(err.error || 'Failed to post comment'); });
+                        }
+                        return response.json();
+                    })
+                    .then(comment => {
+                        addComment(comment.text, comment.upvotes, comment.downvotes, comment.username, comment.verified, comment.id);
+                        commentInput.value = '';
+                        charCount.textContent = '500 characters remaining';
+                        warning.style.display = 'none';
+                    })
+                    .catch(error => {
+                        console.error('Error posting comment:', error);
+                        warning.textContent = error.message || 'Error posting comment. Please try again.';
+                        warning.style.display = 'block';
+                    });
+                });
+            }
+
             function loadComments() {
                 fetch(`/api/article/${articleId}/comments`)
                     .then(response => {
@@ -639,14 +626,12 @@
                             commentList.innerHTML = '<p>No comments available.</p>';
                             return;
                         }
-                        // Sort comments by total vote count in descending order
                         const sortedComments = data.comments.sort((a, b) => {
                             const votesA = a.upvotes - a.downvotes;
                             const votesB = b.upvotes - b.downvotes;
-                            //return votesB - votesA; // Descending order
-                            return votesA - votesB
+                            return votesA - votesB;  // Ascending order (highest net votes first)
                         });
-    
+
                         commentList.innerHTML = '';
                         sortedComments.forEach(comment => {
                             addComment(
@@ -664,60 +649,60 @@
                         commentList.innerHTML = `<p>Error loading comments: ${error.message}</p>`;
                     });
             }
-    
+
             function addComment(text, initialUpvotes = 0, initialDownvotes = 0, usernameOverride, isVerified = false, commentId) {
                 const commentDiv = document.createElement('div');
                 commentDiv.className = 'comment';
                 if (isVerified) {
                     commentDiv.classList.add('verified-comment');
                 }
-    
+
                 const usernameDiv = document.createElement('div');
                 usernameDiv.className = 'comment-username';
                 usernameDiv.textContent = usernameOverride || `Anonymous${Math.floor(Math.random() * 1000) + 1}`;
                 if (isVerified) {
                     usernameDiv.innerHTML += ' <span class="verified-badge">✔ Verified</span>';
                 }
-    
+
                 const commentText = document.createElement('div');
                 commentText.className = 'comment-text';
                 commentText.textContent = text;
-    
+
                 const voteDiv = document.createElement('div');
                 voteDiv.className = 'vote-buttons';
-    
+
                 const upvote = document.createElement('button');
                 upvote.className = 'vote-btn upvote';
                 upvote.innerHTML = '<i class="fas fa-arrow-up"></i>';
                 if (!isLoggedIn) upvote.disabled = true;
-    
+
                 const voteCount = document.createElement('span');
                 voteCount.className = 'vote-count';
                 voteCount.textContent = initialUpvotes - initialDownvotes;
-    
+
                 const downvote = document.createElement('button');
                 downvote.className = 'vote-btn downvote';
                 downvote.innerHTML = '<i class="fas fa-arrow-down"></i>';
                 if (!isLoggedIn) downvote.disabled = true;
-    
+
                 let currentVote = null;
-    
+
                 if (isLoggedIn) {
                     upvote.onclick = () => {
                         const newVote = currentVote === 'upvote' ? null : 'upvote';
                         updateVote(commentId, newVote, voteCount, upvote, downvote);
                     };
-    
+
                     downvote.onclick = () => {
                         const newVote = currentVote === 'downvote' ? null : 'downvote';
                         updateVote(commentId, newVote, voteCount, upvote, downvote);
                     };
                 }
-    
+
                 voteDiv.append(upvote, voteCount, downvote);
                 commentDiv.append(usernameDiv, commentText, voteDiv);
                 document.getElementById('comment-list').prepend(commentDiv);
-    
+
                 function updateVote(commentId, newVote, voteCount, upvote, downvote) {
                     fetch(`/api/comment/${commentId}/vote`, {
                         method: 'POST',

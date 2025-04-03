@@ -1,5 +1,9 @@
 import os
 import random
+import requests
+from bs4 import BeautifulSoup
+import uuid
+from datetime import datetime
 from flask import Flask, render_template, redirect, url_for, request, flash, jsonify, session
 import sqlite3
 import json
@@ -80,30 +84,148 @@ def init_db():
                         FOREIGN KEY (user_id) REFERENCES users(id)
                       )''')
         db.commit()
-        load_articles_from_json()
+        scrape_articles_from_web()  # Replace load_articles_from_json with web scraping
         load_reviews_from_json()
         load_users_from_json()
         fix_ratings()
 
+def scrape_articles_from_web():
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    }
+    sources = [
+        {"name": "CNN", "url": "https://www.cnn.com", "headline_selector": ".container__headline a"},
+        {"name": "MSNBC", "url": "https://www.msnbc.com", "headline_selector": ".teaser__title a"},
+        {"name": "Fox News", "url": "https://www.foxnews.com", "headline_selector": ".article-list .title a"}
+    ]
+    all_articles = []
+    seen_urls = set()  # Track unique URLs instead of titles
+    max_articles = 6  # Total unique articles
+    
+    # Clear existing articles to start fresh
+    db = get_db()
+    db.execute('DELETE FROM articles')  # Reset articles table
+    db.commit()
+
+    for source in sources:
+        if len(all_articles) >= max_articles:
+            break
+        try:
+            response = requests.get(source["url"], headers=headers, timeout=10)
+            response.raise_for_status()
+            soup = BeautifulSoup(response.text, 'html.parser')
+
+            article_elements = soup.select(source["headline_selector"])
+            print(f"{source['name']}: Found {len(article_elements)} elements with selector {source['headline_selector']}")
+            
+            for element in article_elements:
+                if len(all_articles) >= max_articles:
+                    break
+                
+                article_url = element['href'] if 'href' in element.attrs else None
+                if not article_url:
+                    continue
+                
+                # Handle relative URLs
+                if not article_url.startswith('http'):
+                    article_url = f"{source['url']}{article_url}" if article_url.startswith('/') else f"{source['url']}/{article_url}"
+                
+                if article_url in seen_urls:
+                    print(f"Skipping duplicate URL: {article_url}")
+                    continue
+                seen_urls.add(article_url)
+
+                title = element.get_text(strip=True) if element else "No Title"
+                print(f"Processing {source['name']} article: {title} ({article_url})")
+
+                try:
+                    article_response = requests.get(article_url, headers=headers, timeout=10)
+                    article_soup = BeautifulSoup(article_response.text, 'html.parser')
+
+                    if source["name"] == "CNN":
+                        author_tag = article_soup.select_one('.byline__name')
+                        summary_tag = article_soup.select_one('.article__content p')
+                        body_elements = article_soup.select('.article__content p')
+                        date_tag = article_soup.select_one('.timestamp')
+                        category_tag = article_soup.select_one('.category')
+                    elif source["name"] == "MSNBC":
+                        author_tag = article_soup.select_one('.author-name, .showAuthor')
+                        summary_tag = article_soup.select_one('.article-body__content p')
+                        body_elements = article_soup.select('.article-body__content p')
+                        date_tag = article_soup.select_one('.time')
+                        category_tag = article_soup.select_one('.category')
+                    else:  # Fox News
+                        author_tag = article_soup.select_one('.author-byline')
+                        summary_tag = article_soup.select_one('.article-body p')
+                        body_elements = article_soup.select('.article-body p')
+                        date_tag = article_soup.select_one('.date')
+                        category_tag = article_soup.select_one('.eyebrow')
+
+                    author = author_tag.get_text(strip=True) if author_tag else "Unknown Author"
+                    summary = summary_tag.get_text(strip=True) if summary_tag else "No Summary Available"
+                    body = " ".join([p.get_text(strip=True) for p in body_elements]) if body_elements else "No Content Available"
+                    publication_date = date_tag.get_text(strip=True) if date_tag else datetime.now().strftime('%Y-%m-%d')
+                    category = category_tag.get_text(strip=True) if category_tag else "General"
+                except requests.RequestException as e:
+                    print(f"Error fetching article from {source['name']} at {article_url}: {e}")
+                    author = "Unknown Author"
+                    summary = "No Summary Available"
+                    body = "No Content Available"
+                    publication_date = datetime.now().strftime('%Y-%m-%d')
+                    category = "General"
+
+                length = len(body.split()) // 100
+                rating = 0
+
+                all_articles.append({
+                    "id": str(uuid.uuid4()),
+                    "title": title,
+                    "author": author,
+                    "category": category,
+                    "length": length,
+                    "summary": summary,
+                    "rating": rating,
+                    "source": source["url"],
+                    "publication_date": publication_date,
+                    "body": body
+                })
+        except requests.RequestException as e:
+            print(f"Error fetching {source['name']} homepage: {e}")
+        except Exception as e:
+            print(f"Error processing {source['name']}: {e}")
+
+    # Insert into database
+    try:
+        cursor = db.cursor()
+        for article in all_articles:
+            cursor.execute(
+                '''INSERT OR IGNORE INTO articles (id, title, author, category, length, summary, rating, source, publication_date, body) 
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+                (article["id"], article["title"], article["author"], article["category"], article["length"],
+                 article["summary"], article["rating"], article["source"], article["publication_date"], article["body"])
+            )
+        db.commit()
+        print(f"Scraped and inserted {len(all_articles)} unique articles from CNN, MSNBC, and Fox News.")
+    except Exception as e:
+        print(f"Error inserting articles into database: {e}")
+    finally:
+        db.close()
 
 def load_reviews_from_json():
     json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dev-reviews.json')
-
     if not os.path.exists(json_file):
         print("Error: File does not exist!")
         return
-
     with open(json_file, 'r', encoding='utf-8') as file:
         content = file.read()
         if not content.strip():
             print("Error: File is empty or contains only whitespace!")
             return
         try:
-            reviews = json.loads(content)  # Use json.loads since we read the content
+            reviews = json.loads(content)
         except json.JSONDecodeError as e:
             print(f"JSON parsing error: {e}")
             return
-
     db = get_db()
     cursor = db.cursor()
     for review in reviews:
@@ -118,59 +240,21 @@ def load_reviews_from_json():
     db.commit()
     db.close()
 
-def load_articles_from_json():
-    json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dev-articles.json')
-    lorem_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'lorem.txt')
-    try:
-        LoremShort, LoremMedium, LoremLong = read_lorem_file(lorem_file)
-    except FileNotFoundError:
-        LoremShort = "Short placeholder text."
-        LoremMedium = "Medium placeholder text."
-        LoremLong = "Long placeholder text."
-
-    with open(json_file, 'r', encoding='utf-8') as file:
-        articles = json.load(file)
-
-    db = get_db()
-    cursor = db.cursor()
-    for article in articles:
-        length_str = article["length"]
-        if length_str == "Short":
-            body = LoremShort
-            length_int = 5
-        elif length_str == "Medium":
-            body = LoremMedium
-            length_int = 10
-        else:
-            body = LoremLong
-            length_int = 15
-        cursor.execute(
-            '''INSERT OR IGNORE INTO articles (id, title, author, category, length, summary, rating, source, publication_date, body) 
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-            (article["id"], article["title"], article["author"], article["category"], length_int,
-             article["summary"], article["rating"], article["source"], article["publication_date"], body)
-        )
-    db.commit()
-    db.close()
-
 def load_users_from_json():
     json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dev-users.json')
-
     if not os.path.exists(json_file):
         print("Error: File does not exist!")
         return
-
     with open(json_file, 'r', encoding='utf-8') as file:
         content = file.read()
         if not content.strip():
             print("Error: File is empty or contains only whitespace!")
             return
         try:
-            users = json.loads(content)  # Use json.loads since we read the content
+            users = json.loads(content)
         except json.JSONDecodeError as e:
             print(f"JSON parsing error: {e}")
             return
-
     db = get_db()
     cursor = db.cursor()
     for user in users:
@@ -193,14 +277,6 @@ def fix_ratings():
         cursor.execute('UPDATE articles SET rating = ? WHERE id = ?', (("{:.2f}".format(avg_rating[0]), article_id['article_id'])))
     db.commit()
     db.close()
-
-def read_lorem_file(filename):
-    with open(filename, "r", encoding="utf-8") as file:
-        lines = file.readlines()
-    short = lines[0].strip() if len(lines) > 0 else "Short placeholder."
-    medium = lines[1].strip() if len(lines) > 1 else "Medium placeholder."
-    long = lines[2].strip() if len(lines) > 2 else "Long placeholder."
-    return short, medium, long
 
 @app.route('/')
 def index():
@@ -265,10 +341,10 @@ def get_user():
         if user:
             return jsonify({
                 "username": user['username'],
-                "verified": user['verified_code'] != ''  # Return true if verified_code is non-empty
+                "verified": user['verified_code'] != ''
             })
-        return jsonify({}), 404  # User not found in DB (shouldn't happen with valid session)
-    return jsonify({}), 401  # Not logged in
+        return jsonify({}), 404
+    return jsonify({}), 401
 
 @app.route('/api/articles')
 def get_articles():
@@ -282,26 +358,17 @@ def get_articles():
         GROUP BY a.id
         ORDER BY a.publication_date DESC
     ''').fetchall()
-
     articles_list = [dict(article) for article in articles]
     return jsonify({"articles": articles_list})
 
-@app.route('/api/article/<int:article_id>', endpoint='article')
-def get_article(article_id):
-    db = get_db()
-    article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
-    if article is None:
-        return jsonify({"error": "Article not found"}), 404
-    return jsonify(dict(article))
+
 
 @app.route('/api/article/<article_id>/comments', methods=['GET'])
 def get_comments(article_id):
     db = get_db()
-    # Check if the article exists
     article = db.execute('SELECT id FROM articles WHERE id = ?', (article_id,)).fetchone()
     if not article:
         return jsonify({"error": "Article not found"}), 404
-
     comments = db.execute(
         '''SELECT c.id, c.username, c.text, c.upvotes, c.downvotes, c.created_at, 
                   CASE WHEN u.verified_code != '' THEN 1 ELSE 0 END AS verified
@@ -319,17 +386,14 @@ def post_comment(article_id):
     data = request.get_json()
     if not data or 'text' not in data:
         return jsonify({"error": "Comment text is required"}), 400
-
     comment_text = data['text']
     db = get_db()
     article = db.execute('SELECT id FROM articles WHERE id = ?', (article_id,)).fetchone()
     if not article:
         return jsonify({"error": "Article not found"}), 404
-
     user_id = session.get('user_id')
     username = session.get('username')
     is_verified = False
-
     if user_id and username:
         user = db.execute('SELECT verified_code FROM users WHERE id = ?', (user_id,)).fetchone()
         if user and user['verified_code'] != '':
@@ -338,7 +402,6 @@ def post_comment(article_id):
             username = f"Anonymous{random.randint(1, 1000)}"
     else:
         username = f"Anonymous{random.randint(1, 1000)}"
-
     try:
         cursor = db.execute(
             'INSERT INTO comments (article_id, user_id, username, text) VALUES (?, ?, ?, ?)',
@@ -356,7 +419,7 @@ def post_comment(article_id):
             "upvotes": new_comment['upvotes'],
             "downvotes": new_comment['downvotes'],
             "created_at": new_comment['created_at'],
-            "verified": is_verified  # Include verified status in response
+            "verified": is_verified
         }), 201
     except sqlite3.Error as e:
         return jsonify({"error": "Failed to post comment: " + str(e)}), 500
@@ -365,28 +428,22 @@ def post_comment(article_id):
 def vote_comment(comment_id):
     if 'user_id' not in session:
         return jsonify({"error": "User not logged in"}), 401
-
     data = request.get_json()
-    vote_type = data.get('vote_type')  # 'upvote', 'downvote', or None (to remove vote)
+    vote_type = data.get('vote_type')
     user_id = session['user_id']
     db = get_db()
-
-    # Check if the user has already voted on this comment
     existing_vote = db.execute(
         'SELECT vote_type FROM comment_votes WHERE comment_id = ? AND user_id = ?',
         (comment_id, user_id)
     ).fetchone()
-
     if existing_vote:
         if vote_type is None:
-            # Remove the existing vote
             db.execute('DELETE FROM comment_votes WHERE comment_id = ? AND user_id = ?', (comment_id, user_id))
             if existing_vote['vote_type'] == 'upvote':
                 db.execute('UPDATE comments SET upvotes = upvotes - 1 WHERE id = ?', (comment_id,))
             else:
                 db.execute('UPDATE comments SET downvotes = downvotes - 1 WHERE id = ?', (comment_id,))
         elif existing_vote['vote_type'] != vote_type:
-            # Change the vote type
             db.execute(
                 'UPDATE comment_votes SET vote_type = ? WHERE comment_id = ? AND user_id = ?',
                 (vote_type, comment_id, user_id)
@@ -397,7 +454,6 @@ def vote_comment(comment_id):
                 db.execute('UPDATE comments SET upvotes = upvotes - 1, downvotes = downvotes + 1 WHERE id = ?', (comment_id,))
     else:
         if vote_type is not None:
-            # Add a new vote
             db.execute(
                 'INSERT INTO comment_votes (comment_id, user_id, vote_type) VALUES (?, ?, ?)',
                 (comment_id, user_id, vote_type)
@@ -406,7 +462,6 @@ def vote_comment(comment_id):
                 db.execute('UPDATE comments SET upvotes = upvotes + 1 WHERE id = ?', (comment_id,))
             else:
                 db.execute('UPDATE comments SET downvotes = downvotes + 1 WHERE id = ?', (comment_id,))
-
     db.commit()
     updated_comment = db.execute('SELECT upvotes, downvotes FROM comments WHERE id = ?', (comment_id,)).fetchone()
     return jsonify({"upvotes": updated_comment['upvotes'], "downvotes": updated_comment['downvotes']})
@@ -414,14 +469,18 @@ def vote_comment(comment_id):
 @app.route('/article/<article_id>')
 def article_page(article_id):
     db = get_db()
+    article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
     is_verified = False
+    user_info = None
     if 'user_id' in session:
         user = db.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],)).fetchone()
         if user:
             user_info = dict(user)
         if user and user['verified_code'] != '':
             is_verified = True
-    return render_template('article.html', is_verified=is_verified, user_info=user_info)
+    if article is None:
+        return render_template('404.html'), 404
+    return render_template('article.html', article=article, is_verified=is_verified, user_info=user_info)
 
 @app.route('/browse')
 def browse():
@@ -501,7 +560,15 @@ def categories():
         categories[category].append(article)
     return render_template('categories.html', categories=categories)
 
-@app.route('/article/<int:article_id>', endpoint='view_article')
+@app.route('/api/article/<article_id>', endpoint='article')  # Changed from <int:article_id>
+def get_article(article_id):
+    db = get_db()
+    article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
+    if article is None:
+        return jsonify({"error": "Article not found"}), 404
+    return jsonify(dict(article))
+
+@app.route('/article/<article_id>', endpoint='view_article')  # Changed from <int:article_id>
 def view_article(article_id):
     db = get_db()
     article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
@@ -538,12 +605,10 @@ def get_article_by_id(article_id):
     article = db.execute("SELECT * FROM articles WHERE id = ?", (article_id,)).fetchone()
     return article
 
-
 @app.route('/reviews')
 def reviews_page():
     db = get_db()
     article_id = request.args.get('article_id')
-
     if not article_id:
         return "Article ID is required", 400
     article = get_article_by_id(article_id)
@@ -561,15 +626,12 @@ def reviews_page():
             authors[review['user_id']] = author['username']
         else:
             authors[review['user_id']] = 'User ' + str(review['user_id'])
-
     return render_template("reviews.html", article=article, user=user, reviews=reviews, authors=authors)
-
 
 @app.route('/submit_review', methods=['POST'])
 def submit_review():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-
     user_id = session['user_id']
     article_id = request.form.get('article_id')
     bias = float(request.form.get('bias'))
@@ -577,21 +639,14 @@ def submit_review():
     quality = float(request.form.get('quality'))
     value = float(request.form.get('value'))
     text = request.form.get('text')
-
-    # Calculate the overall rating
     overall_rating = (bias + accuracy + quality + value) / 4.0
-
-    # Insert review into database
     db = get_db()
     db.execute('''
         INSERT INTO reviews (article_id, user_id, bias_rating, accuracy_rating, quality_rating, value_rating, overall_rating, review)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     ''', (article_id, user_id, bias, accuracy, quality, value, overall_rating, text))
-
     db.commit()
-
     return redirect(url_for('reviews_page', article_id=article_id))
-
 
 @app.route('/api/article_ratings/<int:article_id>')
 def get_article_ratings(article_id):
@@ -604,10 +659,8 @@ def get_article_ratings(article_id):
                AVG(overall_rating) as avg_overall
         FROM reviews WHERE article_id = ?
     ''', (article_id,)).fetchone()
-
     if not ratings or ratings['avg_overall'] is None:
         return jsonify({"error": "No ratings available"}), 404
-
     return jsonify({
         "bias": round(ratings['avg_bias'], 2),
         "accuracy": round(ratings['avg_accuracy'], 2),
@@ -616,11 +669,9 @@ def get_article_ratings(article_id):
         "overall": round(ratings['avg_overall'], 2)
     })
 
-
 if __name__ == '__main__':
     init_db()
     app.run(debug=True)
 else:
-    # Initialize when imported
     with app.app_context():
         init_db()
