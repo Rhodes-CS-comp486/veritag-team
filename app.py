@@ -28,9 +28,7 @@ def get_db():
 def init_db():
     with app.app_context():
         db = get_db()
-        # Drop the comments and reviews tables if they exist to ensure the schema is updated
-        db.execute('DROP TABLE IF EXISTS comments')
-        db.execute('DROP TABLE IF EXISTS reviews')
+        # Remove the DROP TABLE statements to preserve existing data
         db.execute('''CREATE TABLE IF NOT EXISTS articles
                        (id TEXT PRIMARY KEY,
                         title TEXT NOT NULL,
@@ -84,9 +82,14 @@ def init_db():
                         FOREIGN KEY (user_id) REFERENCES users(id)
                       )''')
         db.commit()
-        scrape_articles_from_web()  # Replace load_articles_from_json with web scraping
-        load_reviews_from_json()
-        load_users_from_json()
+
+        # Only load initial data if the tables are empty
+        if not db.execute('SELECT 1 FROM articles LIMIT 1').fetchone():
+            scrape_articles_from_web()  # Replace load_articles_from_json with web scraping
+        if not db.execute('SELECT 1 FROM reviews LIMIT 1').fetchone():
+            load_reviews_from_json()
+        if not db.execute('SELECT 1 FROM users LIMIT 1').fetchone():
+            load_users_from_json()
         fix_ratings()
 
 def scrape_articles_from_web():
@@ -94,17 +97,16 @@ def scrape_articles_from_web():
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     }
     sources = [
-        {"name": "CNN", "url": "https://www.cnn.com", "headline_selector": ".container__headline a"},
-        {"name": "MSNBC", "url": "https://www.msnbc.com", "headline_selector": ".teaser__title a"},
-        {"name": "Fox News", "url": "https://www.foxnews.com", "headline_selector": ".article-list .title a"}
+        {"name": "CNN", "url": "https://www.cnn.com", "headline_selector": ".container__title-url"},
+        {"name": "MSNBC", "url": "https://www.msnbc.com", "headline_selector": ".tease-card__headline a"},
+        {"name": "Fox News", "url": "https://www.foxnews.com", "headline_selector": ".title a, .info-header a"}
     ]
     all_articles = []
-    seen_urls = set()  # Track unique URLs instead of titles
-    max_articles = 6  # Total unique articles
-    
-    # Clear existing articles to start fresh
+    seen_urls = set()
+    max_articles = 20  # Updated to allow up to 20 articles
+
     db = get_db()
-    db.execute('DELETE FROM articles')  # Reset articles table
+    db.execute('DELETE FROM articles')
     db.commit()
 
     for source in sources:
@@ -116,44 +118,47 @@ def scrape_articles_from_web():
             soup = BeautifulSoup(response.text, 'html.parser')
 
             article_elements = soup.select(source["headline_selector"])
-            print(f"{source['name']}: Found {len(article_elements)} elements with selector {source['headline_selector']}")
-            
+
             for element in article_elements:
                 if len(all_articles) >= max_articles:
                     break
-                
+
                 article_url = element['href'] if 'href' in element.attrs else None
                 if not article_url:
                     continue
-                
+
+                # Filter non-article links
+                if source["name"] == "CNN" and not ("/interactive/" in article_url or "/article/" in article_url):
+                    continue
+
                 # Handle relative URLs
                 if not article_url.startswith('http'):
                     article_url = f"{source['url']}{article_url}" if article_url.startswith('/') else f"{source['url']}/{article_url}"
-                
+
                 if article_url in seen_urls:
-                    print(f"Skipping duplicate URL: {article_url}")
                     continue
                 seen_urls.add(article_url)
 
                 title = element.get_text(strip=True) if element else "No Title"
-                print(f"Processing {source['name']} article: {title} ({article_url})")
 
                 try:
                     article_response = requests.get(article_url, headers=headers, timeout=10)
                     article_soup = BeautifulSoup(article_response.text, 'html.parser')
 
                     if source["name"] == "CNN":
-                        author_tag = article_soup.select_one('.byline__name')
-                        summary_tag = article_soup.select_one('.article__content p')
-                        body_elements = article_soup.select('.article__content p')
-                        date_tag = article_soup.select_one('.timestamp')
-                        category_tag = article_soup.select_one('.category')
+                        author_tag = article_soup.select_one('.metadata__byline__author')
+                        summary_tag = article_soup.select_one('.l-container .zn-body__paragraph')
+                        body_elements = article_soup.select('.l-container .zn-body__paragraph')
+                        date_tag = article_soup.select_one('.update-time')
+                        category_tag = article_soup.select_one('.metadata__section')
+
                     elif source["name"] == "MSNBC":
                         author_tag = article_soup.select_one('.author-name, .showAuthor')
                         summary_tag = article_soup.select_one('.article-body__content p')
                         body_elements = article_soup.select('.article-body__content p')
                         date_tag = article_soup.select_one('.time')
                         category_tag = article_soup.select_one('.category')
+
                     else:  # Fox News
                         author_tag = article_soup.select_one('.author-byline')
                         summary_tag = article_soup.select_one('.article-body p')
@@ -167,7 +172,6 @@ def scrape_articles_from_web():
                     publication_date = date_tag.get_text(strip=True) if date_tag else datetime.now().strftime('%Y-%m-%d')
                     category = category_tag.get_text(strip=True) if category_tag else "General"
                 except requests.RequestException as e:
-                    print(f"Error fetching article from {source['name']} at {article_url}: {e}")
                     author = "Unknown Author"
                     summary = "No Summary Available"
                     body = "No Content Available"
@@ -190,11 +194,10 @@ def scrape_articles_from_web():
                     "body": body
                 })
         except requests.RequestException as e:
-            print(f"Error fetching {source['name']} homepage: {e}")
+            pass
         except Exception as e:
-            print(f"Error processing {source['name']}: {e}")
+            pass
 
-    # Insert into database
     try:
         cursor = db.cursor()
         for article in all_articles:
@@ -205,9 +208,8 @@ def scrape_articles_from_web():
                  article["summary"], article["rating"], article["source"], article["publication_date"], article["body"])
             )
         db.commit()
-        print(f"Scraped and inserted {len(all_articles)} unique articles from CNN, MSNBC, and Fox News.")
     except Exception as e:
-        print(f"Error inserting articles into database: {e}")
+        pass
     finally:
         db.close()
 
@@ -361,8 +363,6 @@ def get_articles():
     articles_list = [dict(article) for article in articles]
     return jsonify({"articles": articles_list})
 
-
-
 @app.route('/api/article/<article_id>/comments', methods=['GET'])
 def get_comments(article_id):
     db = get_db()
@@ -375,7 +375,7 @@ def get_comments(article_id):
            FROM comments c
            LEFT JOIN users u ON c.user_id = u.id
            WHERE c.article_id = ?
-           ORDER BY c.created_at DESC''',
+           ORDER BY (c.upvotes - c.downvotes) DESC, c.created_at DESC''',  # Sort by net votes, then by creation time
         (article_id,)
     ).fetchall()
     comments_list = [dict(comment) for comment in comments]
@@ -428,41 +428,49 @@ def post_comment(article_id):
 def vote_comment(comment_id):
     if 'user_id' not in session:
         return jsonify({"error": "User not logged in"}), 401
+
     data = request.get_json()
-    vote_type = data.get('vote_type')
+    vote_type = data.get('vote_type')  # 'upvote', 'downvote', or None
     user_id = session['user_id']
     db = get_db()
+
+    # Check if the user has already voted on this comment
     existing_vote = db.execute(
         'SELECT vote_type FROM comment_votes WHERE comment_id = ? AND user_id = ?',
         (comment_id, user_id)
     ).fetchone()
+
     if existing_vote:
         if vote_type is None:
+            # Remove the existing vote
             db.execute('DELETE FROM comment_votes WHERE comment_id = ? AND user_id = ?', (comment_id, user_id))
             if existing_vote['vote_type'] == 'upvote':
                 db.execute('UPDATE comments SET upvotes = upvotes - 1 WHERE id = ?', (comment_id,))
-            else:
+            elif existing_vote['vote_type'] == 'downvote':
                 db.execute('UPDATE comments SET downvotes = downvotes - 1 WHERE id = ?', (comment_id,))
         elif existing_vote['vote_type'] != vote_type:
+            # Change the vote type
+            if existing_vote['vote_type'] == 'upvote' and vote_type == 'downvote':
+                db.execute('UPDATE comments SET upvotes = upvotes - 1, downvotes = downvotes + 1 WHERE id = ?', (comment_id,))
+            elif existing_vote['vote_type'] == 'downvote' and vote_type == 'upvote':
+                db.execute('UPDATE comments SET upvotes = upvotes + 1, downvotes = downvotes - 1 WHERE id = ?', (comment_id,))
             db.execute(
                 'UPDATE comment_votes SET vote_type = ? WHERE comment_id = ? AND user_id = ?',
                 (vote_type, comment_id, user_id)
             )
-            if vote_type == 'upvote':
-                db.execute('UPDATE comments SET upvotes = upvotes + 1, downvotes = downvotes - 1 WHERE id = ?', (comment_id,))
-            else:
-                db.execute('UPDATE comments SET upvotes = upvotes - 1, downvotes = downvotes + 1 WHERE id = ?', (comment_id,))
     else:
-        if vote_type is not None:
-            db.execute(
-                'INSERT INTO comment_votes (comment_id, user_id, vote_type) VALUES (?, ?, ?)',
-                (comment_id, user_id, vote_type)
-            )
-            if vote_type == 'upvote':
-                db.execute('UPDATE comments SET upvotes = upvotes + 1 WHERE id = ?', (comment_id,))
-            else:
-                db.execute('UPDATE comments SET downvotes = downvotes + 1 WHERE id = ?', (comment_id,))
+        if vote_type == 'upvote':
+            db.execute('UPDATE comments SET upvotes = upvotes + 1 WHERE id = ?', (comment_id,))
+        elif vote_type == 'downvote':
+            db.execute('UPDATE comments SET downvotes = downvotes + 1 WHERE id = ?', (comment_id,))
+        db.execute(
+            'INSERT INTO comment_votes (comment_id, user_id, vote_type) VALUES (?, ?, ?)',
+            (comment_id, user_id, vote_type)
+        )
+
     db.commit()
+
+    # Fetch the updated vote counts
     updated_comment = db.execute('SELECT upvotes, downvotes FROM comments WHERE id = ?', (comment_id,)).fetchone()
     return jsonify({"upvotes": updated_comment['upvotes'], "downvotes": updated_comment['downvotes']})
 
@@ -470,6 +478,41 @@ def vote_comment(comment_id):
 def article_page(article_id):
     db = get_db()
     article = db.execute('SELECT * FROM articles WHERE id = ?', (article_id,)).fetchone()
+    if not article:
+        return render_template('404.html'), 404
+
+    # Fetch aggregate review scores
+    ratings = db.execute('''
+        SELECT AVG(bias_rating) as avg_bias, 
+               AVG(accuracy_rating) as avg_accuracy, 
+               AVG(quality_rating) as avg_quality, 
+               AVG(value_rating) as avg_value, 
+               AVG(overall_rating) as avg_overall
+        FROM reviews WHERE article_id = ?
+    ''', (article_id,)).fetchone()
+
+    aggregate_scores = {
+        "bias": round(ratings['avg_bias'], 2) if ratings['avg_bias'] else None,
+        "accuracy": round(ratings['avg_accuracy'], 2) if ratings['avg_accuracy'] else None,
+        "quality": round(ratings['avg_quality'], 2) if ratings['avg_quality'] else None,
+        "value": round(ratings['avg_value'], 2) if ratings['avg_value'] else None,
+        "overall": round(ratings['avg_overall'], 2) if ratings['avg_overall'] else None
+    }
+
+    # Pass the aggregate overall rating to the article object
+    article = dict(article)
+    article['rating'] = aggregate_scores['overall']
+
+    # Fetch comments for the article, sorted by total votes (upvotes - downvotes) in descending order
+    comments = db.execute('''
+        SELECT c.id, c.username, c.text, c.upvotes, c.downvotes, c.created_at, 
+               CASE WHEN u.verified_code != '' THEN 1 ELSE 0 END AS verified
+        FROM comments c
+        LEFT JOIN users u ON c.user_id = u.id
+        WHERE c.article_id = ?
+        ORDER BY (c.upvotes - c.downvotes) DESC, c.created_at DESC
+    ''', (article_id,)).fetchall()
+
     is_verified = False
     user_info = None
     if 'user_id' in session:
@@ -478,9 +521,15 @@ def article_page(article_id):
             user_info = dict(user)
         if user and user['verified_code'] != '':
             is_verified = True
-    if article is None:
-        return render_template('404.html'), 404
-    return render_template('article.html', article=article, is_verified=is_verified, user_info=user_info)
+
+    return render_template(
+        'article.html',
+        article=article,
+        is_verified=is_verified,
+        user_info=user_info,
+        aggregate_scores=aggregate_scores,
+        comments=comments
+    )
 
 @app.route('/browse')
 def browse():
@@ -645,6 +694,10 @@ def submit_review():
         INSERT INTO reviews (article_id, user_id, bias_rating, accuracy_rating, quality_rating, value_rating, overall_rating, review)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     ''', (article_id, user_id, bias, accuracy, quality, value, overall_rating, text))
+    # Recalculate the aggregate score for the article
+    cursor = db.execute('SELECT AVG(overall_rating) FROM reviews WHERE article_id = ?', (article_id,))
+    avg_rating = cursor.fetchone()[0]
+    db.execute('UPDATE articles SET rating = ? WHERE id = ?', (avg_rating, article_id))
     db.commit()
     return redirect(url_for('reviews_page', article_id=article_id))
 

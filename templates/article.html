@@ -418,11 +418,7 @@
 </head>
 <body>
     <div class="article-container">
-        {% if is_verified %}
-            <a href="/browse_verified" class="back-button"><i class="fas fa-arrow-left"></i> Back to Articles</a>
-        {% else %}
-            <a href="/browse" class="back-button"><i class="fas fa-arrow-left"></i> Back to Articles</a>
-        {% endif %}
+        <a href="/" class="back-button"><i class="fas fa-arrow-left"></i> Back to Home</a>
 
         {% if article %}
             <div class="article-header" id="article-title">{{ article.title }}</div>
@@ -432,14 +428,25 @@
             <div id="ratings-section" class="ratings-box">
                 <div class="ratings-title">Aggregate Data</div>
                 <div class="rating-third overall-rating" id="rating-overall-digit">
-                    <span class="rating-value">Loading...</span>
+                    {% if article.rating %}
+                        <span class="rating-value">{{ article.rating }} / 5</span>
+                    {% else %}
+                        <span class="rating-value no-ratings">No Ratings Yet</span>
+                    {% endif %}
                     <span class="rating-label">Overall</span>
                 </div>
                 <div class="rating-third button-container">
                     <button id="view-reviews-btn" class="reviews-btn">Reviews</button>
                 </div>
                 <div class="rating-third subcategory-ratings" id="rating-breakdown">
-                    <p>Loading ratings...</p>
+                    {% if aggregate_scores.bias %}
+                        <p><strong>Bias:</strong> {{ aggregate_scores.bias }}/5</p>
+                        <p><strong>Accuracy:</strong> {{ aggregate_scores.accuracy }}/5</p>
+                        <p><strong>Quality:</strong> {{ aggregate_scores.quality }}/5</p>
+                        <p><strong>Value:</strong> {{ aggregate_scores.value }}/5</p>
+                    {% else %}
+                        <p>No Ratings Yet.</p>
+                    {% endif %}
                 </div>
             </div>
             <div class="article-summary" id="article-summary">{{ article.summary }}</div>
@@ -626,14 +633,10 @@
                             commentList.innerHTML = '<p>No comments available.</p>';
                             return;
                         }
-                        const sortedComments = data.comments.sort((a, b) => {
-                            const votesA = a.upvotes - a.downvotes;
-                            const votesB = b.upvotes - b.downvotes;
-                            return votesA - votesB;  // Ascending order (highest net votes first)
-                        });
 
+                        // Comments are already sorted by total votes (upvotes - downvotes) in the backend
                         commentList.innerHTML = '';
-                        sortedComments.forEach(comment => {
+                        data.comments.forEach(comment => {
                             addComment(
                                 comment.text,
                                 comment.upvotes,
