@@ -213,6 +213,42 @@
         .user-menu-item:hover {
             background: rgba(176, 136, 255, 0.2);
         }
+
+        .search-container {
+            margin-bottom: 2rem;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            box-shadow: 0 0 10px rgba(176, 136, 255, 0.2);
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 15px rgba(176, 136, 255, 0.4);
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .no-results {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
     </style>
 </head>
 
@@ -234,8 +270,8 @@
                 </button>
                 <div class="user-menu">
                     <a href="/login" class="user-menu-item">Login</a>
-                    <a href="/verified_login" class="user-menu-item">Verified Login</a>
                     <a href="/create_account" class="user-menu-item">Create Account</a>
+                    <a href="/verified_login" class="user-menu-item">Verified Login</a>
                 </div>
             </div>
         </div>
@@ -244,9 +280,13 @@
     <div class="container">
         <h1 class="text-center mb-5">Verified Users</h1>
 
-        <div class="row">
+        <div class="search-container">
+            <input type="text" id="userSearch" class="search-input" placeholder="Search for verified users...">
+        </div>
+
+        <div class="row" id="usersContainer">
             {% for user in verified_users %}
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4 mb-4 user-item" data-username="{{ user.username.lower() }}">
                 <div class="user-card">
                     <div class="card-inner">
                         <!-- Front side with user name and stick figure -->
@@ -282,9 +322,43 @@
             </div>
             {% endfor %}
         </div>
+
+        <div id="noResults" class="no-results" style="display: none;">
+            No verified users found matching your search
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('userSearch');
+            const userItems = document.querySelectorAll('.user-item');
+            const usersContainer = document.getElementById('usersContainer');
+            const noResultsMessage = document.getElementById('noResults');
+
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                let matchCount = 0;
+
+                userItems.forEach(item => {
+                    const username = item.dataset.username;
+                    if (username.includes(searchTerm)) {
+                        item.style.display = 'block';
+                        matchCount++;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                // Show/hide the no results message
+                if (matchCount === 0) {
+                    noResultsMessage.style.display = 'block';
+                } else {
+                    noResultsMessage.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
