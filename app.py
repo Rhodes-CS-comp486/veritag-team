@@ -485,9 +485,37 @@ def browse_verified():
             user_info = dict(user)
     return render_template('browse.html', user_info=user_info, articles=articles)
 
-@app.route('/community')
-def community():
-    return render_template('community.html')
+
+# Update the verified_users route in app.py
+
+@app.route('/verified_users')
+def verified_users():
+    db = get_db()
+    # Query to get verified users and their reviewed articles
+    verified_users = db.execute('''
+        SELECT DISTINCT u.id, u.username 
+        FROM users u 
+        WHERE u.verified_code != ""
+    ''').fetchall()
+
+    # For each verified user, get the articles they've reviewed
+    users_with_reviews = []
+    for user in verified_users:
+        reviewed_articles = db.execute('''
+            SELECT a.id, a.title 
+            FROM articles a
+            INNER JOIN reviews r ON a.id = r.article_id
+            WHERE r.user_id = ?
+            ORDER BY r.created_at DESC
+        ''', (user['id'],)).fetchall()
+
+        users_with_reviews.append({
+            'id': user['id'],
+            'username': user['username'],
+            'reviewed_articles': [dict(article) for article in reviewed_articles]
+        })
+
+    return render_template('verified_users.html', verified_users=users_with_reviews)
 
 @app.route('/categories')
 def categories():
