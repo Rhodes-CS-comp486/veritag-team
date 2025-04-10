@@ -79,6 +79,19 @@ def init_db():
                         FOREIGN KEY (comment_id) REFERENCES comments(id),
                         FOREIGN KEY (user_id) REFERENCES users(id)
                       )''')
+        
+        db.execute('''CREATE TABLE IF NOT EXISTS following (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        follower_id INTEGER NOT NULL,
+                        following_id INTEGER NOT NULL,
+                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                        UNIQUE (follower_id, following_id),
+                        CHECK (follower_id != following_id),
+                        FOREIGN KEY (follower_id) REFERENCES users(id),
+                        FOREIGN KEY (following_id) REFERENCES users(id)
+                    )
+                ''')
+        
         db.commit()
         load_articles_from_json()
         load_reviews_from_json()
@@ -486,9 +499,7 @@ def browse_verified():
     return render_template('browse.html', user_info=user_info, articles=articles)
 
 
-# Update the verified_users route in app.py
-
-@app.route('/verified_users')
+@app.route('/verified_users', methods=['POST', 'GET'])
 def verified_users():
     db = get_db()
     # Query to get verified users and their reviewed articles
@@ -515,7 +526,74 @@ def verified_users():
             'reviewed_articles': [dict(article) for article in reviewed_articles]
         })
 
-    return render_template('verified_users.html', verified_users=users_with_reviews)
+        if 'user_id' in session:
+            user = db.execute('SELECT username, email FROM users WHERE id = ?', (session['user_id'],)).fetchone()
+        if user:
+            user_info = dict(user)
+
+    return render_template('verified_users.html', verified_users=users_with_reviews, user=user_info)
+
+@app.route('/api/toggle_follow', methods=['POST'])
+def toggle_follow():
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'message': 'Not logged in'}), 401
+    
+    # Get request data
+    data = request.get_json()
+    following_id = data.get('following_id')
+    action = data.get('action')
+    
+    # Validate request data
+    if not following_id or action not in ['follow', 'unfollow']:
+        return jsonify({'success': False, 'message': 'Invalid request'}), 400
+    
+    db = get_db()
+    user_id = session.get('user_id')
+    
+    try:
+        if action == 'follow':
+            # Check if already following to avoid duplicates
+            existing = db.execute(
+                'SELECT id FROM following WHERE follower_id = ? AND following_id = ?',
+                (user_id, following_id)
+            ).fetchone()
+            
+            if not existing:
+                # Create new follow relationship
+                db.execute(
+                    'INSERT INTO following (follower_id, following_id) VALUES (?, ?)',
+                    (user_id, following_id)
+                )
+                db.commit()
+        
+        elif action == 'unfollow':
+            # Delete existing follow relationship
+            db.execute(
+                'DELETE FROM following WHERE follower_id = ? AND following_id = ?',
+                (user_id, following_id)
+            )
+            db.commit()
+        
+        return jsonify({'success': True})
+    
+    except sqlite3.Error as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/api/following')
+def get_following():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'following': []})
+    
+    db = get_db()
+    # Get all users that the current user is following
+    following = db.execute(
+        'SELECT following_id FROM following WHERE follower_id = ?',
+        (user_id,)
+    ).fetchall()
+    
+    following_ids = [follow['following_id'] for follow in following]
+    return jsonify({'following': following_ids})
 
 @app.route('/categories')
 def categories():
