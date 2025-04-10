@@ -499,9 +499,17 @@ def browse_verified():
     return render_template('browse.html', user_info=user_info, articles=articles)
 
 
-@app.route('/verified_users', methods=['POST', 'GET'])
+@app.route('/verified_users')
 def verified_users():
     db = get_db()
+    user_info = None
+    
+    # Get user info if logged in
+    if 'user_id' in session:
+        user = db.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],)).fetchone()
+        if user:
+            user_info = dict(user)
+    
     # Query to get verified users and their reviewed articles
     verified_users = db.execute('''
         SELECT DISTINCT u.id, u.username 
@@ -526,12 +534,7 @@ def verified_users():
             'reviewed_articles': [dict(article) for article in reviewed_articles]
         })
 
-        if 'user_id' in session:
-            user = db.execute('SELECT username, email FROM users WHERE id = ?', (session['user_id'],)).fetchone()
-        if user:
-            user_info = dict(user)
-
-    return render_template('verified_users.html', verified_users=users_with_reviews, user=user_info)
+    return render_template('verified_users.html', verified_users=users_with_reviews, user_info=user_info)
 
 @app.route('/api/toggle_follow', methods=['POST'])
 def toggle_follow():
@@ -597,6 +600,15 @@ def get_following():
 
 @app.route('/categories')
 def categories():
+    db = get_db()
+    user_info = None
+    
+    # Get user info if logged in
+    if 'user_id' in session:
+        user = db.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],)).fetchone()
+        if user:
+            user_info = dict(user)
+    
     response = get_articles()
     articles = json.loads(response.get_data(as_text=True))["articles"]
     categories = {}
@@ -605,7 +617,7 @@ def categories():
         if category not in categories:
             categories[category] = []
         categories[category].append(article)
-    return render_template('categories.html', categories=categories)
+    return render_template('categories.html', categories=categories, user_info=user_info)
 
 @app.route('/article/<int:article_id>', endpoint='view_article')
 def view_article(article_id):
@@ -622,7 +634,7 @@ def view_article(article_id):
 
 @app.route('/explore')
 def explore():
-    return render_template('browse.html')
+    return browse()
 
 @app.route('/db_contents')
 def db_contents():
