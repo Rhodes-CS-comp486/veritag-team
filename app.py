@@ -242,6 +242,41 @@ def load_reviews_from_json():
     db.commit()
     db.close()
 
+def load_articles_from_json():
+    json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dev-articles.json')
+    lorem_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'lorem.txt')
+    try:
+        LoremShort, LoremMedium, LoremLong = read_lorem_file(lorem_file)
+    except FileNotFoundError:
+        LoremShort = "Short placeholder text."
+        LoremMedium = "Medium placeholder text."
+        LoremLong = "Long placeholder text."
+
+    with open(json_file, 'r', encoding='utf-8') as file:
+        articles = json.load(file)
+
+    db = get_db()
+    cursor = db.cursor()
+    for article in articles:
+        length_str = article["length"]
+        if length_str == "Short":
+            body = LoremShort
+            length_int = 5
+        elif length_str == "Medium":
+            body = LoremMedium
+            length_int = 10
+        else:
+            body = LoremLong
+            length_int = 15
+        cursor.execute(
+            '''INSERT OR IGNORE INTO articles (id, title, author, category, length, summary, rating, source, publication_date, body) 
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+            (article["id"], article["title"], article["author"], article["category"], length_int,
+             article["summary"], article["rating"], article["source"], article["publication_date"], body)
+        )
+    db.commit()
+    db.close()
+
 def load_users_from_json():
     json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dev-users.json')
     if not os.path.exists(json_file):
@@ -593,9 +628,34 @@ def browse_verified():
             user_info = dict(user)
     return render_template('browse.html', user_info=user_info, articles=articles)
 
-@app.route('/community')
-def community():
-    return render_template('community.html')
+@app.route('/verified_users')
+def verified_users():
+    db = get_db()
+    # Query to get verified users and their reviewed articles
+    verified_users = db.execute('''
+        SELECT DISTINCT u.id, u.username 
+        FROM users u 
+        WHERE u.verified_code != ""
+    ''').fetchall()
+
+    # For each verified user, get the articles they've reviewed
+    users_with_reviews = []
+    for user in verified_users:
+        reviewed_articles = db.execute('''
+            SELECT a.id, a.title 
+            FROM articles a
+            INNER JOIN reviews r ON a.id = r.article_id
+            WHERE r.user_id = ?
+            ORDER BY r.created_at DESC
+        ''', (user['id'],)).fetchall()
+
+        users_with_reviews.append({
+            'id': user['id'],
+            'username': user['username'],
+            'reviewed_articles': [dict(article) for article in reviewed_articles]
+        })
+
+    return render_template('verified_users.html', verified_users=users_with_reviews)
 
 @app.route('/categories')
 def categories():
