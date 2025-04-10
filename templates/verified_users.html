@@ -7,6 +7,7 @@
     <title>Verified Users</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             background-color: #000000;
@@ -84,7 +85,7 @@
             transform-style: preserve-3d;
         }
 
-        .user-card:hover .card-inner {
+        .card-inner.flipped {
             transform: rotateY(180deg);
         }
 
@@ -249,6 +250,29 @@
             font-size: 1.2rem;
             color: rgba(255, 255, 255, 0.7);
         }
+
+        .flip-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(176, 136, 255, 0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            z-index: 10;
+            font-size: 0.8rem;
+        }
+
+        .flip-btn:hover {
+            background-color: rgba(176, 136, 255, 0.8);
+        }
     </style>
 </head>
 
@@ -288,9 +312,12 @@
             {% for user in verified_users %}
             <div class="col-md-4 mb-4 user-item" data-username="{{ user.username.lower() }}">
                 <div class="user-card">
-                    <div class="card-inner">
+                    <div class="card-inner" id="card-{{ loop.index }}">
                         <!-- Front side with user name and stick figure -->
                         <div class="card-front">
+                            <button class="flip-btn" onclick="flipCard('card-{{ loop.index }}')">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
                             <svg class="user-icon" viewBox="0 0 100 100">
                                 <!-- Simple stick figure -->
                                 <circle cx="50" cy="25" r="20" stroke="white" stroke-width="2" fill="none" />
@@ -306,6 +333,9 @@
 
                         <!-- Back side with reviewed articles list -->
                         <div class="card-back">
+                            <button class="flip-btn" onclick="flipCard('card-{{ loop.index }}')">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
                             <h4>Reviewed Articles</h4>
                             <ul>
                                 {% for article in user.reviewed_articles %}
@@ -358,6 +388,11 @@
                 }
             });
         });
+
+        function flipCard(cardId) {
+            const card = document.getElementById(cardId);
+            card.classList.toggle('flipped');
+        }
     </script>
 </body>
 
