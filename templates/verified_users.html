@@ -111,6 +111,11 @@
             font-weight: bold;
             background-size: cover;
             background-position: center;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .card-front.followed {
+            box-shadow: 0 0 20px rgba(176, 136, 255, 0.5);
         }
 
         .user-icon {
@@ -273,6 +278,33 @@
         .flip-btn:hover {
             background-color: rgba(176, 136, 255, 0.8);
         }
+
+        .follow-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(176, 136, 255, 0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
+            font-size: 0.8rem;
+        }
+
+        .follow-btn:hover {
+            background-color: rgba(176, 136, 255, 0.8);
+        }
+
+        .follow-btn.following {
+            background-color: rgba(176, 136, 255, 0.8);
+        }
     </style>
 </head>
 
@@ -289,6 +321,16 @@
         </div>
         <div class="nav-right">
             <div class="user-section">
+                {% if user_info %}
+                <button class="user-menu-trigger">
+                    <i class="fas fa-user-circle"></i>
+                </button>
+                <div class="user-menu">
+                    <div class="user-menu-item">Username: {{ user_info.username }}</div>
+                    <div class="user-menu-item">Email: {{ user_info.email }}</div>
+                    <a href="/logout" class="user-menu-item">Logout</a>
+                </div>
+                {% else %}
                 <button class="user-menu-trigger">
                     <i class="fas fa-user-circle"></i>
                 </button>
@@ -297,6 +339,7 @@
                     <a href="/create_account" class="user-menu-item">Create Account</a>
                     <a href="/verified_login" class="user-menu-item">Verified Login</a>
                 </div>
+                {% endif %}
             </div>
         </div>
     </nav>
@@ -310,13 +353,16 @@
 
         <div class="row" id="usersContainer">
             {% for user in verified_users %}
-            <div class="col-md-4 mb-4 user-item" data-username="{{ user.username.lower() }}">
+            <div class="col-md-4 mb-4 user-item" data-username="{{ user.username.lower() }}" data-userid="{{ user.id }}">
                 <div class="user-card">
                     <div class="card-inner" id="card-{{ loop.index }}">
                         <!-- Front side with user name and stick figure -->
-                        <div class="card-front">
-                            <button class="flip-btn" onclick="flipCard('card-{{ loop.index }}')">
+                        <div class="card-front" id="card-front-{{ user.id }}">
+                            <button class="flip-btn" onclick="flipCard(event, 'card-{{ loop.index }}')">
                                 <i class="fas fa-sync-alt"></i>
+                            </button>
+                            <button class="follow-btn" id="follow-btn-{{ user.id }}" onclick="toggleFollow(event, {{ user.id }})">
+                                <i class="fas fa-plus" id="follow-icon-{{ user.id }}"></i>
                             </button>
                             <svg class="user-icon" viewBox="0 0 100 100">
                                 <!-- Simple stick figure -->
@@ -333,7 +379,7 @@
 
                         <!-- Back side with reviewed articles list -->
                         <div class="card-back">
-                            <button class="flip-btn" onclick="flipCard('card-{{ loop.index }}')">
+                            <button class="flip-btn" onclick="flipCard(event, 'card-{{ loop.index }}')">
                                 <i class="fas fa-sync-alt"></i>
                             </button>
                             <h4>Reviewed Articles</h4>
@@ -360,7 +406,22 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
+
+    function followUser(userId) {
+        const btn = event.currentTarget;
+        const isFollowing = btn.classList.toggle('following');
+
+        btn.innerHTML = isFollowing
+            ? '<i class="fas fa-user-check"></i>'
+            : '<i class="fas fa-user-plus"></i>';
+
+        // You can plug this into a real follow endpoint here
+        // fetch(`/follow/${userId}`, { method: 'POST' });
+    }
+
+
         document.addEventListener('DOMContentLoaded', function() {
+            // Search functionality
             const searchInput = document.getElementById('userSearch');
             const userItems = document.querySelectorAll('.user-item');
             const usersContainer = document.getElementById('usersContainer');
@@ -387,11 +448,110 @@
                     noResultsMessage.style.display = 'none';
                 }
             });
+
+            // Load user's following status
+            loadFollowingStatus();
         });
 
-        function flipCard(cardId) {
+        function flipCard(event, cardId) {
+            // Stop event propagation to prevent triggering parent element events
+            event.stopPropagation();
+            
             const card = document.getElementById(cardId);
             card.classList.toggle('flipped');
+        }
+
+        // Load all users the current user is following
+        function loadFollowingStatus() {
+            fetch('/api/following')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.following) {
+                        data.following.forEach(userId => {
+                            updateFollowUI(userId, true);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading following status:', error);
+                });
+        }
+
+        // Toggle follow/unfollow status
+        function toggleFollow(event, userId) {
+            // Stop event propagation to prevent card flipping
+            event.stopPropagation();
+            
+            // Immediately give visual feedback (optimistic UI update)
+            const followBtn = document.getElementById(`follow-btn-${userId}`);
+            const isCurrentlyFollowing = followBtn.classList.contains('following');
+            
+            // Temporarily update UI
+            updateFollowUI(userId, !isCurrentlyFollowing);
+            
+            // Make API call to update database
+            fetch('/api/toggle_follow', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                },
+                body: JSON.stringify({
+                    following_id: userId,
+                    action: isCurrentlyFollowing ? 'unfollow' : 'follow'
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        // Not logged in, redirect to login page
+                        window.location.href = '/login?redirect=/verified_users';
+                        throw new Error('Not logged in');
+                    }
+                    throw new Error('Server error');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (!data.success) {
+                    // If server reports failure, revert the UI change
+                    updateFollowUI(userId, isCurrentlyFollowing);
+                    if (data.message === 'Not logged in') {
+                        window.location.href = '/login?redirect=/verified_users';
+                    } else {
+                        alert('Failed to update follow status: ' + data.message);
+                    }
+                }
+            })
+            .catch(error => {
+                // On network error, revert UI change
+                console.error('Error updating follow status:', error);
+                updateFollowUI(userId, isCurrentlyFollowing);
+            });
+        }
+
+        // Update UI to reflect follow/unfollow
+        function updateFollowUI(userId, isFollowing) {
+            const followBtn = document.getElementById(`follow-btn-${userId}`);
+            const followIcon = document.getElementById(`follow-icon-${userId}`);
+            const cardFront = document.getElementById(`card-front-${userId}`);
+            
+            if (isFollowing) {
+                followBtn.classList.add('following');
+                followIcon.classList.remove('fa-plus');
+                followIcon.classList.add('fa-check');
+                cardFront.classList.add('followed');
+            } else {
+                followBtn.classList.remove('following');
+                followIcon.classList.remove('fa-check');
+                followIcon.classList.add('fa-plus');
+                cardFront.classList.remove('followed');
+            }
         }
     </script>
 </body>
