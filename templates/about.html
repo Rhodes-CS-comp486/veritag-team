@@ -63,6 +63,7 @@
             color: #fff;
             text-decoration: none;
             font-size: 1rem;
+            backdrop-filter: blur(10px);
             padding: 0.5rem 1rem;
             border-radius: 6px;
             transition: all 0.2s;
@@ -74,6 +75,47 @@
         }
 
         .nav-link.active {
+            background: rgba(176, 136, 255, 0.2);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .user-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+        }
+
+        .user-section:hover .user-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .user-menu-item {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .user-menu-item:hover {
             background: rgba(176, 136, 255, 0.2);
         }
 
@@ -97,8 +139,33 @@
             <div class="nav-links">
                 <a href="/explore" class="nav-link">Explore</a>
                 <a href="/categories" class="nav-link">Categories</a>
-                <a href="/verified_users" class="nav-link active">Verified Users</a>
+                <a href="/verified_users" class="nav-link">Verified Users</a>
                 <a href="/about" class="nav-link active">About</a>
+                <a href="/profile" class = "nav-link">Profile</a>
+
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="user-section">
+                {% if user_info %}
+                <button class="user-menu-trigger">
+                    <i class="fas fa-user-circle"></i>
+                </button>
+                <div class="user-menu">
+                    <div class="user-menu-item">Username: {{ user_info.username }}</div>
+                    <div class="user-menu-item">Email: {{ user_info.email }}</div>
+                    <a href="/logout" class="user-menu-item">Logout</a>
+                </div>
+                {% else %}
+                <button class="user-menu-trigger">
+                    <i class="fas fa-user-circle"></i>
+                </button>
+                <div class="user-menu">
+                    <a href="/login" class="user-menu-item">Login</a>
+                    <a href="/create_account" class="user-menu-item">Create Account</a>
+                    <a href="/verified_login" class="user-menu-item">Verified Login</a>
+                </div>
+                {% endif %}
             </div>
         </div>
     </nav>
