@@ -374,16 +374,14 @@
             <div class="col-md-4 mb-4 user-item" data-username="{{ user.username.lower() }}" data-userid="{{ user.id }}">
                 <div class="user-card">
                     <div class="card-inner" id="card-{{ loop.index }}">
-                        <!-- Front side with user name and stick figure -->
                         <div class="card-front" id="card-front-{{ user.id }}">
-                            <button class="flip-btn" onclick="flipCard(event, 'card-{{ loop.index }}')">
+                            <button class="flip-btn" onclick="flipCard('card-{{ loop.index }}', event)">
                                 <i class="fas fa-sync-alt"></i>
                             </button>
                             <button class="follow-btn" id="follow-btn-{{ user.id }}" onclick="toggleFollow(event, {{ user.id }})">
                                 <i class="fas fa-plus" id="follow-icon-{{ user.id }}"></i>
                             </button>
                             <svg class="user-icon" viewBox="0 0 100 100">
-                                <!-- Simple stick figure -->
                                 <circle cx="50" cy="25" r="20" stroke="white" stroke-width="2" fill="none" />
                                 <line x1="50" y1="45" x2="50" y2="80" stroke="white" stroke-width="2" />
                                 <line x1="50" y1="55" x2="30" y2="70" stroke="white" stroke-width="2" />
@@ -395,9 +393,8 @@
                             <div class="verified-badge">Verified Reviewer</div>
                         </div>
 
-                        <!-- Back side with reviewed articles list -->
                         <div class="card-back">
-                            <button class="flip-btn" onclick="flipCard(event, 'card-{{ loop.index }}')">
+                            <button class="flip-btn" onclick="flipCard('card-{{ loop.index }}', event)">
                                 <i class="fas fa-sync-alt"></i>
                             </button>
                             <h4>Reviewed Articles</h4>
@@ -424,20 +421,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
-
-    function followUser(userId) {
-        const btn = event.currentTarget;
-        const isFollowing = btn.classList.toggle('following');
-
-        btn.innerHTML = isFollowing
-            ? '<i class="fas fa-user-check"></i>'
-            : '<i class="fas fa-user-plus"></i>';
-
-        // You can plug this into a real follow endpoint here
-        // fetch(`/follow/${userId}`, { method: 'POST' });
-    }
-
-
         document.addEventListener('DOMContentLoaded', function() {
             // Search functionality
             const searchInput = document.getElementById('userSearch');
@@ -471,13 +454,12 @@
             loadFollowingStatus();
         });
 
-        function flipCard(event, cardId) {
-            // Stop event propagation to prevent triggering parent element events
+        function flipCard(cardId, event) {
             event.stopPropagation();
-            
             const card = document.getElementById(cardId);
             card.classList.toggle('flipped');
         }
+
 
         // Load all users the current user is following
         function loadFollowingStatus() {
