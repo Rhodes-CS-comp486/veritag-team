@@ -735,6 +735,25 @@ def get_article_ratings(article_id):
     })
 
 
+@app.route('/profile')
+def profile():
+    db = get_db()
+    user_info = None
+    following = []  # Assuming you'll fetch the list of followed users from the database
+
+    # Check if user is logged in
+    if 'user_id' in session:
+        user = db.execute('SELECT username, email FROM users WHERE id = ?', (session['user_id'],)).fetchone()
+        if user:
+            user_info = dict(user)
+
+        # Fetch following list, assuming you have a table for user follow relationships
+        following = db.execute('SELECT following_id FROM following WHERE id = ?', (session['user_id'],)).fetchall()
+
+    return render_template('profile.html', user_info=user_info, following=following)
+
+
+
 if __name__ == '__main__':
     init_db()
     app.run(debug=True)
