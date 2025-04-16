@@ -92,6 +92,7 @@
         }
 
         .card-front, .card-back {
+            z-index: 1;
             position: absolute;
             width: 100%;
             height: 100%;
@@ -288,7 +289,7 @@
             justify-content: center;
             cursor: pointer;
             transition: background-color 0.3s;
-            z-index: 10;
+            z-index: 20;
             font-size: 0.8rem;
         }
 
@@ -375,7 +376,7 @@
                 <div class="user-card">
                     <div class="card-inner" id="card-{{ loop.index }}">
                         <div class="card-front" id="card-front-{{ user.id }}">
-                            <button class="flip-btn" onclick="flipCard('card-{{ loop.index }}', event)">
+                            <button type="button" class="flip-btn" onclick="flipCard('card-{{ loop.index }}', event)">
                                 <i class="fas fa-sync-alt"></i>
                             </button>
                             <button class="follow-btn" id="follow-btn-{{ user.id }}" onclick="toggleFollow(event, {{ user.id }})">
@@ -455,10 +456,17 @@
         });
 
         function flipCard(cardId, event) {
-            event.stopPropagation();
-            const card = document.getElementById(cardId);
-            card.classList.toggle('flipped');
-        }
+    event.preventDefault();  // Prevent default behavior like following a link
+    event.stopImmediatePropagation(); // Stop it from bubbling up to clickable areas
+
+    const card = document.getElementById(cardId);
+    if (card.classList.contains("flipped")) {
+        card.classList.remove("flipped");
+    } else {
+        card.classList.add("flipped");
+    }
+}
+
 
 
         // Load all users the current user is following
@@ -553,6 +561,12 @@
                 cardFront.classList.remove('followed');
             }
         }
+        document.querySelectorAll('.card-back a').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.stopPropagation(); // Stops link click from triggering flip
+    });
+});
+
     </script>
 </body>
 
