@@ -160,6 +160,18 @@
             background: rgba(176, 136, 255, 0.2);
         }
 
+        .user-menu-trigger {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem; /* Consistent icon size */
+            cursor: pointer;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .user-icon {
             width: 120px;
             height: 120px;
@@ -272,71 +284,166 @@
             color: white;
         }
         .profile-card {
-    max-width: 400px;
-    margin: 40px auto;
-    padding: 20px;
-    background-color: #1e1e1e;
-    color: #f0f0f0;
-    border-radius: 15px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-    font-family: sans-serif;
-}
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #1e1e1e;
+            color: #f0f0f0;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            font-family: sans-serif;
+        }
 
-.profile-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
 
-.avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    border: 2px solid #555;
-}
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 2px solid #555;
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
 
-.username {
-    font-size: 1.5em;
-    font-weight: bold;
-}
+        .stick-figure {
+            width: 60px;
+            height: 60px;
+        }
 
-.badge {
-    background-color: #4caf50;
-    color: white;
-    font-size: 0.7em;
-    padding: 2px 6px;
-    margin-left: 8px;
-    border-radius: 5px;
-    vertical-align: middle;
-}
+        .username {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
 
-.email {
-    font-size: 0.9em;
-    color: #ccc;
-}
+        .badge {
+            background-color: #4caf50;
+            color: white;
+            font-size: 0.7em;
+            padding: 2px 6px;
+            margin-left: 8px;
+            border-radius: 5px;
+            vertical-align: middle;
+        }
 
-.stats, .substats {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
-}
+        .email {
+            font-size: 0.9em;
+            color: #ccc;
+        }
 
-.stat, .substat {
-    text-align: center;
-}
+        .following-section {
+            margin-top: 20px;
+        }
 
-.number {
-    font-size: 1.4em;
-    font-weight: bold;
-    color: #00bcd4;
-}
+        .following-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+            margin-bottom: 15px;
+        }
 
-.label {
-    font-size: 0.8em;
-    color: #aaa;
-}
+        .following-count {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #00bcd4;
+        }
 
+        .following-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
 
+        .following-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background-color: #2a2a2a;
+            transition: background-color 0.2s;
+        }
+
+        .following-item:hover {
+            background-color: #333;
+        }
+
+        .following-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 12px;
+            background-color: #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .following-stick-figure {
+            width: 30px;
+            height: 30px;
+        }
+
+        .following-info {
+            flex-grow: 1;
+        }
+
+        .following-name {
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .following-username {
+            font-size: 0.8em;
+            color: #aaa;
+        }
+
+        .following-verified {
+            font-size: 0.7em;
+            background-color: #4caf50;
+            color: white;
+            padding: 1px 4px;
+            border-radius: 3px;
+            margin-left: 5px;
+        }
+
+        /* Custom scrollbar for following list */
+        .following-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .following-list::-webkit-scrollbar-track {
+            background: #2a2a2a;
+            border-radius: 4px;
+        }
+
+        .following-list::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 4px;
+        }
+
+        .following-list::-webkit-scrollbar-thumb:hover {
+            background: #777;
+        }
+
+        /* Empty following state */
+        .empty-following {
+            text-align: center;
+            padding: 20px 0;
+            color: #777;
+            font-style: italic;
+        }
     </style>
 </head>
 
@@ -345,7 +452,6 @@
         <div class="nav-group">
             <a href="/" class="logo">VERITAG</a>
             <div class="nav-links">
-                <a href="/explore" class="nav-link">Explore</a>
                 <a href="/categories" class="nav-link">Categories</a>
                 <a href="/verified_users" class="nav-link">Verified Users</a>
                 <a href="/about" class="nav-link">About</a>
@@ -385,47 +491,75 @@
                 {% if user_info %}
                 <!-- Show profile card if user is logged in -->
                 <div class="profile-card">
-    <div class="profile-header">
-        <img src="https://via.placeholder.com/80" alt="User Avatar" class="avatar">
-        <div>
-            <h2 class="username">
-                {{ user_info.username }}
-                {% if user_info.verified_code %}
-                    <span class="badge">✔ Verified</span>
-                {% endif %}
-            </h2>
-            <p class="email">{{ user_info.email }}</p>
-        </div>
-    </div>
+                    <div class="profile-header">
+                        <div class="avatar">
+                            <svg class="stick-figure" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Head -->
+                                <circle cx="50" cy="30" r="20" fill="none" stroke="#fff" stroke-width="2"/>
+                                <!-- Body -->
+                                <line x1="50" y1="50" x2="50" y2="80" stroke="#fff" stroke-width="2"/>
+                                <!-- Arms -->
+                                <line x1="50" y1="60" x2="30" y2="50" stroke="#fff" stroke-width="2"/>
+                                <line x1="50" y1="60" x2="70" y2="50" stroke="#fff" stroke-width="2"/>
+                                <!-- Legs -->
+                                <line x1="50" y1="80" x2="35" y2="100" stroke="#fff" stroke-width="2"/>
+                                <line x1="50" y1="80" x2="65" y2="100" stroke="#fff" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="username">
+                                {{ user_info.username }}
+                                {% if user_info.verified_code %}
+                                    <span class="badge">✔ Verified</span>
+                                {% endif %}
+                            </h2>
+                            <p class="email">{{ user_info.email }}</p>
+                        </div>
+                    </div>
 
-    <div class="stats">
-        <div class="stat">
-            <div class="number">{{ followers }}</div>
-            <div class="label">Followers</div>
-        </div>
-        <div class="stat">
-            <div class="number">{{ following | length }}</div>
-            <div class="label">Following</div>
-        </div>
-        <div class="stat">
-            <div class="number">{{ avg_rating }}</div>
-            <div class="label">Avg Rating</div>
-        </div>
-    </div>
+                    <div class="following-section">
+                        <div class="following-header">
+                            <h3>Following</h3>
+                            <span class="following-count">{{ following | length }}</span>
+                        </div>
 
-    <div class="substats">
-        <div class="substat">
-            <div class="number">{{ comment_count }}</div>
-            <div class="label">Comments</div>
-        </div>
-        <div class="substat">
-            <div class="number">{{ review_count }}</div>
-            <div class="label">Reviews</div>
-        </div>
-    </div>
-
-</div>
-
+                        {% if following and following|length > 0 %}
+                        <ul class="following-list">
+                            {% for user in following %}
+                            <li class="following-item">
+                                <div class="following-avatar">
+                                    <svg class="following-stick-figure" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                        <!-- Head -->
+                                        <circle cx="50" cy="30" r="20" fill="none" stroke="#fff" stroke-width="2"/>
+                                        <!-- Body -->
+                                        <line x1="50" y1="50" x2="50" y2="80" stroke="#fff" stroke-width="2"/>
+                                        <!-- Arms -->
+                                        <line x1="50" y1="60" x2="30" y2="50" stroke="#fff" stroke-width="2"/>
+                                        <line x1="50" y1="60" x2="70" y2="50" stroke="#fff" stroke-width="2"/>
+                                        <!-- Legs -->
+                                        <line x1="50" y1="80" x2="35" y2="100" stroke="#fff" stroke-width="2"/>
+                                        <line x1="50" y1="80" x2="65" y2="100" stroke="#fff" stroke-width="2"/>
+                                    </svg>
+                                </div>
+                                <div class="following-info">
+                                    <div class="following-name">
+                                        {{ user.username }}
+                                        {% if user.verified %}
+                                        <span class="following-verified">✓</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="following-username">@{{user.username}}</div>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <div class="empty-following">
+                            You are not following anyone yet.
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
                 {% else %}
                 <!-- Show login prompt if user is not logged in -->
                 <div class="login-prompt">
