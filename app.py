@@ -739,18 +739,42 @@ def get_article_ratings(article_id):
 def profile():
     db = get_db()
     user_info = None
-    following = []  # Assuming you'll fetch the list of followed users from the database
+    following = []
+    comment_count = 0
+    review_count = 0
+    avg_rating = 0
+    followers = 0
 
-    # Check if user is logged in
     if 'user_id' in session:
-        user = db.execute('SELECT username, email FROM users WHERE id = ?', (session['user_id'],)).fetchone()
+        user_id = session['user_id']
+
+        user = db.execute('SELECT username, email, verified_code FROM users WHERE id = ?', (user_id,)).fetchone()
         if user:
             user_info = dict(user)
 
-        # Fetch following list, assuming you have a table for user follow relationships
-        following = db.execute('SELECT following_id FROM following WHERE id = ?', (session['user_id'],)).fetchall()
+        # Fetch following list (returns user IDs this user is following)
+        following = db.execute('SELECT following_id FROM following WHERE follower_id = ?', (user_id,)).fetchall()
 
-    return render_template('profile.html', user_info=user_info, following=following)
+        # Count user's comments
+        comment_count = db.execute("SELECT COUNT(*) FROM comments WHERE user_id = ?", (user_id,)).fetchone()[0]
+
+        # Count user's reviews
+        review_count = db.execute("SELECT COUNT(*) FROM reviews WHERE user_id = ?", (user_id,)).fetchone()[0]
+
+        # Average rating from user's reviews
+        avg_rating = db.execute("SELECT AVG(overall_rating) FROM reviews WHERE user_id = ?", (user_id,)).fetchone()[
+                         0] or 0
+
+        # Count followers (users who follow this user)
+        followers = db.execute("SELECT COUNT(*) FROM following WHERE following_id = ?", (user_id,)).fetchone()[0]
+
+    return render_template('profile.html',
+                           user_info=user_info,
+                           following=following,
+                           comment_count=comment_count,
+                           review_count=review_count,
+                           avg_rating=round(avg_rating, 2),
+                           followers=followers)
 
 
 

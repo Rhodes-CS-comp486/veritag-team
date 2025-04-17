@@ -271,6 +271,72 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             color: white;
         }
+        .profile-card {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    font-family: sans-serif;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid #555;
+}
+
+.username {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.badge {
+    background-color: #4caf50;
+    color: white;
+    font-size: 0.7em;
+    padding: 2px 6px;
+    margin-left: 8px;
+    border-radius: 5px;
+    vertical-align: middle;
+}
+
+.email {
+    font-size: 0.9em;
+    color: #ccc;
+}
+
+.stats, .substats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.stat, .substat {
+    text-align: center;
+}
+
+.number {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #00bcd4;
+}
+
+.label {
+    font-size: 0.8em;
+    color: #aaa;
+}
+
+
     </style>
 </head>
 
@@ -319,38 +385,47 @@
                 {% if user_info %}
                 <!-- Show profile card if user is logged in -->
                 <div class="profile-card">
-                    <div class="card-inner" id="card-1">
-                        <div class="card-front">
-                            <button class="flip-btn" onclick="flipCard(event, 'card-1')">
-                                <i class="fas fa-sync-alt"></i>
-                            </button>
-                            <svg class="user-icon" viewBox="0 0 100 100">
-                                <circle cx="50" cy="25" r="20" stroke="white" stroke-width="2" fill="none" />
-                                <line x1="50" y1="45" x2="50" y2="80" stroke="white" stroke-width="2" />
-                                <line x1="50" y1="55" x2="30" y2="70" stroke="white" stroke-width="2" />
-                                <line x1="50" y1="55" x2="70" y2="70" stroke="white" stroke-width="2" />
-                                <line x1="50" y1="80" x2="30" y2="100" stroke="white" stroke-width="2" />
-                                <line x1="50" y1="80" x2="70" y2="100" stroke="white" stroke-width="2" />
-                            </svg>
-                            <div class="user-name">{{ user_info.username }}</div>
-                            {% if user_info.verified %}
-                            <div class="verified-badge">Verified</div>
-                            {% endif %}
-                        </div>
+    <div class="profile-header">
+        <img src="https://via.placeholder.com/80" alt="User Avatar" class="avatar">
+        <div>
+            <h2 class="username">
+                {{ user_info.username }}
+                {% if user_info.verified_code %}
+                    <span class="badge">✔ Verified</span>
+                {% endif %}
+            </h2>
+            <p class="email">{{ user_info.email }}</p>
+        </div>
+    </div>
 
-                        <div class="card-back">
-                            <button class="flip-btn" onclick="flipCard(event, 'card-1')">
-                                <i class="fas fa-sync-alt"></i>
-                            </button>
-                            <h4>Profile Details</h4>
-                            <ul>
-                                <li><strong>Email:</strong> {{ user_info.email }}</li>
-                                <li><strong>Username:</strong> {{ user_info.username }}</li>
-                                <li><strong>Password:</strong> {{ user_info.password }}</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+    <div class="stats">
+        <div class="stat">
+            <div class="number">{{ followers }}</div>
+            <div class="label">Followers</div>
+        </div>
+        <div class="stat">
+            <div class="number">{{ following | length }}</div>
+            <div class="label">Following</div>
+        </div>
+        <div class="stat">
+            <div class="number">{{ avg_rating }}</div>
+            <div class="label">Avg Rating</div>
+        </div>
+    </div>
+
+    <div class="substats">
+        <div class="substat">
+            <div class="number">{{ comment_count }}</div>
+            <div class="label">Comments</div>
+        </div>
+        <div class="substat">
+            <div class="number">{{ review_count }}</div>
+            <div class="label">Reviews</div>
+        </div>
+    </div>
+
+</div>
+
                 {% else %}
                 <!-- Show login prompt if user is not logged in -->
                 <div class="login-prompt">
