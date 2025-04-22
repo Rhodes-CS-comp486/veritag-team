@@ -66,6 +66,11 @@ def scrape_articles_from_web():
             "name": "MSNBC", 
             "url": "https://www.msnbc.com", 
             "headline_selector": ".tease-card__headline a, .intro-card a"
+        },
+        {
+            "name": "CNN", 
+            "url": "https://www.cnn.com", 
+            "headline_selector": ".container__headline-text, .container__link--type-article, .card__headline-text"
         }
     ]
     
@@ -82,50 +87,66 @@ def scrape_articles_from_web():
         if len(all_articles) >= max_articles:
             break
         
-        print(f"Scraping from {source['name']}...")
+        # Maximum articles per source to ensure balance
+        max_per_source = 10
+        source_articles = 0
         
         try:
             response = requests.get(source["url"], headers=headers, timeout=15)
             response.raise_for_status()
             soup = BeautifulSoup(response.text, 'html.parser')
             
-            # Debug: Check what HTML we're getting
-            print(f"Retrieved {len(response.text)} bytes from {source['name']}")
-            
             article_elements = soup.select(source["headline_selector"])
-            print(f"Found {len(article_elements)} potential article links on {source['name']}")
 
-            # Limit articles per source to ensure balance
-            max_per_source = 10
-            source_articles = 0
-            
             for element in article_elements:
                 if len(all_articles) >= max_articles or source_articles >= max_per_source:
                     break
 
-                article_url = element.get('href') if element else None
+                # Handle CNN links specifically as they have different HTML structure
+                if source["name"] == "CNN":
+                    # If the element is a link, get href directly
+                    if element.name == 'a':
+                        article_url = element.get('href')
+                        title = element.select_one('.container__headline-text')
+                        title = title.get_text(strip=True) if title else element.get_text(strip=True)
+                    # If it's a headline text, look for the parent link
+                    else:
+                        parent_link = element.find_parent('a')
+                        if parent_link:
+                            article_url = parent_link.get('href')
+                            title = element.get_text(strip=True)
+                        else:
+                            continue
+                else:
+                    article_url = element.get('href') if element else None
+                    if not article_url:
+                        continue
+                    title = element.get_text(strip=True) if element else "No Title"
+                
+                # Skip if no URL found
                 if not article_url:
                     continue
-                    
-                # Debug
-                print(f"Found article URL: {article_url}")
 
-                # Handle relative URLs
-                if not article_url.startswith('http'):
+                # Handle CNN relative URLs
+                if source["name"] == "CNN" and article_url.startswith('/'):
+                    if '/index.html' in article_url:
+                        article_url = f"https://www.cnn.com{article_url}"
+                    else:
+                        article_url = f"https://www.cnn.com{article_url}"
+
+                # Handle relative URLs for other sources
+                elif not article_url.startswith('http'):
                     article_url = f"{source['url']}{article_url}" if article_url.startswith('/') else f"{source['url']}/{article_url}"
 
                 if article_url in seen_urls:
                     continue
                 seen_urls.add(article_url)
-
-                title = element.get_text(strip=True) if element else "No Title"
                 
                 # Skip non-articles or unwanted content
                 if len(title) < 10 or any(skip in article_url.lower() for skip in ['/video/', '/shows/', '/personalities/']):
                     continue
 
                 try:
-                    print(f"Fetching article: {title}")
                     article_response = requests.get(article_url, headers=headers, timeout=15)
                     article_soup = BeautifulSoup(article_response.text, 'html.parser')
                     
@@ -143,6 +164,13 @@ def scrape_articles_from_web():
                         body_selectors = ['.article-body__content p', '.article-body p', '.content-body p']
                         date_selectors = ['.article-date', '.timestamp', '[data-test="timestamp"]', 'time']
                         category_selectors = ['.label', '.tag', '.article-category', '.article-section']
+                    
+                    elif source["name"] == "CNN":
+                        author_selectors = ['.byline__name', '.byline a', '.metadata__byline', '.article__byline']
+                        summary_selectors = ['.article__content p:first-child', '.article__main p:first-child', '.article__paragraph:first-child']
+                        body_selectors = ['.article__content p', '.article__main p', '.article__paragraph', '.body-text']
+                        date_selectors = ['.timestamp', 'meta[property="article:published_time"]', '.article__date', '.article-metadata__date time']
+                        category_selectors = ['.article__section', '.metadata__section-label', '.section-name']
 
                     # Try multiple selectors for each field
                     author = None
@@ -218,27 +246,21 @@ def scrape_articles_from_web():
                     })
                     
                     source_articles += 1
-                    print(f"Successfully processed article: {title} from {source['name']}")
                     
                     # Small delay to avoid overwhelming the server
                     time.sleep(0.5)
                     
                 except requests.RequestException as e:
-                    print(f"Request error fetching article {article_url}: {str(e)}")
+                    pass
                 except Exception as e:
-                    print(f"Error processing article {article_url}: {str(e)}")
+                    pass
 
         except requests.RequestException as e:
-            print(f"Failed to fetch {source['name']}: {str(e)}")
+            pass
         except Exception as e:
-            print(f"Unexpected error with {source['name']}: {str(e)}")
-            
-    print(f"Total articles collected: {len(all_articles)}")
-    print(f"Fox News: {sum(1 for a in all_articles if a['source'] == 'Fox News')}")
-    print(f"MSNBC: {sum(1 for a in all_articles if a['source'] == 'MSNBC')}")
+            pass
 
     if not all_articles:
-        print("WARNING: No articles were collected!")
         return
 
     try:
@@ -255,9 +277,8 @@ def scrape_articles_from_web():
                 inserted_count += 1
         
         db.commit()
-        print(f"Successfully inserted {inserted_count} articles into the database")
     except Exception as e:
-        print(f"Database error: {str(e)}")
+        pass
     finally:
         db.close()
 
