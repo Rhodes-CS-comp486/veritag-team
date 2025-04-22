@@ -752,12 +752,21 @@ def profile():
         user_id = session['user_id']
 
         # Update this query to include about_me
-        user = db.execute('SELECT username, email, verified_code, about_me FROM users WHERE id = ?', (user_id,)).fetchone()
+        user = db.execute('SELECT username, email, verified_code, about_me FROM users WHERE id = ?',
+                          (user_id,)).fetchone()
         if user:
             user_info = dict(user)
 
-        # Fetch following list (returns user IDs this user is following)
-        following = db.execute('SELECT following_id FROM following WHERE follower_id = ?', (user_id,)).fetchall()
+        # Fetch complete user info for people this user is following
+        following = db.execute('''
+            SELECT u.id, u.username, CASE WHEN u.verified_code != '' THEN 1 ELSE 0 END AS verified
+            FROM users u
+            JOIN following f ON u.id = f.following_id
+            WHERE f.follower_id = ?
+        ''', (user_id,)).fetchall()
+
+        # Convert following to list of dicts
+        following = [dict(user) for user in following]
 
         # Count user's comments
         comment_count = db.execute("SELECT COUNT(*) FROM comments WHERE user_id = ?", (user_id,)).fetchone()[0]
