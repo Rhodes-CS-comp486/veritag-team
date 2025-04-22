@@ -77,12 +77,21 @@
 
         .user-card {
             perspective: 1000px;
+            position: relative;
+            border: 1px solid rgba(176, 136, 255, 0.3);
+            border-radius: 12px;
+            box-shadow: 0 0 5px rgba(176, 136, 255, 0.2);
+            transition: box-shadow 0.3s;
+        }
+
+        .user-card:hover {
+            box-shadow: 0 0 8px rgba(176, 136, 255, 0.4);
         }
 
         .card-inner {
             position: relative;
             width: 100%;
-            height: 300px;
+            height: 350px;
             transition: transform 0.8s;
             transform-style: preserve-3d;
         }
@@ -115,6 +124,7 @@
             background-size: cover;
             background-position: center;
             transition: box-shadow 0.3s ease;
+            padding: 15px;
         }
 
         .card-front.followed {
@@ -122,11 +132,12 @@
         }
 
         .user-icon {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             filter: brightness(0) invert(1);
             -webkit-filter: drop-shadow(0 0 5px rgba(176, 136, 255, 0.8));
             filter: drop-shadow(0 0 5px rgba(176, 136, 255, 0.8));
+            margin-top: 15px;
         }
 
         .user-name {
@@ -134,16 +145,49 @@
             font-size: 1.8rem;
             font-weight: bold;
             text-shadow: 0 0 5px rgba(176, 136, 255, 0.8);
-            margin-top: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
         }
 
-        .verified-badge {
-            background-color: rgba(176, 136, 255, 0.5);
-            color: white;
-            padding: 0.25rem 0.5rem;
+        .bio-container {
+            width: 100%;
+            text-align: center;
+        }
+
+        .bio-toggle {
+            background: rgba(176, 136, 255, 0.3);
+            border: none;
             border-radius: 4px;
+            color: white;
+            padding: 5px 10px;
             font-size: 0.8rem;
-            margin-top: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: auto;
+            display: inline-block;
+        }
+
+        .bio-toggle:hover {
+            background: rgba(176, 136, 255, 0.5);
+        }
+
+        .bio-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            padding: 0 10px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .bio-content.expanded {
+            max-height: 200px;
+            padding: 10px;
+            overflow-y: auto;
         }
 
         .card-back {
@@ -286,54 +330,83 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
-        .flip-btn {
+        /* Enlarged buttons on front */
+        .flip-btn-front {
             position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: rgba(176, 136, 255, 0.5);
+            top: 15px;
+            left: 15px;
+            background-color: rgba(176, 136, 255, 0.6);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            z-index: 20;
+            font-size: 1.2rem;
+            box-shadow: 0 0 10px rgba(176, 136, 255, 0.4);
+        }
+
+        .flip-btn-front:hover {
+            background-color: rgba(176, 136, 255, 0.9);
+            transform: scale(1.1);
+        }
+
+        /* Same size for back button */
+        .flip-btn-back {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: rgba(176, 136, 255, 0.6);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: background-color 0.3s;
             z-index: 20;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
         }
 
-        .flip-btn:hover {
-            background-color: rgba(176, 136, 255, 0.8);
+        .flip-btn-back:hover {
+            background-color: rgba(176, 136, 255, 0.9);
         }
 
         .follow-btn {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(176, 136, 255, 0.5);
+            top: 15px;
+            right: 15px;
+            background-color: rgba(176, 136, 255, 0.6);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 45px;
+            height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s;
             z-index: 10;
-            font-size: 0.8rem;
+            font-size: 1.2rem;
+            box-shadow: 0 0 10px rgba(176, 136, 255, 0.4);
         }
 
         .follow-btn:hover {
-            background-color: rgba(176, 136, 255, 0.8);
+            background-color: rgba(176, 136, 255, 0.9);
+            transform: scale(1.1);
         }
 
         .follow-btn.following {
-            background-color: rgba(176, 136, 255, 0.8);
+            background-color: rgba(176, 136, 255, 0.9);
         }
     </style>
 </head>
@@ -387,7 +460,7 @@
                 <div class="user-card">
                     <div class="card-inner" id="card-{{ loop.index }}">
                         <div class="card-front" id="card-front-{{ user.id }}">
-                            <button type="button" class="flip-btn" onclick="flipCard('card-{{ loop.index }}', event)">
+                            <button type="button" class="flip-btn-front" onclick="flipCard('card-{{ loop.index }}', event)">
                                 <i class="fas fa-sync-alt"></i>
                             </button>
                             <button class="follow-btn" id="follow-btn-{{ user.id }}" onclick="toggleFollow(event, {{ user.id }})">
@@ -401,12 +474,23 @@
                                 <line x1="50" y1="80" x2="30" y2="100" stroke="white" stroke-width="2" />
                                 <line x1="50" y1="80" x2="70" y2="100" stroke="white" stroke-width="2" />
                             </svg>
+                            <div class="bio-container">
+                                <button class="bio-toggle" onclick="toggleBio(event, 'bio-{{ user.id }}')">
+                                    <i class="fas fa-chevron-down"></i> Show Bio
+                                </button>
+                                <div class="bio-content" id="bio-{{ user.id }}">
+                                    {% if user.about_me %}
+                                        {{ user.about_me }}
+                                    {% else %}
+                                        This user hasn't added a bio yet.
+                                    {% endif %}
+                                </div>
+                            </div>
                             <div class="user-name">{{ user.username }}</div>
-                            <div class="verified-badge">Verified Reviewer</div>
                         </div>
 
                         <div class="card-back">
-                            <button class="flip-btn" onclick="flipCard('card-{{ loop.index }}', event)">
+                            <button class="flip-btn-back" onclick="flipCard('card-{{ loop.index }}', event)">
                                 <i class="fas fa-sync-alt"></i>
                             </button>
                             <h4>Reviewed Articles</h4>
@@ -467,18 +551,33 @@
         });
 
         function flipCard(cardId, event) {
-    event.preventDefault();  // Prevent default behavior like following a link
-    event.stopImmediatePropagation(); // Stop it from bubbling up to clickable areas
+            event.preventDefault();  // Prevent default behavior like following a link
+            event.stopImmediatePropagation(); // Stop it from bubbling up to clickable areas
 
-    const card = document.getElementById(cardId);
-    if (card.classList.contains("flipped")) {
-        card.classList.remove("flipped");
-    } else {
-        card.classList.add("flipped");
-    }
-}
+            const card = document.getElementById(cardId);
+            if (card.classList.contains("flipped")) {
+                card.classList.remove("flipped");
+            } else {
+                card.classList.add("flipped");
+            }
+        }
 
-
+        // Toggle bio visibility
+        function toggleBio(event, bioId) {
+            event.preventDefault(); 
+            event.stopPropagation(); // Prevent card flip when clicking bio toggle
+            
+            const bioContent = document.getElementById(bioId);
+            const bioToggle = event.currentTarget;
+            
+            if (bioContent.classList.contains('expanded')) {
+                bioContent.classList.remove('expanded');
+                bioToggle.innerHTML = '<i class="fas fa-chevron-down"></i> Show Bio';
+            } else {
+                bioContent.classList.add('expanded');
+                bioToggle.innerHTML = '<i class="fas fa-chevron-up"></i> Hide Bio';
+            }
+        }
 
         // Load all users the current user is following
         function loadFollowingStatus() {
@@ -572,12 +671,12 @@
                 cardFront.classList.remove('followed');
             }
         }
+        
         document.querySelectorAll('.card-back a').forEach(link => {
-    link.addEventListener('click', function(e) {
-        e.stopPropagation(); // Stops link click from triggering flip
-    });
-});
-
+            link.addEventListener('click', function(e) {
+                e.stopPropagation(); // Stops link click from triggering flip
+            });
+        });
     </script>
 </body>
 
