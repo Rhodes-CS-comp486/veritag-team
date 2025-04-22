@@ -616,30 +616,31 @@
 
                     <!-- New About Me Section -->
                     <div class="about-me-section">
-                        <div class="about-me-header">
-                            <h3>About Me</h3>
-                            <button id="editAboutMeBtn" class="edit-about-me" onclick="toggleAboutMeEdit()">
-                                <i class="fas fa-pencil-alt"></i> Edit
-                            </button>
-                        </div>
+                        {% if user_info.verified_code %}
+                            <div class="about-me-header">
+                                <h3>About Me</h3>
+                                <button id="editAboutMeBtn" class="edit-about-me" onclick="toggleAboutMeEdit()">
+                                    <i class="fas fa-pencil-alt"></i> Edit
+                                </button>
+                            </div>
+                            <div id="aboutMeDisplay">
+                                {% if user_info.about_me %}
+                                <p class="about-me-content">{{ user_info.about_me }}</p>
+                                {% else %}
+                                <p class="about-me-empty">Tell others about yourself...</p>
+                                {% endif %}
+                            </div>
 
-                        <div id="aboutMeDisplay">
-                            {% if user_info.about_me %}
-                            <p class="about-me-content">{{ user_info.about_me }}</p>
-                            {% else %}
-                            <p class="about-me-empty">Tell others about yourself...</p>
-                            {% endif %}
-                        </div>
-
-                        <div id="aboutMeEdit" style="display: none;">
-                            <form action="/update_about_me" method="post" class="about-me-form">
-                                <textarea name="about_me" class="about-me-textarea" placeholder="Tell others about yourself...">{{ user_info.about_me }}</textarea>
-                                <div class="about-me-buttons">
-                                    <button type="button" class="cancel-about-me" onclick="toggleAboutMeEdit()">Cancel</button>
-                                    <button type="submit" class="save-about-me">Save</button>
-                                </div>
-                            </form>
-                        </div>
+                            <div id="aboutMeEdit" style="display: none;">
+                                <form action="/update_about_me" method="post" class="about-me-form">
+                                    <textarea name="about_me" class="about-me-textarea" placeholder="Tell others about yourself...">{{ user_info.about_me }}</textarea>
+                                    <div class="about-me-buttons">
+                                        <button type="button" class="cancel-about-me" onclick="toggleAboutMeEdit()">Cancel</button>
+                                        <button type="submit" class="save-about-me">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        {% endif %}
                     </div>
 
                     <div class="following-section">
