@@ -28,121 +28,87 @@ def get_db():
 def init_db():
     with app.app_context():
         db = get_db()
-        # Remove the DROP TABLE statements to preserve existing data
-        db.execute('''CREATE TABLE IF NOT EXISTS articles
-                       (id TEXT PRIMARY KEY,
-                        title TEXT NOT NULL,
-                        source TEXT NOT NULL,
-                        author TEXT NOT NULL,
-                        length INTEGER NOT NULL,
-                        category TEXT NOT NULL,
-                        rating INTEGER NOT NULL,
-                        summary TEXT NOT NULL,
-                        publication_date TEXT NOT NULL,
-                        body TEXT)''')
-        db.execute('''CREATE TABLE IF NOT EXISTS users
-                       (id INTEGER PRIMARY KEY,
-                        username TEXT NOT NULL UNIQUE,
-                        email TEXT NOT NULL UNIQUE,
-                        password TEXT NOT NULL,
-                        verified_code TEXT NOT NULL)''')
-        db.execute('''CREATE TABLE IF NOT EXISTS comments
-                       (id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        article_id TEXT NOT NULL,
-                        user_id INTEGER,
-                        username TEXT NOT NULL,
-                        text TEXT NOT NULL,
-                        upvotes INTEGER DEFAULT 0,
-                        downvotes INTEGER DEFAULT 0,
-                        verified BOOLEAN DEFAULT 0,
-                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                        FOREIGN KEY (article_id) REFERENCES articles(id),
-                        FOREIGN KEY (user_id) REFERENCES users(id))''')
-        db.execute('''CREATE TABLE IF NOT EXISTS reviews (
-                                review_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                article_id TEXT NOT NULL,
-                                user_id INTEGER NOT NULL,
-                                bias_rating INTEGER NOT NULL,
-                                accuracy_rating INTEGER NOT NULL,
-                                quality_rating INTEGER NOT NULL,
-                                value_rating INTEGER NOT NULL,
-                                overall_rating REAL NOT NULL,
-                                review TEXT NOT NULL,
-                                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                                FOREIGN KEY (article_id) REFERENCES articles(id),
-                                FOREIGN KEY (user_id) REFERENCES users(id)
-                              )''')
-        db.execute('''CREATE TABLE IF NOT EXISTS comment_votes (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        comment_id INTEGER NOT NULL,
-                        user_id INTEGER NOT NULL,
-                        vote_type TEXT NOT NULL, -- 'upvote' or 'downvote'
-                        UNIQUE(comment_id, user_id),
-                        FOREIGN KEY (comment_id) REFERENCES comments(id),
-                        FOREIGN KEY (user_id) REFERENCES users(id)
-                      )''')
-        
-        db.execute('''CREATE TABLE IF NOT EXISTS following (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        follower_id INTEGER NOT NULL,
-                        following_id INTEGER NOT NULL,
-                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                        UNIQUE (follower_id, following_id),
-                        CHECK (follower_id != following_id),
-                        FOREIGN KEY (follower_id) REFERENCES users(id),
-                        FOREIGN KEY (following_id) REFERENCES users(id)
-                    )
-                ''')
-        
+        # ... (existing table creation code) ...
         db.commit()
 
-        # Only load initial data if the tables are empty
-        if not db.execute('SELECT 1 FROM articles LIMIT 1').fetchone():
-            scrape_articles_from_web()  # Replace load_articles_from_json with web scraping
+        # Always scrape fresh articles
+        scrape_articles_from_web()  # Remove the condition
         if not db.execute('SELECT 1 FROM reviews LIMIT 1').fetchone():
             load_reviews_from_json()
         if not db.execute('SELECT 1 FROM users LIMIT 1').fetchone():
             load_users_from_json()
         fix_ratings()
 
+
+
 def scrape_articles_from_web():
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Upgrade-Insecure-Requests": "1",
+        "Cache-Control": "max-age=0"
     }
+    
+    # Clear existing cache to ensure fresh content
+    if hasattr(requests, 'session'):
+        requests.session().close()
+    
     sources = [
-        {"name": "CNN", "url": "https://www.cnn.com", "headline_selector": ".container__title-url"},
-        {"name": "MSNBC", "url": "https://www.msnbc.com", "headline_selector": ".tease-card__headline a"},
-        {"name": "Fox News", "url": "https://www.foxnews.com", "headline_selector": ".title a, .info-header a"}
+        {
+            "name": "Fox News", 
+            "url": "https://www.foxnews.com", 
+            "headline_selector": ".title a, .info-header a, .headline a, .title-link, .m a"
+        },
+        {
+            "name": "MSNBC", 
+            "url": "https://www.msnbc.com", 
+            "headline_selector": ".tease-card__headline a, .intro-card a"
+        }
     ]
+    
     all_articles = []
     seen_urls = set()
-    max_articles = 20  # Updated to allow up to 20 articles
+    max_articles = 20  # Limit to 20 articles total
 
     db = get_db()
+    # Clear existing articles to prevent showing old content
     db.execute('DELETE FROM articles')
     db.commit()
 
     for source in sources:
         if len(all_articles) >= max_articles:
             break
+        
+        print(f"Scraping from {source['name']}...")
+        
         try:
-            response = requests.get(source["url"], headers=headers, timeout=10)
+            response = requests.get(source["url"], headers=headers, timeout=15)
             response.raise_for_status()
             soup = BeautifulSoup(response.text, 'html.parser')
-
+            
+            # Debug: Check what HTML we're getting
+            print(f"Retrieved {len(response.text)} bytes from {source['name']}")
+            
             article_elements = soup.select(source["headline_selector"])
+            print(f"Found {len(article_elements)} potential article links on {source['name']}")
 
+            # Limit articles per source to ensure balance
+            max_per_source = 10
+            source_articles = 0
+            
             for element in article_elements:
-                if len(all_articles) >= max_articles:
+                if len(all_articles) >= max_articles or source_articles >= max_per_source:
                     break
 
-                article_url = element['href'] if 'href' in element.attrs else None
+                article_url = element.get('href') if element else None
                 if not article_url:
                     continue
-
-                # Filter non-article links
-                if source["name"] == "CNN" and not ("/interactive/" in article_url or "/article/" in article_url):
-                    continue
+                    
+                # Debug
+                print(f"Found article URL: {article_url}")
 
                 # Handle relative URLs
                 if not article_url.startswith('http'):
@@ -153,66 +119,131 @@ def scrape_articles_from_web():
                 seen_urls.add(article_url)
 
                 title = element.get_text(strip=True) if element else "No Title"
+                
+                # Skip non-articles or unwanted content
+                if len(title) < 10 or any(skip in article_url.lower() for skip in ['/video/', '/shows/', '/personalities/']):
+                    continue
 
                 try:
-                    article_response = requests.get(article_url, headers=headers, timeout=10)
+                    print(f"Fetching article: {title}")
+                    article_response = requests.get(article_url, headers=headers, timeout=15)
                     article_soup = BeautifulSoup(article_response.text, 'html.parser')
-
-                    if source["name"] == "CNN":
-                        author_tag = article_soup.select_one('.metadata__byline__author')
-                        summary_tag = article_soup.select_one('.l-container .zn-body__paragraph')
-                        body_elements = article_soup.select('.l-container .zn-body__paragraph')
-                        date_tag = article_soup.select_one('.update-time')
-                        category_tag = article_soup.select_one('.metadata__section')
-
+                    
+                    # Different selector strategies based on source
+                    if source["name"] == "Fox News":
+                        author_selectors = ['.author-byline', '.article-meta .by-author', '[data-testid="author-byline"]', '.author']
+                        summary_selectors = ['.article-body p:first-child', '.article p:first-child', '[data-testid="article-body"] p:first-child']
+                        body_selectors = ['.article-body p', '.article p', '[data-testid="article-body"] p']
+                        date_selectors = ['.article-date', 'time', '.timestamp', 'meta[property="article:published_time"]']
+                        category_selectors = ['.eyebrow', '.tag', '.kicker', 'meta[property="article:section"]']
+                    
                     elif source["name"] == "MSNBC":
-                        author_tag = article_soup.select_one('.author-name, .showAuthor')
-                        summary_tag = article_soup.select_one('.article-body__content p')
-                        body_elements = article_soup.select('.article-body__content p')
-                        date_tag = article_soup.select_one('.time')
-                        category_tag = article_soup.select_one('.category')
+                        author_selectors = ['.byline-name', '.author-byline', '[data-test="byline"]', '.author']
+                        summary_selectors = ['.article-dek', '.summary', '.article-body__content p:first-child']
+                        body_selectors = ['.article-body__content p', '.article-body p', '.content-body p']
+                        date_selectors = ['.article-date', '.timestamp', '[data-test="timestamp"]', 'time']
+                        category_selectors = ['.label', '.tag', '.article-category', '.article-section']
 
-                    else:  # Fox News
-                        author_tag = article_soup.select_one('.author-byline')
-                        summary_tag = article_soup.select_one('.article-body p')
-                        body_elements = article_soup.select('.article-body p')
-                        date_tag = article_soup.select_one('.date')
-                        category_tag = article_soup.select_one('.eyebrow')
-
-                    author = author_tag.get_text(strip=True) if author_tag else "Unknown Author"
-                    summary = summary_tag.get_text(strip=True) if summary_tag else "No Summary Available"
+                    # Try multiple selectors for each field
+                    author = None
+                    for selector in author_selectors:
+                        author_tag = article_soup.select_one(selector)
+                        if author_tag:
+                            author = author_tag.get_text(strip=True)
+                            break
+                    author = author or "Unknown Author"
+                    
+                    # Clean up author text
+                    if author.lower().startswith(("by ", "by:")):
+                        author = author[author.lower().find("by") + 3:].strip()
+                    
+                    # Extract summary
+                    summary = None
+                    for selector in summary_selectors:
+                        summary_tag = article_soup.select_one(selector)
+                        if summary_tag:
+                            summary = summary_tag.get_text(strip=True)
+                            break
+                    summary = summary or "No Summary Available"
+                    
+                    # Extract body
+                    body_elements = []
+                    for selector in body_selectors:
+                        body_elements = article_soup.select(selector)
+                        if body_elements:
+                            break
                     body = " ".join([p.get_text(strip=True) for p in body_elements]) if body_elements else "No Content Available"
-                    publication_date = date_tag.get_text(strip=True) if date_tag else datetime.now().strftime('%Y-%m-%d')
-                    category = category_tag.get_text(strip=True) if category_tag else "General"
+                    
+                    # Extract date
+                    publication_date = None
+                    for selector in date_selectors:
+                        date_tag = article_soup.select_one(selector)
+                        if date_tag:
+                            if date_tag.name == 'meta':
+                                publication_date = date_tag.get('content', '')
+                            else:
+                                publication_date = date_tag.get_text(strip=True)
+                            break
+                    publication_date = publication_date or datetime.now().strftime('%Y-%m-%d')
+                    
+                    # Extract category
+                    category = None
+                    for selector in category_selectors:
+                        category_tag = article_soup.select_one(selector)
+                        if category_tag:
+                            if category_tag.name == 'meta':
+                                category = category_tag.get('content', '')
+                            else:
+                                category = category_tag.get_text(strip=True)
+                            break
+                    category = category or "General"
+
+                    # Calculate article length (in 100-word units)
+                    length = max(1, len(body.split()) // 100)
+                    
+                    # Initial rating is 0
+                    rating = 0
+
+                    all_articles.append({
+                        "id": str(uuid.uuid4()),
+                        "title": title,
+                        "author": author,
+                        "category": category,
+                        "length": length,
+                        "summary": summary,
+                        "rating": rating,
+                        "source": source["name"],
+                        "publication_date": publication_date,
+                        "body": body
+                    })
+                    
+                    source_articles += 1
+                    print(f"Successfully processed article: {title} from {source['name']}")
+                    
+                    # Small delay to avoid overwhelming the server
+                    time.sleep(0.5)
+                    
                 except requests.RequestException as e:
-                    author = "Unknown Author"
-                    summary = "No Summary Available"
-                    body = "No Content Available"
-                    publication_date = datetime.now().strftime('%Y-%m-%d')
-                    category = "General"
+                    print(f"Request error fetching article {article_url}: {str(e)}")
+                except Exception as e:
+                    print(f"Error processing article {article_url}: {str(e)}")
 
-                length = len(body.split()) // 100
-                rating = 0
-
-                all_articles.append({
-                    "id": str(uuid.uuid4()),
-                    "title": title,
-                    "author": author,
-                    "category": category,
-                    "length": length,
-                    "summary": summary,
-                    "rating": rating,
-                    "source": source["url"],
-                    "publication_date": publication_date,
-                    "body": body
-                })
         except requests.RequestException as e:
-            pass
+            print(f"Failed to fetch {source['name']}: {str(e)}")
         except Exception as e:
-            pass
+            print(f"Unexpected error with {source['name']}: {str(e)}")
+            
+    print(f"Total articles collected: {len(all_articles)}")
+    print(f"Fox News: {sum(1 for a in all_articles if a['source'] == 'Fox News')}")
+    print(f"MSNBC: {sum(1 for a in all_articles if a['source'] == 'MSNBC')}")
+
+    if not all_articles:
+        print("WARNING: No articles were collected!")
+        return
 
     try:
         cursor = db.cursor()
+        inserted_count = 0
         for article in all_articles:
             cursor.execute(
                 '''INSERT OR IGNORE INTO articles (id, title, author, category, length, summary, rating, source, publication_date, body) 
@@ -220,9 +251,13 @@ def scrape_articles_from_web():
                 (article["id"], article["title"], article["author"], article["category"], article["length"],
                  article["summary"], article["rating"], article["source"], article["publication_date"], article["body"])
             )
+            if cursor.rowcount > 0:
+                inserted_count += 1
+        
         db.commit()
+        print(f"Successfully inserted {inserted_count} articles into the database")
     except Exception as e:
-        pass
+        print(f"Database error: {str(e)}")
     finally:
         db.close()
 
@@ -289,6 +324,8 @@ def load_articles_from_json():
         )
     db.commit()
     db.close()
+
+    
 
 def load_users_from_json():
     json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dev-users.json')

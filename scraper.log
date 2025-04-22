@@ -1,0 +1,644 @@
+2025-04-22 14:44:27,384 - INFO - Scraping from Fox News...
+2025-04-22 14:44:27,814 - INFO - Retrieved 744088 bytes from Fox News
+2025-04-22 14:44:28,027 - INFO - Found 411 potential article links on Fox News
+2025-04-22 14:44:28,027 - INFO - Found article URL: https://www.foxnews.com/politics/gorsuch-roberts-side-left-leaning-supreme-court-justices-immigration-ruling
+2025-04-22 14:44:28,027 - INFO - Fetching article: NARROW DECISION
+2025-04-22 14:44:28,224 - INFO - Successfully processed article: NARROW DECISION from Fox News
+2025-04-22 14:44:28,725 - INFO - Found article URL: https://www.foxnews.com/politics/gorsuch-roberts-side-left-leaning-supreme-court-justices-immigration-ruling
+2025-04-22 14:44:28,725 - INFO - Found article URL: https://www.foxnews.com/politics/trumps-third-term-trial-balloon-gets-resounding-response-new-poll
+2025-04-22 14:44:28,725 - INFO - Fetching article: PEOPLE HAVE SPOKEN
+2025-04-22 14:44:28,907 - INFO - Successfully processed article: PEOPLE HAVE SPOKEN from Fox News
+2025-04-22 14:44:29,408 - INFO - Found article URL: https://www.foxnews.com/politics/trumps-third-term-trial-balloon-gets-resounding-response-new-poll
+2025-04-22 14:44:29,408 - INFO - Found article URL: https://www.foxnews.com/video/5614615980001
+2025-04-22 14:44:29,408 - INFO - Found article URL: https://www.foxnews.com/video/5614615980001
+2025-04-22 14:44:29,408 - INFO - Found article URL: https://www.foxnews.com/media/top-60-minutes-producer-resigns-from-show-cites-lack-independence
+2025-04-22 14:44:29,408 - INFO - Found article URL: https://www.foxnews.com/media/top-60-minutes-producer-resigns-from-show-cites-lack-independence
+2025-04-22 14:44:29,408 - INFO - Found article URL: https://www.foxbusiness.com/economy/bessent-believes-china-impasse-over-tariffs-de-escalate
+2025-04-22 14:44:29,408 - INFO - Fetching article: ON THE MOVE
+2025-04-22 14:44:29,633 - INFO - Successfully processed article: ON THE MOVE from Fox News
+2025-04-22 14:44:30,134 - INFO - Found article URL: https://www.foxbusiness.com/economy/bessent-believes-china-impasse-over-tariffs-de-escalate
+2025-04-22 14:44:30,134 - INFO - Found article URL: https://www.foxnews.com/world/pope-francis-last-words-revealed-vatican-describes-his-final-hours
+2025-04-22 14:44:30,135 - INFO - Fetching article: ‘GESTURE OF FAREWELL’
+2025-04-22 14:44:30,307 - INFO - Successfully processed article: ‘GESTURE OF FAREWELL’ from Fox News
+2025-04-22 14:44:30,808 - INFO - Found article URL: https://www.foxnews.com/world/pope-francis-last-words-revealed-vatican-describes-his-final-hours
+2025-04-22 14:44:30,808 - INFO - Found article URL: https://www.foxnews.com/sports/trump-praises-granddaughters-golf-skills-says-she-may-able-beat-him-someday
+2025-04-22 14:44:30,808 - INFO - Fetching article: GREEN AGENDA
+2025-04-22 14:44:30,994 - INFO - Successfully processed article: GREEN AGENDA from Fox News
+2025-04-22 14:44:31,495 - INFO - Found article URL: https://www.foxnews.com/sports/trump-praises-granddaughters-golf-skills-says-she-may-able-beat-him-someday
+2025-04-22 14:44:31,495 - INFO - Found article URL: https://www.foxnews.com/politics/house-republican-enters-race-mitch-mcconnells-senate-seat-setting-up-high-stakes-gop-primary
+2025-04-22 14:44:31,495 - INFO - Fetching article: OFF TO THE RACES
+2025-04-22 14:44:31,683 - INFO - Successfully processed article: OFF TO THE RACES from Fox News
+2025-04-22 14:44:32,184 - INFO - Found article URL: https://www.foxnews.com/politics/house-republican-enters-race-mitch-mcconnells-senate-seat-setting-up-high-stakes-gop-primary
+2025-04-22 14:44:32,184 - INFO - Found article URL: https://www.foxnews.com/sports/wwe-star-gunther-chokes-out-pat-mcafee-bitter-rage-following-wrestlemania-41-loss
+2025-04-22 14:44:32,184 - INFO - Fetching article: 'PAT' DOWN
+2025-04-22 14:44:32,355 - INFO - Successfully processed article: 'PAT' DOWN from Fox News
+2025-04-22 14:44:32,856 - INFO - Found article URL: https://www.foxnews.com/sports/wwe-star-gunther-chokes-out-pat-mcafee-bitter-rage-following-wrestlemania-41-loss
+2025-04-22 14:44:32,857 - INFO - Found article URL: https://www.foxnews.com/video/6371787483112
+2025-04-22 14:44:32,857 - INFO - Found article URL: https://www.foxnews.com/video/6371787483112
+2025-04-22 14:44:32,857 - INFO - Found article URL: https://www.foxnews.com/politics/supreme-court-appears-side-parents-religious-liberty-dispute-over-storybooks
+2025-04-22 14:44:32,857 - INFO - Found article URL: https://www.foxnews.com/politics/supreme-court-appears-side-parents-religious-liberty-dispute-over-storybooks
+2025-04-22 14:44:32,857 - INFO - Found article URL: https://www.foxnews.com/media/rosie-odonnell-demands-rfk-jr-resign-over-comments-about-autistic-children
+2025-04-22 14:44:32,857 - INFO - Found article URL: https://www.foxnews.com/media/rosie-odonnell-demands-rfk-jr-resign-over-comments-about-autistic-children
+2025-04-22 14:44:32,857 - INFO - Found article URL: https://www.foxnews.com/us/walz-staffer-accused-vandalizing-teslas-might-not-face-charges-report
+2025-04-22 14:44:32,857 - INFO - Found article URL: https://www.foxnews.com/us/walz-staffer-accused-vandalizing-teslas-might-not-face-charges-report
+2025-04-22 14:44:32,857 - INFO - Found article URL: https://www.foxnews.com/world/iran-ramps-up-state-executions-amid-nuclear-talks-us
+2025-04-22 14:44:32,858 - INFO - Found article URL: https://www.foxnews.com/world/iran-ramps-up-state-executions-amid-nuclear-talks-us
+2025-04-22 14:44:32,858 - INFO - Found article URL: https://www.foxnews.com/video/6371759518112
+2025-04-22 14:44:32,858 - INFO - Found article URL: https://www.foxnews.com/video/6371759518112
+2025-04-22 14:44:32,858 - INFO - Found article URL: https://www.foxnews.com/politics/republicans-troll-dems-el-salvador-visits-offer-foot-travel-bill-exchange-one-thing
+2025-04-22 14:44:32,858 - INFO - Found article URL: https://www.foxnews.com/politics/republicans-troll-dems-el-salvador-visits-offer-foot-travel-bill-exchange-one-thing
+2025-04-22 14:44:32,858 - INFO - Found article URL: https://www.foxnews.com/politics/epa-chief-zeldin-launches-talks-mexico-end-sewage-hitting-san-diego-navy-seals-out-patience
+2025-04-22 14:44:32,858 - INFO - Found article URL: https://www.foxnews.com/politics/epa-chief-zeldin-launches-talks-mexico-end-sewage-hitting-san-diego-navy-seals-out-patience
+2025-04-22 14:44:32,858 - INFO - Found article URL: https://www.foxnews.com/politics/let-us-parents-supreme-court-should-let-parents-opt-kids-out-lgbtq-school-lessons-lawyer-argues
+2025-04-22 14:44:32,858 - INFO - Found article URL: https://www.foxnews.com/politics/let-us-parents-supreme-court-should-let-parents-opt-kids-out-lgbtq-school-lessons-lawyer-argues
+2025-04-22 14:44:32,858 - INFO - Found article URL: https://www.foxnews.com/games
+2025-04-22 14:44:32,858 - INFO - Found article URL: https://www.foxnews.com/games
+2025-04-22 14:44:32,858 - INFO - Found article URL: https://www.foxbusiness.com/politics/china-asks-south-korea-not-export-rare-earth-products-us-defense-firms-warns-companies-could-sanctioned
+2025-04-22 14:44:32,858 - INFO - Found article URL: https://www.foxbusiness.com/politics/china-asks-south-korea-not-export-rare-earth-products-us-defense-firms-warns-companies-could-sanctioned
+2025-04-22 14:44:32,858 - INFO - Found article URL: https://www.foxnews.com/world/first-photos-released-pope-francis-his-casket-funeral-set-saturday
+2025-04-22 14:44:32,858 - INFO - Found article URL: https://www.foxnews.com/world/first-photos-released-pope-francis-his-casket-funeral-set-saturday
+2025-04-22 14:44:32,858 - INFO - Found article URL: https://www.foxnews.com/politics/house-republican-asks-trump-doj-criminally-prosecute-ex-new-york-gov-andrew-cuomo
+2025-04-22 14:44:32,858 - INFO - Found article URL: https://www.foxnews.com/politics/house-republican-asks-trump-doj-criminally-prosecute-ex-new-york-gov-andrew-cuomo
+2025-04-22 14:44:32,858 - INFO - Found article URL: https://www.foxnews.com/us/private-security-guards-who-dragged-idaho-woman-from-town-hall-meeting-hit-charges
+2025-04-22 14:44:32,858 - INFO - Found article URL: https://www.foxnews.com/us/private-security-guards-who-dragged-idaho-woman-from-town-hall-meeting-hit-charges
+2025-04-22 14:44:32,858 - INFO - Found article URL: https://www.foxbusiness.com/markets/halliburton-warns-tariff-impact-lower-north-america-oilfield-activity
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://www.foxbusiness.com/markets/halliburton-warns-tariff-impact-lower-north-america-oilfield-activity
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://www.foxnews.com/media/dana-perino-shares-advice-she-wishes-she-heard-years-ago-new-book-i-wish-someone-had-told-me
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://www.foxnews.com/media/dana-perino-shares-advice-she-wishes-she-heard-years-ago-new-book-i-wish-someone-had-told-me
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://foxnews.com/trumptransition
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://foxnews.com/trumptransition
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://www.foxnews.com/politics/politics-cartoons-slideshow
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://www.foxnews.com/politics/politics-cartoons-slideshow
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://www.foxnews.com/deals/stylish-dresses-spring-wedding
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://www.foxnews.com/deals/stylish-dresses-spring-wedding
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://www.foxnews.com/food-drink/popular-coffee-alternative-may-help-prevent-cancer-experts
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://www.foxnews.com/food-drink/popular-coffee-alternative-may-help-prevent-cancer-experts
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://www.foxnews.com/lifestyle/american-culture-quiz-test-yourself-classic-cars-perfect-pitches-timeless-tv
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://www.foxnews.com/lifestyle/american-culture-quiz-test-yourself-classic-cars-perfect-pitches-timeless-tv
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://www.foxnews.com/deals/wayfair-way-day-sale
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://www.foxnews.com/deals/wayfair-way-day-sale
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://www.foxnews.com/media/jen-psaki-admits-msnbcs-liberal-viewers-expect-negative-coverage-trump
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://www.foxnews.com/media/jen-psaki-admits-msnbcs-liberal-viewers-expect-negative-coverage-trump
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://www.foxbusiness.com/energy/solar-energy-installations-continue-grow-united-states
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://www.foxbusiness.com/energy/solar-energy-installations-continue-grow-united-states
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://www.foxnews.com/opinion/un-marks-holocaust-remembrance-day-redefining-holocaust-comparing-israelis-nazis
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://www.foxnews.com/opinion/un-marks-holocaust-remembrance-day-redefining-holocaust-comparing-israelis-nazis
+2025-04-22 14:44:32,859 - INFO - Found article URL: https://www.foxnews.com/politics/democrats-el-salvador-trip-lampooned-senate-gop-group-faux-tourism-ad-bienvenidos
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/politics/democrats-el-salvador-trip-lampooned-senate-gop-group-faux-tourism-ad-bienvenidos
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/media/kimmel-mocks-dhs-sec-kristi-noem-getting-robbed-her-being-crime-victim-embarrassing
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/media/kimmel-mocks-dhs-sec-kristi-noem-getting-robbed-her-being-crime-victim-embarrassing
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/media/elizabeth-warren-squirms-when-pressed-about-defending-bidens-mental-fitness-podcast-interview
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/media/elizabeth-warren-squirms-when-pressed-about-defending-bidens-mental-fitness-podcast-interview
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/politics/rubio-overhauling-bloated-state-department-sweeping-reform
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/politics/rubio-overhauling-bloated-state-department-sweeping-reform
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/sports/jets-gm-darren-mougey-dodges-aaron-rodgers-questions-after-quarterbacks-scathing-claims-final-meeting
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/sports/jets-gm-darren-mougey-dodges-aaron-rodgers-questions-after-quarterbacks-scathing-claims-final-meeting
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/sports/vikings-aaron-jones-downplays-age-recalls-trying-get-older-women-when-younger
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/sports/vikings-aaron-jones-downplays-age-recalls-trying-get-older-women-when-younger
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/entertainment/josh-duhamels-doomsday-cabin-away-from-hollywood-allows-his-kids-kids
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/entertainment/josh-duhamels-doomsday-cabin-away-from-hollywood-allows-his-kids-kids
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/entertainment/prince-williams-public-dig-meghan-markle-prince-harry-shows-doesnt-care-what-think-experts
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/entertainment/prince-williams-public-dig-meghan-markle-prince-harry-shows-doesnt-care-what-think-experts
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/entertainment/dick-van-dyke-ignored-warnings-about-46-year-age-gap-wife-arlene-silver
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/entertainment/dick-van-dyke-ignored-warnings-about-46-year-age-gap-wife-arlene-silver
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/category/topic/anti-semitism
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/category/topic/anti-semitism
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/politics/democrats-identity-crisis-youth-revolt-rocks-party-after-trump-comeback
+2025-04-22 14:44:32,860 - INFO - Found article URL: https://www.foxnews.com/politics/democrats-identity-crisis-youth-revolt-rocks-party-after-trump-comeback
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.foxweather.com/extreme-weather/hawaii-volcano-kilauea-eruption-april-2025
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.foxweather.com/extreme-weather/hawaii-volcano-kilauea-eruption-april-2025
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.foxnews.com/entertainment/demi-moore-says-fame-put-her-through-wringer
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.foxnews.com/entertainment/demi-moore-says-fame-put-her-through-wringer
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.foxnews.com/travel/archaeologists-unexpectedly-uncover-hundreds-skeletons-medieval-church-beneath-university-campus
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.foxnews.com/travel/archaeologists-unexpectedly-uncover-hundreds-skeletons-medieval-church-beneath-university-campus
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.outkick.com/culture/tayvin-galanakis-dui-arrest-lawsuit-body-camera-footage
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.outkick.com/culture/tayvin-galanakis-dui-arrest-lawsuit-body-camera-footage
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.foxnews.com/sports/trump-rips-ridiculous-calls-new-york-high-school-change-native-american-mascot
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.foxnews.com/sports/trump-rips-ridiculous-calls-new-york-high-school-change-native-american-mascot
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.foxnews.com/politics/al-gore-compares-trump-admin-hitlers-third-reich
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.foxnews.com/politics/al-gore-compares-trump-admin-hitlers-third-reich
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.foxnews.com/media/colorados-totalitarian-transgenderism-bill-sparks-concerns-from-parents
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.foxnews.com/media/colorados-totalitarian-transgenderism-bill-sparks-concerns-from-parents
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.foxnews.com/travel/rare-colossal-baby-sea-creature-caught-camera-first-time
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.foxnews.com/travel/rare-colossal-baby-sea-creature-caught-camera-first-time
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.foxnews.com/food-drink/public-health-alert-issued-budget-friendly-mexican-meal-should-thrown-away
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.foxnews.com/food-drink/public-health-alert-issued-budget-friendly-mexican-meal-should-thrown-away
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.foxnews.com/health/stem-cell-therapy-parkinsons-shows-strong-promise-relieving-symptoms
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.foxnews.com/health/stem-cell-therapy-parkinsons-shows-strong-promise-relieving-symptoms
+2025-04-22 14:44:32,861 - INFO - Found article URL: https://www.foxnews.com/category/tech/artificial-intelligence
+2025-04-22 14:44:32,862 - INFO - Found article URL: https://www.foxnews.com/category/tech/artificial-intelligence
+2025-04-22 14:44:32,862 - INFO - Found article URL: https://www.foxnews.com/food-drink
+2025-04-22 14:44:32,862 - INFO - Found article URL: https://www.foxnews.com/food-drink
+2025-04-22 14:44:32,862 - INFO - Found article URL: https://www.foxnews.com/travel
+2025-04-22 14:44:32,862 - INFO - Found article URL: https://www.foxnews.com/travel
+2025-04-22 14:44:32,862 - INFO - Found article URL: https://www.foxnews.com/health
+2025-04-22 14:44:32,862 - INFO - Found article URL: https://www.foxnews.com/health
+2025-04-22 14:44:32,862 - INFO - Found article URL: https://www.foxnews.com/media/fun-facts-animal-most-eyes-world-scallop
+2025-04-22 14:44:32,862 - INFO - Found article URL: https://www.foxnews.com/media/fun-facts-animal-most-eyes-world-scallop
+2025-04-22 14:44:32,862 - INFO - Found article URL: https://bit.ly/4hTv27u
+2025-04-22 14:44:32,862 - INFO - Found article URL: https://bit.ly/4hTv27u
+2025-04-22 14:44:32,862 - INFO - Found article URL: https://bit.ly/4hTv27u
+2025-04-22 14:44:32,862 - INFO - Found article URL: //www.outkick.com
+2025-04-22 14:44:32,862 - INFO - Found article URL: //www.outkick.com/analysis/rock-makes-wrestlemania-absence-worse-explanation-pat-mcafee
+2025-04-22 14:44:32,862 - INFO - Found article URL: //www.outkick.com/analysis/rock-makes-wrestlemania-absence-worse-explanation-pat-mcafee
+2025-04-22 14:44:32,862 - INFO - Found article URL: //www.outkick.com/culture/oakland-elects-mayor-who-thinks-50-minimum-wage-solve-inflation
+2025-04-22 14:44:32,862 - INFO - Fetching article: Oakland Elects Insane Mayor Who Thinks $50 Minimum Wage Will Solve Inflation
+2025-04-22 14:44:33,899 - INFO - Successfully processed article: Oakland Elects Insane Mayor Who Thinks $50 Minimum Wage Will Solve Inflation from Fox News
+2025-04-22 14:44:34,400 - INFO - Found article URL: //www.outkick.com/culture/oakland-elects-mayor-who-thinks-50-minimum-wage-solve-inflation
+2025-04-22 14:44:34,400 - INFO - Found article URL: //www.outkick.com/betting/2025-nba-playoffs-best-bets-odds-picks-tuesday-april-22
+2025-04-22 14:44:34,400 - INFO - Fetching article: Three Best Bets For 'Tourniquet Tuesday' In The 2025 NBA Playoffs
+2025-04-22 14:44:35,528 - INFO - Successfully processed article: Three Best Bets For 'Tourniquet Tuesday' In The 2025 NBA Playoffs from Fox News
+2025-04-22 14:44:36,028 - INFO - Found article URL: //www.outkick.com/betting/2025-nba-playoffs-best-bets-odds-picks-tuesday-april-22
+2025-04-22 14:44:36,028 - INFO - Found article URL: //www.outkick.com/sports/british-open-return-trump-turnberry-new-ra-message
+2025-04-22 14:44:36,028 - INFO - Fetching article: Golf Officials 'Would Love' To See Donald Trump Golf Course Host British Open Again
+2025-04-22 14:44:36,951 - INFO - Successfully processed article: Golf Officials 'Would Love' To See Donald Trump Golf Course Host British Open Again from Fox News
+2025-04-22 14:44:37,451 - INFO - Scraping from MSNBC...
+2025-04-22 14:44:37,762 - INFO - Retrieved 726218 bytes from MSNBC
+2025-04-22 14:44:37,871 - INFO - Found 0 potential article links on MSNBC
+2025-04-22 14:44:37,871 - INFO - Total articles collected: 10
+2025-04-22 14:44:37,871 - INFO - Fox News: 10
+2025-04-22 14:44:37,871 - INFO - MSNBC: 0
+2025-04-22 14:44:37,877 - INFO - Successfully inserted 10 articles into the database
+2025-04-22 14:44:38,899 - INFO - Scraping from Fox News...
+2025-04-22 14:44:39,263 - INFO - Retrieved 744088 bytes from Fox News
+2025-04-22 14:44:39,475 - INFO - Found 411 potential article links on Fox News
+2025-04-22 14:44:39,476 - INFO - Found article URL: https://www.foxnews.com/politics/gorsuch-roberts-side-left-leaning-supreme-court-justices-immigration-ruling
+2025-04-22 14:44:39,476 - INFO - Fetching article: NARROW DECISION
+2025-04-22 14:44:39,658 - INFO - Successfully processed article: NARROW DECISION from Fox News
+2025-04-22 14:44:40,159 - INFO - Found article URL: https://www.foxnews.com/politics/gorsuch-roberts-side-left-leaning-supreme-court-justices-immigration-ruling
+2025-04-22 14:44:40,159 - INFO - Found article URL: https://www.foxnews.com/politics/trumps-third-term-trial-balloon-gets-resounding-response-new-poll
+2025-04-22 14:44:40,159 - INFO - Fetching article: PEOPLE HAVE SPOKEN
+2025-04-22 14:44:40,333 - INFO - Successfully processed article: PEOPLE HAVE SPOKEN from Fox News
+2025-04-22 14:44:40,834 - INFO - Found article URL: https://www.foxnews.com/politics/trumps-third-term-trial-balloon-gets-resounding-response-new-poll
+2025-04-22 14:44:40,834 - INFO - Found article URL: https://www.foxnews.com/video/5614615980001
+2025-04-22 14:44:40,834 - INFO - Found article URL: https://www.foxnews.com/video/5614615980001
+2025-04-22 14:44:40,835 - INFO - Found article URL: https://www.foxnews.com/media/top-60-minutes-producer-resigns-from-show-cites-lack-independence
+2025-04-22 14:44:40,835 - INFO - Found article URL: https://www.foxnews.com/media/top-60-minutes-producer-resigns-from-show-cites-lack-independence
+2025-04-22 14:44:40,835 - INFO - Found article URL: https://www.foxbusiness.com/economy/bessent-believes-china-impasse-over-tariffs-de-escalate
+2025-04-22 14:44:40,835 - INFO - Fetching article: ON THE MOVE
+2025-04-22 14:44:41,103 - INFO - Successfully processed article: ON THE MOVE from Fox News
+2025-04-22 14:44:41,604 - INFO - Found article URL: https://www.foxbusiness.com/economy/bessent-believes-china-impasse-over-tariffs-de-escalate
+2025-04-22 14:44:41,604 - INFO - Found article URL: https://www.foxnews.com/world/pope-francis-last-words-revealed-vatican-describes-his-final-hours
+2025-04-22 14:44:41,604 - INFO - Fetching article: ‘GESTURE OF FAREWELL’
+2025-04-22 14:44:41,780 - INFO - Successfully processed article: ‘GESTURE OF FAREWELL’ from Fox News
+2025-04-22 14:44:42,281 - INFO - Found article URL: https://www.foxnews.com/world/pope-francis-last-words-revealed-vatican-describes-his-final-hours
+2025-04-22 14:44:42,282 - INFO - Found article URL: https://www.foxnews.com/sports/trump-praises-granddaughters-golf-skills-says-she-may-able-beat-him-someday
+2025-04-22 14:44:42,282 - INFO - Fetching article: GREEN AGENDA
+2025-04-22 14:44:42,462 - INFO - Successfully processed article: GREEN AGENDA from Fox News
+2025-04-22 14:44:42,962 - INFO - Found article URL: https://www.foxnews.com/sports/trump-praises-granddaughters-golf-skills-says-she-may-able-beat-him-someday
+2025-04-22 14:44:42,962 - INFO - Found article URL: https://www.foxnews.com/politics/house-republican-enters-race-mitch-mcconnells-senate-seat-setting-up-high-stakes-gop-primary
+2025-04-22 14:44:42,962 - INFO - Fetching article: OFF TO THE RACES
+2025-04-22 14:44:43,157 - INFO - Successfully processed article: OFF TO THE RACES from Fox News
+2025-04-22 14:44:43,658 - INFO - Found article URL: https://www.foxnews.com/politics/house-republican-enters-race-mitch-mcconnells-senate-seat-setting-up-high-stakes-gop-primary
+2025-04-22 14:44:43,658 - INFO - Found article URL: https://www.foxnews.com/sports/wwe-star-gunther-chokes-out-pat-mcafee-bitter-rage-following-wrestlemania-41-loss
+2025-04-22 14:44:43,659 - INFO - Fetching article: 'PAT' DOWN
+2025-04-22 14:44:43,912 - INFO - Successfully processed article: 'PAT' DOWN from Fox News
+2025-04-22 14:44:44,412 - INFO - Found article URL: https://www.foxnews.com/sports/wwe-star-gunther-chokes-out-pat-mcafee-bitter-rage-following-wrestlemania-41-loss
+2025-04-22 14:44:44,412 - INFO - Found article URL: https://www.foxnews.com/video/6371787483112
+2025-04-22 14:44:44,412 - INFO - Found article URL: https://www.foxnews.com/video/6371787483112
+2025-04-22 14:44:44,412 - INFO - Found article URL: https://www.foxnews.com/politics/supreme-court-appears-side-parents-religious-liberty-dispute-over-storybooks
+2025-04-22 14:44:44,412 - INFO - Found article URL: https://www.foxnews.com/politics/supreme-court-appears-side-parents-religious-liberty-dispute-over-storybooks
+2025-04-22 14:44:44,412 - INFO - Found article URL: https://www.foxnews.com/media/rosie-odonnell-demands-rfk-jr-resign-over-comments-about-autistic-children
+2025-04-22 14:44:44,412 - INFO - Found article URL: https://www.foxnews.com/media/rosie-odonnell-demands-rfk-jr-resign-over-comments-about-autistic-children
+2025-04-22 14:44:44,412 - INFO - Found article URL: https://www.foxnews.com/us/walz-staffer-accused-vandalizing-teslas-might-not-face-charges-report
+2025-04-22 14:44:44,413 - INFO - Found article URL: https://www.foxnews.com/us/walz-staffer-accused-vandalizing-teslas-might-not-face-charges-report
+2025-04-22 14:44:44,413 - INFO - Found article URL: https://www.foxnews.com/world/iran-ramps-up-state-executions-amid-nuclear-talks-us
+2025-04-22 14:44:44,413 - INFO - Found article URL: https://www.foxnews.com/world/iran-ramps-up-state-executions-amid-nuclear-talks-us
+2025-04-22 14:44:44,413 - INFO - Found article URL: https://www.foxnews.com/video/6371759518112
+2025-04-22 14:44:44,413 - INFO - Found article URL: https://www.foxnews.com/video/6371759518112
+2025-04-22 14:44:44,413 - INFO - Found article URL: https://www.foxnews.com/politics/republicans-troll-dems-el-salvador-visits-offer-foot-travel-bill-exchange-one-thing
+2025-04-22 14:44:44,413 - INFO - Found article URL: https://www.foxnews.com/politics/republicans-troll-dems-el-salvador-visits-offer-foot-travel-bill-exchange-one-thing
+2025-04-22 14:44:44,413 - INFO - Found article URL: https://www.foxnews.com/politics/epa-chief-zeldin-launches-talks-mexico-end-sewage-hitting-san-diego-navy-seals-out-patience
+2025-04-22 14:44:44,413 - INFO - Found article URL: https://www.foxnews.com/politics/epa-chief-zeldin-launches-talks-mexico-end-sewage-hitting-san-diego-navy-seals-out-patience
+2025-04-22 14:44:44,413 - INFO - Found article URL: https://www.foxnews.com/politics/let-us-parents-supreme-court-should-let-parents-opt-kids-out-lgbtq-school-lessons-lawyer-argues
+2025-04-22 14:44:44,414 - INFO - Found article URL: https://www.foxnews.com/politics/let-us-parents-supreme-court-should-let-parents-opt-kids-out-lgbtq-school-lessons-lawyer-argues
+2025-04-22 14:44:44,414 - INFO - Found article URL: https://www.foxnews.com/games
+2025-04-22 14:44:44,414 - INFO - Found article URL: https://www.foxnews.com/games
+2025-04-22 14:44:44,414 - INFO - Found article URL: https://www.foxbusiness.com/politics/china-asks-south-korea-not-export-rare-earth-products-us-defense-firms-warns-companies-could-sanctioned
+2025-04-22 14:44:44,414 - INFO - Found article URL: https://www.foxbusiness.com/politics/china-asks-south-korea-not-export-rare-earth-products-us-defense-firms-warns-companies-could-sanctioned
+2025-04-22 14:44:44,414 - INFO - Found article URL: https://www.foxnews.com/world/first-photos-released-pope-francis-his-casket-funeral-set-saturday
+2025-04-22 14:44:44,414 - INFO - Found article URL: https://www.foxnews.com/world/first-photos-released-pope-francis-his-casket-funeral-set-saturday
+2025-04-22 14:44:44,414 - INFO - Found article URL: https://www.foxnews.com/politics/house-republican-asks-trump-doj-criminally-prosecute-ex-new-york-gov-andrew-cuomo
+2025-04-22 14:44:44,414 - INFO - Found article URL: https://www.foxnews.com/politics/house-republican-asks-trump-doj-criminally-prosecute-ex-new-york-gov-andrew-cuomo
+2025-04-22 14:44:44,414 - INFO - Found article URL: https://www.foxnews.com/us/private-security-guards-who-dragged-idaho-woman-from-town-hall-meeting-hit-charges
+2025-04-22 14:44:44,414 - INFO - Found article URL: https://www.foxnews.com/us/private-security-guards-who-dragged-idaho-woman-from-town-hall-meeting-hit-charges
+2025-04-22 14:44:44,414 - INFO - Found article URL: https://www.foxbusiness.com/markets/halliburton-warns-tariff-impact-lower-north-america-oilfield-activity
+2025-04-22 14:44:44,414 - INFO - Found article URL: https://www.foxbusiness.com/markets/halliburton-warns-tariff-impact-lower-north-america-oilfield-activity
+2025-04-22 14:44:44,414 - INFO - Found article URL: https://www.foxnews.com/media/dana-perino-shares-advice-she-wishes-she-heard-years-ago-new-book-i-wish-someone-had-told-me
+2025-04-22 14:44:44,414 - INFO - Found article URL: https://www.foxnews.com/media/dana-perino-shares-advice-she-wishes-she-heard-years-ago-new-book-i-wish-someone-had-told-me
+2025-04-22 14:44:44,414 - INFO - Found article URL: https://foxnews.com/trumptransition
+2025-04-22 14:44:44,414 - INFO - Found article URL: https://foxnews.com/trumptransition
+2025-04-22 14:44:44,414 - INFO - Found article URL: https://www.foxnews.com/politics/politics-cartoons-slideshow
+2025-04-22 14:44:44,414 - INFO - Found article URL: https://www.foxnews.com/politics/politics-cartoons-slideshow
+2025-04-22 14:44:44,415 - INFO - Found article URL: https://www.foxnews.com/deals/stylish-dresses-spring-wedding
+2025-04-22 14:44:44,415 - INFO - Found article URL: https://www.foxnews.com/deals/stylish-dresses-spring-wedding
+2025-04-22 14:44:44,415 - INFO - Found article URL: https://www.foxnews.com/food-drink/popular-coffee-alternative-may-help-prevent-cancer-experts
+2025-04-22 14:44:44,415 - INFO - Found article URL: https://www.foxnews.com/food-drink/popular-coffee-alternative-may-help-prevent-cancer-experts
+2025-04-22 14:44:44,415 - INFO - Found article URL: https://www.foxnews.com/lifestyle/american-culture-quiz-test-yourself-classic-cars-perfect-pitches-timeless-tv
+2025-04-22 14:44:44,415 - INFO - Found article URL: https://www.foxnews.com/lifestyle/american-culture-quiz-test-yourself-classic-cars-perfect-pitches-timeless-tv
+2025-04-22 14:44:44,415 - INFO - Found article URL: https://www.foxnews.com/deals/wayfair-way-day-sale
+2025-04-22 14:44:44,415 - INFO - Found article URL: https://www.foxnews.com/deals/wayfair-way-day-sale
+2025-04-22 14:44:44,415 - INFO - Found article URL: https://www.foxnews.com/media/jen-psaki-admits-msnbcs-liberal-viewers-expect-negative-coverage-trump
+2025-04-22 14:44:44,415 - INFO - Found article URL: https://www.foxnews.com/media/jen-psaki-admits-msnbcs-liberal-viewers-expect-negative-coverage-trump
+2025-04-22 14:44:44,415 - INFO - Found article URL: https://www.foxbusiness.com/energy/solar-energy-installations-continue-grow-united-states
+2025-04-22 14:44:44,415 - INFO - Found article URL: https://www.foxbusiness.com/energy/solar-energy-installations-continue-grow-united-states
+2025-04-22 14:44:44,415 - INFO - Found article URL: https://www.foxnews.com/opinion/un-marks-holocaust-remembrance-day-redefining-holocaust-comparing-israelis-nazis
+2025-04-22 14:44:44,415 - INFO - Found article URL: https://www.foxnews.com/opinion/un-marks-holocaust-remembrance-day-redefining-holocaust-comparing-israelis-nazis
+2025-04-22 14:44:44,415 - INFO - Found article URL: https://www.foxnews.com/politics/democrats-el-salvador-trip-lampooned-senate-gop-group-faux-tourism-ad-bienvenidos
+2025-04-22 14:44:44,415 - INFO - Found article URL: https://www.foxnews.com/politics/democrats-el-salvador-trip-lampooned-senate-gop-group-faux-tourism-ad-bienvenidos
+2025-04-22 14:44:44,415 - INFO - Found article URL: https://www.foxnews.com/media/kimmel-mocks-dhs-sec-kristi-noem-getting-robbed-her-being-crime-victim-embarrassing
+2025-04-22 14:44:44,415 - INFO - Found article URL: https://www.foxnews.com/media/kimmel-mocks-dhs-sec-kristi-noem-getting-robbed-her-being-crime-victim-embarrassing
+2025-04-22 14:44:44,415 - INFO - Found article URL: https://www.foxnews.com/media/elizabeth-warren-squirms-when-pressed-about-defending-bidens-mental-fitness-podcast-interview
+2025-04-22 14:44:44,415 - INFO - Found article URL: https://www.foxnews.com/media/elizabeth-warren-squirms-when-pressed-about-defending-bidens-mental-fitness-podcast-interview
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxnews.com/politics/rubio-overhauling-bloated-state-department-sweeping-reform
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxnews.com/politics/rubio-overhauling-bloated-state-department-sweeping-reform
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxnews.com/sports/jets-gm-darren-mougey-dodges-aaron-rodgers-questions-after-quarterbacks-scathing-claims-final-meeting
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxnews.com/sports/jets-gm-darren-mougey-dodges-aaron-rodgers-questions-after-quarterbacks-scathing-claims-final-meeting
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxnews.com/sports/vikings-aaron-jones-downplays-age-recalls-trying-get-older-women-when-younger
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxnews.com/sports/vikings-aaron-jones-downplays-age-recalls-trying-get-older-women-when-younger
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxnews.com/entertainment/josh-duhamels-doomsday-cabin-away-from-hollywood-allows-his-kids-kids
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxnews.com/entertainment/josh-duhamels-doomsday-cabin-away-from-hollywood-allows-his-kids-kids
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxnews.com/entertainment/prince-williams-public-dig-meghan-markle-prince-harry-shows-doesnt-care-what-think-experts
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxnews.com/entertainment/prince-williams-public-dig-meghan-markle-prince-harry-shows-doesnt-care-what-think-experts
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxnews.com/entertainment/dick-van-dyke-ignored-warnings-about-46-year-age-gap-wife-arlene-silver
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxnews.com/entertainment/dick-van-dyke-ignored-warnings-about-46-year-age-gap-wife-arlene-silver
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxnews.com/category/topic/anti-semitism
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxnews.com/category/topic/anti-semitism
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxnews.com/politics/democrats-identity-crisis-youth-revolt-rocks-party-after-trump-comeback
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxnews.com/politics/democrats-identity-crisis-youth-revolt-rocks-party-after-trump-comeback
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxweather.com/extreme-weather/hawaii-volcano-kilauea-eruption-april-2025
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxweather.com/extreme-weather/hawaii-volcano-kilauea-eruption-april-2025
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxnews.com/entertainment/demi-moore-says-fame-put-her-through-wringer
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxnews.com/entertainment/demi-moore-says-fame-put-her-through-wringer
+2025-04-22 14:44:44,416 - INFO - Found article URL: https://www.foxnews.com/travel/archaeologists-unexpectedly-uncover-hundreds-skeletons-medieval-church-beneath-university-campus
+2025-04-22 14:44:44,417 - INFO - Found article URL: https://www.foxnews.com/travel/archaeologists-unexpectedly-uncover-hundreds-skeletons-medieval-church-beneath-university-campus
+2025-04-22 14:44:44,417 - INFO - Found article URL: https://www.outkick.com/culture/tayvin-galanakis-dui-arrest-lawsuit-body-camera-footage
+2025-04-22 14:44:44,417 - INFO - Found article URL: https://www.outkick.com/culture/tayvin-galanakis-dui-arrest-lawsuit-body-camera-footage
+2025-04-22 14:44:44,417 - INFO - Found article URL: https://www.foxnews.com/sports/trump-rips-ridiculous-calls-new-york-high-school-change-native-american-mascot
+2025-04-22 14:44:44,417 - INFO - Found article URL: https://www.foxnews.com/sports/trump-rips-ridiculous-calls-new-york-high-school-change-native-american-mascot
+2025-04-22 14:44:44,417 - INFO - Found article URL: https://www.foxnews.com/politics/al-gore-compares-trump-admin-hitlers-third-reich
+2025-04-22 14:44:44,417 - INFO - Found article URL: https://www.foxnews.com/politics/al-gore-compares-trump-admin-hitlers-third-reich
+2025-04-22 14:44:44,417 - INFO - Found article URL: https://www.foxnews.com/media/colorados-totalitarian-transgenderism-bill-sparks-concerns-from-parents
+2025-04-22 14:44:44,417 - INFO - Found article URL: https://www.foxnews.com/media/colorados-totalitarian-transgenderism-bill-sparks-concerns-from-parents
+2025-04-22 14:44:44,417 - INFO - Found article URL: https://www.foxnews.com/travel/rare-colossal-baby-sea-creature-caught-camera-first-time
+2025-04-22 14:44:44,417 - INFO - Found article URL: https://www.foxnews.com/travel/rare-colossal-baby-sea-creature-caught-camera-first-time
+2025-04-22 14:44:44,417 - INFO - Found article URL: https://www.foxnews.com/food-drink/public-health-alert-issued-budget-friendly-mexican-meal-should-thrown-away
+2025-04-22 14:44:44,417 - INFO - Found article URL: https://www.foxnews.com/food-drink/public-health-alert-issued-budget-friendly-mexican-meal-should-thrown-away
+2025-04-22 14:44:44,417 - INFO - Found article URL: https://www.foxnews.com/health/stem-cell-therapy-parkinsons-shows-strong-promise-relieving-symptoms
+2025-04-22 14:44:44,417 - INFO - Found article URL: https://www.foxnews.com/health/stem-cell-therapy-parkinsons-shows-strong-promise-relieving-symptoms
+2025-04-22 14:44:44,417 - INFO - Found article URL: https://www.foxnews.com/category/tech/artificial-intelligence
+2025-04-22 14:44:44,417 - INFO - Found article URL: https://www.foxnews.com/category/tech/artificial-intelligence
+2025-04-22 14:44:44,417 - INFO - Found article URL: https://www.foxnews.com/food-drink
+2025-04-22 14:44:44,417 - INFO - Found article URL: https://www.foxnews.com/food-drink
+2025-04-22 14:44:44,417 - INFO - Found article URL: https://www.foxnews.com/travel
+2025-04-22 14:44:44,418 - INFO - Found article URL: https://www.foxnews.com/travel
+2025-04-22 14:44:44,418 - INFO - Found article URL: https://www.foxnews.com/health
+2025-04-22 14:44:44,418 - INFO - Found article URL: https://www.foxnews.com/health
+2025-04-22 14:44:44,418 - INFO - Found article URL: https://www.foxnews.com/media/fun-facts-animal-most-eyes-world-scallop
+2025-04-22 14:44:44,418 - INFO - Found article URL: https://www.foxnews.com/media/fun-facts-animal-most-eyes-world-scallop
+2025-04-22 14:44:44,418 - INFO - Found article URL: https://bit.ly/4hTv27u
+2025-04-22 14:44:44,418 - INFO - Found article URL: https://bit.ly/4hTv27u
+2025-04-22 14:44:44,418 - INFO - Found article URL: https://bit.ly/4hTv27u
+2025-04-22 14:44:44,418 - INFO - Found article URL: //www.outkick.com
+2025-04-22 14:44:44,418 - INFO - Found article URL: //www.outkick.com/analysis/rock-makes-wrestlemania-absence-worse-explanation-pat-mcafee
+2025-04-22 14:44:44,418 - INFO - Found article URL: //www.outkick.com/analysis/rock-makes-wrestlemania-absence-worse-explanation-pat-mcafee
+2025-04-22 14:44:44,418 - INFO - Found article URL: //www.outkick.com/culture/oakland-elects-mayor-who-thinks-50-minimum-wage-solve-inflation
+2025-04-22 14:44:44,418 - INFO - Fetching article: Oakland Elects Insane Mayor Who Thinks $50 Minimum Wage Will Solve Inflation
+2025-04-22 14:44:45,397 - INFO - Successfully processed article: Oakland Elects Insane Mayor Who Thinks $50 Minimum Wage Will Solve Inflation from Fox News
+2025-04-22 14:44:45,898 - INFO - Found article URL: //www.outkick.com/culture/oakland-elects-mayor-who-thinks-50-minimum-wage-solve-inflation
+2025-04-22 14:44:45,898 - INFO - Found article URL: //www.outkick.com/betting/2025-nba-playoffs-best-bets-odds-picks-tuesday-april-22
+2025-04-22 14:44:45,899 - INFO - Fetching article: Three Best Bets For 'Tourniquet Tuesday' In The 2025 NBA Playoffs
+2025-04-22 14:44:46,563 - INFO - Successfully processed article: Three Best Bets For 'Tourniquet Tuesday' In The 2025 NBA Playoffs from Fox News
+2025-04-22 14:44:47,064 - INFO - Found article URL: //www.outkick.com/betting/2025-nba-playoffs-best-bets-odds-picks-tuesday-april-22
+2025-04-22 14:44:47,064 - INFO - Found article URL: //www.outkick.com/sports/british-open-return-trump-turnberry-new-ra-message
+2025-04-22 14:44:47,064 - INFO - Fetching article: Golf Officials 'Would Love' To See Donald Trump Golf Course Host British Open Again
+2025-04-22 14:44:48,033 - INFO - Successfully processed article: Golf Officials 'Would Love' To See Donald Trump Golf Course Host British Open Again from Fox News
+2025-04-22 14:44:48,534 - INFO - Scraping from MSNBC...
+2025-04-22 14:44:48,834 - INFO - Retrieved 718578 bytes from MSNBC
+2025-04-22 14:44:48,935 - INFO - Found 0 potential article links on MSNBC
+2025-04-22 14:44:48,935 - INFO - Total articles collected: 10
+2025-04-22 14:44:48,935 - INFO - Fox News: 10
+2025-04-22 14:44:48,936 - INFO - MSNBC: 0
+2025-04-22 14:44:48,942 - INFO - Successfully inserted 10 articles into the database
+2025-04-22 14:45:38,356 - INFO - Scraping from Fox News...
+2025-04-22 14:45:38,775 - INFO - Retrieved 744674 bytes from Fox News
+2025-04-22 14:45:38,979 - INFO - Found 411 potential article links on Fox News
+2025-04-22 14:45:38,979 - INFO - Found article URL: https://www.foxnews.com/politics/gorsuch-roberts-side-left-leaning-supreme-court-justices-immigration-ruling
+2025-04-22 14:45:38,979 - INFO - Fetching article: NARROW DECISION
+2025-04-22 14:45:39,157 - INFO - Successfully processed article: NARROW DECISION from Fox News
+2025-04-22 14:45:39,658 - INFO - Found article URL: https://www.foxnews.com/politics/gorsuch-roberts-side-left-leaning-supreme-court-justices-immigration-ruling
+2025-04-22 14:45:39,658 - INFO - Found article URL: https://www.foxnews.com/politics/trumps-third-term-trial-balloon-gets-resounding-response-new-poll
+2025-04-22 14:45:39,658 - INFO - Fetching article: PEOPLE HAVE SPOKEN
+2025-04-22 14:45:39,821 - INFO - Successfully processed article: PEOPLE HAVE SPOKEN from Fox News
+2025-04-22 14:45:40,323 - INFO - Found article URL: https://www.foxnews.com/politics/trumps-third-term-trial-balloon-gets-resounding-response-new-poll
+2025-04-22 14:45:40,323 - INFO - Found article URL: https://www.foxnews.com/video/5614615980001
+2025-04-22 14:45:40,323 - INFO - Found article URL: https://www.foxnews.com/video/5614615980001
+2025-04-22 14:45:40,323 - INFO - Found article URL: https://www.foxnews.com/media/top-60-minutes-producer-resigns-from-show-cites-lack-independence
+2025-04-22 14:45:40,323 - INFO - Found article URL: https://www.foxnews.com/media/top-60-minutes-producer-resigns-from-show-cites-lack-independence
+2025-04-22 14:45:40,323 - INFO - Found article URL: https://www.foxbusiness.com/economy/bessent-believes-china-impasse-over-tariffs-de-escalate
+2025-04-22 14:45:40,323 - INFO - Fetching article: ON THE MOVE
+2025-04-22 14:45:40,470 - INFO - Successfully processed article: ON THE MOVE from Fox News
+2025-04-22 14:45:40,970 - INFO - Found article URL: https://www.foxbusiness.com/economy/bessent-believes-china-impasse-over-tariffs-de-escalate
+2025-04-22 14:45:40,971 - INFO - Found article URL: https://www.foxnews.com/world/pope-francis-last-words-revealed-vatican-describes-his-final-hours
+2025-04-22 14:45:40,971 - INFO - Fetching article: ‘GESTURE OF FAREWELL’
+2025-04-22 14:45:41,158 - INFO - Successfully processed article: ‘GESTURE OF FAREWELL’ from Fox News
+2025-04-22 14:45:41,659 - INFO - Found article URL: https://www.foxnews.com/world/pope-francis-last-words-revealed-vatican-describes-his-final-hours
+2025-04-22 14:45:41,659 - INFO - Found article URL: https://www.foxnews.com/us/walz-staffer-accused-vandalizing-teslas-might-not-face-charges-report
+2025-04-22 14:45:41,659 - INFO - Fetching article: CRIME AND PUNISHMENT
+2025-04-22 14:45:41,833 - INFO - Successfully processed article: CRIME AND PUNISHMENT from Fox News
+2025-04-22 14:45:42,333 - INFO - Found article URL: https://www.foxnews.com/us/walz-staffer-accused-vandalizing-teslas-might-not-face-charges-report
+2025-04-22 14:45:42,333 - INFO - Found article URL: https://www.foxnews.com/politics/house-republican-enters-race-mitch-mcconnells-senate-seat-setting-up-high-stakes-gop-primary
+2025-04-22 14:45:42,333 - INFO - Fetching article: OFF TO THE RACES
+2025-04-22 14:45:42,532 - INFO - Successfully processed article: OFF TO THE RACES from Fox News
+2025-04-22 14:45:43,033 - INFO - Found article URL: https://www.foxnews.com/politics/house-republican-enters-race-mitch-mcconnells-senate-seat-setting-up-high-stakes-gop-primary
+2025-04-22 14:45:43,033 - INFO - Found article URL: https://www.foxnews.com/sports/wwe-star-gunther-chokes-out-pat-mcafee-bitter-rage-following-wrestlemania-41-loss
+2025-04-22 14:45:43,033 - INFO - Fetching article: 'PAT' DOWN
+2025-04-22 14:45:43,212 - INFO - Successfully processed article: 'PAT' DOWN from Fox News
+2025-04-22 14:45:43,713 - INFO - Found article URL: https://www.foxnews.com/sports/wwe-star-gunther-chokes-out-pat-mcafee-bitter-rage-following-wrestlemania-41-loss
+2025-04-22 14:45:43,714 - INFO - Found article URL: https://www.foxnews.com/video/6371787483112
+2025-04-22 14:45:43,714 - INFO - Found article URL: https://www.foxnews.com/video/6371787483112
+2025-04-22 14:45:43,714 - INFO - Found article URL: https://www.foxnews.com/politics/supreme-court-appears-side-parents-religious-liberty-dispute-over-storybooks
+2025-04-22 14:45:43,714 - INFO - Found article URL: https://www.foxnews.com/politics/supreme-court-appears-side-parents-religious-liberty-dispute-over-storybooks
+2025-04-22 14:45:43,714 - INFO - Found article URL: https://www.foxnews.com/media/rosie-odonnell-demands-rfk-jr-resign-over-comments-about-autistic-children
+2025-04-22 14:45:43,714 - INFO - Found article URL: https://www.foxnews.com/media/rosie-odonnell-demands-rfk-jr-resign-over-comments-about-autistic-children
+2025-04-22 14:45:43,714 - INFO - Found article URL: https://www.foxnews.com/sports/trump-praises-granddaughters-golf-skills-says-she-may-able-beat-him-someday
+2025-04-22 14:45:43,714 - INFO - Found article URL: https://www.foxnews.com/sports/trump-praises-granddaughters-golf-skills-says-she-may-able-beat-him-someday
+2025-04-22 14:45:43,714 - INFO - Found article URL: https://www.foxnews.com/world/iran-ramps-up-state-executions-amid-nuclear-talks-us
+2025-04-22 14:45:43,714 - INFO - Found article URL: https://www.foxnews.com/world/iran-ramps-up-state-executions-amid-nuclear-talks-us
+2025-04-22 14:45:43,714 - INFO - Found article URL: https://www.foxnews.com/video/6371759518112
+2025-04-22 14:45:43,714 - INFO - Found article URL: https://www.foxnews.com/video/6371759518112
+2025-04-22 14:45:43,714 - INFO - Found article URL: https://www.foxnews.com/politics/republicans-troll-dems-el-salvador-visits-offer-foot-travel-bill-exchange-one-thing
+2025-04-22 14:45:43,714 - INFO - Found article URL: https://www.foxnews.com/politics/republicans-troll-dems-el-salvador-visits-offer-foot-travel-bill-exchange-one-thing
+2025-04-22 14:45:43,714 - INFO - Found article URL: https://www.foxnews.com/politics/epa-chief-zeldin-launches-talks-mexico-end-sewage-hitting-san-diego-navy-seals-out-patience
+2025-04-22 14:45:43,714 - INFO - Found article URL: https://www.foxnews.com/politics/epa-chief-zeldin-launches-talks-mexico-end-sewage-hitting-san-diego-navy-seals-out-patience
+2025-04-22 14:45:43,715 - INFO - Found article URL: https://www.foxnews.com/politics/let-us-parents-supreme-court-should-let-parents-opt-kids-out-lgbtq-school-lessons-lawyer-argues
+2025-04-22 14:45:43,715 - INFO - Found article URL: https://www.foxnews.com/politics/let-us-parents-supreme-court-should-let-parents-opt-kids-out-lgbtq-school-lessons-lawyer-argues
+2025-04-22 14:45:43,715 - INFO - Found article URL: https://www.foxnews.com/games
+2025-04-22 14:45:43,715 - INFO - Found article URL: https://www.foxnews.com/games
+2025-04-22 14:45:43,715 - INFO - Found article URL: https://www.foxbusiness.com/politics/china-asks-south-korea-not-export-rare-earth-products-us-defense-firms-warns-companies-could-sanctioned
+2025-04-22 14:45:43,715 - INFO - Found article URL: https://www.foxbusiness.com/politics/china-asks-south-korea-not-export-rare-earth-products-us-defense-firms-warns-companies-could-sanctioned
+2025-04-22 14:45:43,715 - INFO - Found article URL: https://www.foxnews.com/world/first-photos-released-pope-francis-his-casket-funeral-set-saturday
+2025-04-22 14:45:43,715 - INFO - Found article URL: https://www.foxnews.com/world/first-photos-released-pope-francis-his-casket-funeral-set-saturday
+2025-04-22 14:45:43,715 - INFO - Found article URL: https://www.foxnews.com/politics/house-republican-asks-trump-doj-criminally-prosecute-ex-new-york-gov-andrew-cuomo
+2025-04-22 14:45:43,715 - INFO - Found article URL: https://www.foxnews.com/politics/house-republican-asks-trump-doj-criminally-prosecute-ex-new-york-gov-andrew-cuomo
+2025-04-22 14:45:43,715 - INFO - Found article URL: https://www.foxnews.com/us/private-security-guards-who-dragged-idaho-woman-from-town-hall-meeting-hit-charges
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://www.foxnews.com/us/private-security-guards-who-dragged-idaho-woman-from-town-hall-meeting-hit-charges
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://www.foxbusiness.com/markets/halliburton-warns-tariff-impact-lower-north-america-oilfield-activity
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://www.foxbusiness.com/markets/halliburton-warns-tariff-impact-lower-north-america-oilfield-activity
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://www.foxnews.com/media/dana-perino-shares-advice-she-wishes-she-heard-years-ago-new-book-i-wish-someone-had-told-me
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://www.foxnews.com/media/dana-perino-shares-advice-she-wishes-she-heard-years-ago-new-book-i-wish-someone-had-told-me
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://foxnews.com/trumptransition
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://foxnews.com/trumptransition
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://www.foxnews.com/politics/politics-cartoons-slideshow
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://www.foxnews.com/politics/politics-cartoons-slideshow
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://www.foxnews.com/deals/stylish-dresses-spring-wedding
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://www.foxnews.com/deals/stylish-dresses-spring-wedding
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://www.foxnews.com/food-drink/popular-coffee-alternative-may-help-prevent-cancer-experts
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://www.foxnews.com/food-drink/popular-coffee-alternative-may-help-prevent-cancer-experts
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://www.foxnews.com/lifestyle/american-culture-quiz-test-yourself-classic-cars-perfect-pitches-timeless-tv
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://www.foxnews.com/lifestyle/american-culture-quiz-test-yourself-classic-cars-perfect-pitches-timeless-tv
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://www.foxnews.com/deals/wayfair-way-day-sale
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://www.foxnews.com/deals/wayfair-way-day-sale
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://www.foxnews.com/media/jen-psaki-admits-msnbcs-liberal-viewers-expect-negative-coverage-trump
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://www.foxnews.com/media/jen-psaki-admits-msnbcs-liberal-viewers-expect-negative-coverage-trump
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://www.foxbusiness.com/energy/solar-energy-installations-continue-grow-united-states
+2025-04-22 14:45:43,716 - INFO - Found article URL: https://www.foxbusiness.com/energy/solar-energy-installations-continue-grow-united-states
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/opinion/un-marks-holocaust-remembrance-day-redefining-holocaust-comparing-israelis-nazis
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/opinion/un-marks-holocaust-remembrance-day-redefining-holocaust-comparing-israelis-nazis
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/politics/democrats-el-salvador-trip-lampooned-senate-gop-group-faux-tourism-ad-bienvenidos
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/politics/democrats-el-salvador-trip-lampooned-senate-gop-group-faux-tourism-ad-bienvenidos
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/media/kimmel-mocks-dhs-sec-kristi-noem-getting-robbed-her-being-crime-victim-embarrassing
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/media/kimmel-mocks-dhs-sec-kristi-noem-getting-robbed-her-being-crime-victim-embarrassing
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/media/elizabeth-warren-squirms-when-pressed-about-defending-bidens-mental-fitness-podcast-interview
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/media/elizabeth-warren-squirms-when-pressed-about-defending-bidens-mental-fitness-podcast-interview
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/politics/rubio-overhauling-bloated-state-department-sweeping-reform
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/politics/rubio-overhauling-bloated-state-department-sweeping-reform
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/sports/jets-gm-darren-mougey-dodges-aaron-rodgers-questions-after-quarterbacks-scathing-claims-final-meeting
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/sports/jets-gm-darren-mougey-dodges-aaron-rodgers-questions-after-quarterbacks-scathing-claims-final-meeting
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/sports/vikings-aaron-jones-downplays-age-recalls-trying-get-older-women-when-younger
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/sports/vikings-aaron-jones-downplays-age-recalls-trying-get-older-women-when-younger
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/entertainment/josh-duhamels-doomsday-cabin-away-from-hollywood-allows-his-kids-kids
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/entertainment/josh-duhamels-doomsday-cabin-away-from-hollywood-allows-his-kids-kids
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/entertainment/prince-williams-public-dig-meghan-markle-prince-harry-shows-doesnt-care-what-think-experts
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/entertainment/prince-williams-public-dig-meghan-markle-prince-harry-shows-doesnt-care-what-think-experts
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/entertainment/dick-van-dyke-ignored-warnings-about-46-year-age-gap-wife-arlene-silver
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/entertainment/dick-van-dyke-ignored-warnings-about-46-year-age-gap-wife-arlene-silver
+2025-04-22 14:45:43,717 - INFO - Found article URL: https://www.foxnews.com/category/topic/anti-semitism
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.foxnews.com/category/topic/anti-semitism
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.foxnews.com/politics/democrats-identity-crisis-youth-revolt-rocks-party-after-trump-comeback
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.foxnews.com/politics/democrats-identity-crisis-youth-revolt-rocks-party-after-trump-comeback
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.foxweather.com/extreme-weather/hawaii-volcano-kilauea-eruption-april-2025
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.foxweather.com/extreme-weather/hawaii-volcano-kilauea-eruption-april-2025
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.foxnews.com/entertainment/demi-moore-says-fame-put-her-through-wringer
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.foxnews.com/entertainment/demi-moore-says-fame-put-her-through-wringer
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.foxnews.com/travel/archaeologists-unexpectedly-uncover-hundreds-skeletons-medieval-church-beneath-university-campus
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.foxnews.com/travel/archaeologists-unexpectedly-uncover-hundreds-skeletons-medieval-church-beneath-university-campus
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.outkick.com/culture/tayvin-galanakis-dui-arrest-lawsuit-body-camera-footage
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.outkick.com/culture/tayvin-galanakis-dui-arrest-lawsuit-body-camera-footage
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.foxnews.com/sports/trump-rips-ridiculous-calls-new-york-high-school-change-native-american-mascot
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.foxnews.com/sports/trump-rips-ridiculous-calls-new-york-high-school-change-native-american-mascot
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.foxnews.com/politics/al-gore-compares-trump-admin-hitlers-third-reich
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.foxnews.com/politics/al-gore-compares-trump-admin-hitlers-third-reich
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.foxnews.com/media/colorados-totalitarian-transgenderism-bill-sparks-concerns-from-parents
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.foxnews.com/media/colorados-totalitarian-transgenderism-bill-sparks-concerns-from-parents
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.foxnews.com/travel/rare-colossal-baby-sea-creature-caught-camera-first-time
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.foxnews.com/travel/rare-colossal-baby-sea-creature-caught-camera-first-time
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.foxnews.com/food-drink/public-health-alert-issued-budget-friendly-mexican-meal-should-thrown-away
+2025-04-22 14:45:43,718 - INFO - Found article URL: https://www.foxnews.com/food-drink/public-health-alert-issued-budget-friendly-mexican-meal-should-thrown-away
+2025-04-22 14:45:43,719 - INFO - Found article URL: https://www.foxnews.com/health/stem-cell-therapy-parkinsons-shows-strong-promise-relieving-symptoms
+2025-04-22 14:45:43,719 - INFO - Found article URL: https://www.foxnews.com/health/stem-cell-therapy-parkinsons-shows-strong-promise-relieving-symptoms
+2025-04-22 14:45:43,719 - INFO - Found article URL: https://www.foxnews.com/category/tech/artificial-intelligence
+2025-04-22 14:45:43,719 - INFO - Found article URL: https://www.foxnews.com/category/tech/artificial-intelligence
+2025-04-22 14:45:43,719 - INFO - Found article URL: https://www.foxnews.com/food-drink
+2025-04-22 14:45:43,719 - INFO - Found article URL: https://www.foxnews.com/food-drink
+2025-04-22 14:45:43,719 - INFO - Found article URL: https://www.foxnews.com/travel
+2025-04-22 14:45:43,719 - INFO - Found article URL: https://www.foxnews.com/travel
+2025-04-22 14:45:43,719 - INFO - Found article URL: https://www.foxnews.com/health
+2025-04-22 14:45:43,719 - INFO - Found article URL: https://www.foxnews.com/health
+2025-04-22 14:45:43,719 - INFO - Found article URL: https://www.foxnews.com/media/fun-facts-animal-most-eyes-world-scallop
+2025-04-22 14:45:43,719 - INFO - Found article URL: https://www.foxnews.com/media/fun-facts-animal-most-eyes-world-scallop
+2025-04-22 14:45:43,719 - INFO - Found article URL: https://bit.ly/4hTv27u
+2025-04-22 14:45:43,719 - INFO - Found article URL: https://bit.ly/4hTv27u
+2025-04-22 14:45:43,719 - INFO - Found article URL: https://bit.ly/4hTv27u
+2025-04-22 14:45:43,719 - INFO - Found article URL: //www.outkick.com
+2025-04-22 14:45:43,719 - INFO - Found article URL: //www.outkick.com/analysis/rock-makes-wrestlemania-absence-worse-explanation-pat-mcafee
+2025-04-22 14:45:43,719 - INFO - Found article URL: //www.outkick.com/analysis/rock-makes-wrestlemania-absence-worse-explanation-pat-mcafee
+2025-04-22 14:45:43,719 - INFO - Found article URL: //www.outkick.com/culture/oakland-elects-mayor-who-thinks-50-minimum-wage-solve-inflation
+2025-04-22 14:45:43,719 - INFO - Fetching article: Oakland Elects Insane Mayor Who Thinks $50 Minimum Wage Will Solve Inflation
+2025-04-22 14:45:44,164 - INFO - Successfully processed article: Oakland Elects Insane Mayor Who Thinks $50 Minimum Wage Will Solve Inflation from Fox News
+2025-04-22 14:45:44,664 - INFO - Found article URL: //www.outkick.com/culture/oakland-elects-mayor-who-thinks-50-minimum-wage-solve-inflation
+2025-04-22 14:45:44,664 - INFO - Found article URL: //www.outkick.com/betting/2025-nba-playoffs-best-bets-odds-picks-tuesday-april-22
+2025-04-22 14:45:44,664 - INFO - Fetching article: Three Best Bets For 'Tourniquet Tuesday' In The 2025 NBA Playoffs
+2025-04-22 14:45:45,317 - INFO - Successfully processed article: Three Best Bets For 'Tourniquet Tuesday' In The 2025 NBA Playoffs from Fox News
+2025-04-22 14:45:45,818 - INFO - Found article URL: //www.outkick.com/betting/2025-nba-playoffs-best-bets-odds-picks-tuesday-april-22
+2025-04-22 14:45:45,818 - INFO - Found article URL: //www.outkick.com/sports/british-open-return-trump-turnberry-new-ra-message
+2025-04-22 14:45:45,818 - INFO - Fetching article: Golf Officials 'Would Love' To See Donald Trump Golf Course Host British Open Again
+2025-04-22 14:45:46,712 - INFO - Successfully processed article: Golf Officials 'Would Love' To See Donald Trump Golf Course Host British Open Again from Fox News
+2025-04-22 14:45:47,212 - INFO - Scraping from MSNBC...
+2025-04-22 14:45:47,575 - INFO - Retrieved 724094 bytes from MSNBC
+2025-04-22 14:45:47,676 - INFO - Found 0 potential article links on MSNBC
+2025-04-22 14:45:47,676 - INFO - Total articles collected: 10
+2025-04-22 14:45:47,676 - INFO - Fox News: 10
+2025-04-22 14:45:47,676 - INFO - MSNBC: 0
+2025-04-22 14:45:47,681 - INFO - Successfully inserted 10 articles into the database
+2025-04-22 14:45:48,621 - INFO - Scraping from Fox News...
+2025-04-22 14:45:48,979 - INFO - Retrieved 744674 bytes from Fox News
+2025-04-22 14:45:49,182 - INFO - Found 411 potential article links on Fox News
+2025-04-22 14:45:49,182 - INFO - Found article URL: https://www.foxnews.com/politics/gorsuch-roberts-side-left-leaning-supreme-court-justices-immigration-ruling
+2025-04-22 14:45:49,182 - INFO - Fetching article: NARROW DECISION
+2025-04-22 14:45:49,374 - INFO - Successfully processed article: NARROW DECISION from Fox News
+2025-04-22 14:45:49,875 - INFO - Found article URL: https://www.foxnews.com/politics/gorsuch-roberts-side-left-leaning-supreme-court-justices-immigration-ruling
+2025-04-22 14:45:49,875 - INFO - Found article URL: https://www.foxnews.com/politics/trumps-third-term-trial-balloon-gets-resounding-response-new-poll
+2025-04-22 14:45:49,875 - INFO - Fetching article: PEOPLE HAVE SPOKEN
+2025-04-22 14:45:50,066 - INFO - Successfully processed article: PEOPLE HAVE SPOKEN from Fox News
+2025-04-22 14:45:50,566 - INFO - Found article URL: https://www.foxnews.com/politics/trumps-third-term-trial-balloon-gets-resounding-response-new-poll
+2025-04-22 14:45:50,566 - INFO - Found article URL: https://www.foxnews.com/video/5614615980001
+2025-04-22 14:45:50,566 - INFO - Found article URL: https://www.foxnews.com/video/5614615980001
+2025-04-22 14:45:50,566 - INFO - Found article URL: https://www.foxnews.com/media/top-60-minutes-producer-resigns-from-show-cites-lack-independence
+2025-04-22 14:45:50,566 - INFO - Found article URL: https://www.foxnews.com/media/top-60-minutes-producer-resigns-from-show-cites-lack-independence
+2025-04-22 14:45:50,566 - INFO - Found article URL: https://www.foxbusiness.com/economy/bessent-believes-china-impasse-over-tariffs-de-escalate
+2025-04-22 14:45:50,567 - INFO - Fetching article: ON THE MOVE
+2025-04-22 14:45:50,708 - INFO - Successfully processed article: ON THE MOVE from Fox News
+2025-04-22 14:45:51,209 - INFO - Found article URL: https://www.foxbusiness.com/economy/bessent-believes-china-impasse-over-tariffs-de-escalate
+2025-04-22 14:45:51,209 - INFO - Found article URL: https://www.foxnews.com/world/pope-francis-last-words-revealed-vatican-describes-his-final-hours
+2025-04-22 14:45:51,209 - INFO - Fetching article: ‘GESTURE OF FAREWELL’
+2025-04-22 14:45:51,392 - INFO - Successfully processed article: ‘GESTURE OF FAREWELL’ from Fox News
+2025-04-22 14:45:51,893 - INFO - Found article URL: https://www.foxnews.com/world/pope-francis-last-words-revealed-vatican-describes-his-final-hours
+2025-04-22 14:45:51,893 - INFO - Found article URL: https://www.foxnews.com/us/walz-staffer-accused-vandalizing-teslas-might-not-face-charges-report
+2025-04-22 14:45:51,893 - INFO - Fetching article: CRIME AND PUNISHMENT
+2025-04-22 14:45:52,057 - INFO - Successfully processed article: CRIME AND PUNISHMENT from Fox News
+2025-04-22 14:45:52,559 - INFO - Found article URL: https://www.foxnews.com/us/walz-staffer-accused-vandalizing-teslas-might-not-face-charges-report
+2025-04-22 14:45:52,559 - INFO - Found article URL: https://www.foxnews.com/politics/house-republican-enters-race-mitch-mcconnells-senate-seat-setting-up-high-stakes-gop-primary
+2025-04-22 14:45:52,559 - INFO - Fetching article: OFF TO THE RACES
+2025-04-22 14:45:52,749 - INFO - Successfully processed article: OFF TO THE RACES from Fox News
+2025-04-22 14:45:53,250 - INFO - Found article URL: https://www.foxnews.com/politics/house-republican-enters-race-mitch-mcconnells-senate-seat-setting-up-high-stakes-gop-primary
+2025-04-22 14:45:53,250 - INFO - Found article URL: https://www.foxnews.com/sports/wwe-star-gunther-chokes-out-pat-mcafee-bitter-rage-following-wrestlemania-41-loss
+2025-04-22 14:45:53,250 - INFO - Fetching article: 'PAT' DOWN
+2025-04-22 14:45:53,435 - INFO - Successfully processed article: 'PAT' DOWN from Fox News
+2025-04-22 14:45:53,936 - INFO - Found article URL: https://www.foxnews.com/sports/wwe-star-gunther-chokes-out-pat-mcafee-bitter-rage-following-wrestlemania-41-loss
+2025-04-22 14:45:53,936 - INFO - Found article URL: https://www.foxnews.com/video/6371787483112
+2025-04-22 14:45:53,936 - INFO - Found article URL: https://www.foxnews.com/video/6371787483112
+2025-04-22 14:45:53,936 - INFO - Found article URL: https://www.foxnews.com/politics/supreme-court-appears-side-parents-religious-liberty-dispute-over-storybooks
+2025-04-22 14:45:53,936 - INFO - Found article URL: https://www.foxnews.com/politics/supreme-court-appears-side-parents-religious-liberty-dispute-over-storybooks
+2025-04-22 14:45:53,937 - INFO - Found article URL: https://www.foxnews.com/media/rosie-odonnell-demands-rfk-jr-resign-over-comments-about-autistic-children
+2025-04-22 14:45:53,937 - INFO - Found article URL: https://www.foxnews.com/media/rosie-odonnell-demands-rfk-jr-resign-over-comments-about-autistic-children
+2025-04-22 14:45:53,937 - INFO - Found article URL: https://www.foxnews.com/sports/trump-praises-granddaughters-golf-skills-says-she-may-able-beat-him-someday
+2025-04-22 14:45:53,937 - INFO - Found article URL: https://www.foxnews.com/sports/trump-praises-granddaughters-golf-skills-says-she-may-able-beat-him-someday
+2025-04-22 14:45:53,937 - INFO - Found article URL: https://www.foxnews.com/world/iran-ramps-up-state-executions-amid-nuclear-talks-us
+2025-04-22 14:45:53,937 - INFO - Found article URL: https://www.foxnews.com/world/iran-ramps-up-state-executions-amid-nuclear-talks-us
+2025-04-22 14:45:53,937 - INFO - Found article URL: https://www.foxnews.com/video/6371759518112
+2025-04-22 14:45:53,937 - INFO - Found article URL: https://www.foxnews.com/video/6371759518112
+2025-04-22 14:45:53,937 - INFO - Found article URL: https://www.foxnews.com/politics/republicans-troll-dems-el-salvador-visits-offer-foot-travel-bill-exchange-one-thing
+2025-04-22 14:45:53,937 - INFO - Found article URL: https://www.foxnews.com/politics/republicans-troll-dems-el-salvador-visits-offer-foot-travel-bill-exchange-one-thing
+2025-04-22 14:45:53,937 - INFO - Found article URL: https://www.foxnews.com/politics/epa-chief-zeldin-launches-talks-mexico-end-sewage-hitting-san-diego-navy-seals-out-patience
+2025-04-22 14:45:53,938 - INFO - Found article URL: https://www.foxnews.com/politics/epa-chief-zeldin-launches-talks-mexico-end-sewage-hitting-san-diego-navy-seals-out-patience
+2025-04-22 14:45:53,938 - INFO - Found article URL: https://www.foxnews.com/politics/let-us-parents-supreme-court-should-let-parents-opt-kids-out-lgbtq-school-lessons-lawyer-argues
+2025-04-22 14:45:53,938 - INFO - Found article URL: https://www.foxnews.com/politics/let-us-parents-supreme-court-should-let-parents-opt-kids-out-lgbtq-school-lessons-lawyer-argues
+2025-04-22 14:45:53,938 - INFO - Found article URL: https://www.foxnews.com/games
+2025-04-22 14:45:53,938 - INFO - Found article URL: https://www.foxnews.com/games
+2025-04-22 14:45:53,938 - INFO - Found article URL: https://www.foxbusiness.com/politics/china-asks-south-korea-not-export-rare-earth-products-us-defense-firms-warns-companies-could-sanctioned
+2025-04-22 14:45:53,938 - INFO - Found article URL: https://www.foxbusiness.com/politics/china-asks-south-korea-not-export-rare-earth-products-us-defense-firms-warns-companies-could-sanctioned
+2025-04-22 14:45:53,938 - INFO - Found article URL: https://www.foxnews.com/world/first-photos-released-pope-francis-his-casket-funeral-set-saturday
+2025-04-22 14:45:53,938 - INFO - Found article URL: https://www.foxnews.com/world/first-photos-released-pope-francis-his-casket-funeral-set-saturday
+2025-04-22 14:45:53,938 - INFO - Found article URL: https://www.foxnews.com/politics/house-republican-asks-trump-doj-criminally-prosecute-ex-new-york-gov-andrew-cuomo
+2025-04-22 14:45:53,938 - INFO - Found article URL: https://www.foxnews.com/politics/house-republican-asks-trump-doj-criminally-prosecute-ex-new-york-gov-andrew-cuomo
+2025-04-22 14:45:53,938 - INFO - Found article URL: https://www.foxnews.com/us/private-security-guards-who-dragged-idaho-woman-from-town-hall-meeting-hit-charges
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://www.foxnews.com/us/private-security-guards-who-dragged-idaho-woman-from-town-hall-meeting-hit-charges
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://www.foxbusiness.com/markets/halliburton-warns-tariff-impact-lower-north-america-oilfield-activity
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://www.foxbusiness.com/markets/halliburton-warns-tariff-impact-lower-north-america-oilfield-activity
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://www.foxnews.com/media/dana-perino-shares-advice-she-wishes-she-heard-years-ago-new-book-i-wish-someone-had-told-me
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://www.foxnews.com/media/dana-perino-shares-advice-she-wishes-she-heard-years-ago-new-book-i-wish-someone-had-told-me
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://foxnews.com/trumptransition
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://foxnews.com/trumptransition
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://www.foxnews.com/politics/politics-cartoons-slideshow
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://www.foxnews.com/politics/politics-cartoons-slideshow
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://www.foxnews.com/deals/stylish-dresses-spring-wedding
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://www.foxnews.com/deals/stylish-dresses-spring-wedding
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://www.foxnews.com/food-drink/popular-coffee-alternative-may-help-prevent-cancer-experts
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://www.foxnews.com/food-drink/popular-coffee-alternative-may-help-prevent-cancer-experts
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://www.foxnews.com/lifestyle/american-culture-quiz-test-yourself-classic-cars-perfect-pitches-timeless-tv
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://www.foxnews.com/lifestyle/american-culture-quiz-test-yourself-classic-cars-perfect-pitches-timeless-tv
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://www.foxnews.com/deals/wayfair-way-day-sale
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://www.foxnews.com/deals/wayfair-way-day-sale
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://www.foxnews.com/media/jen-psaki-admits-msnbcs-liberal-viewers-expect-negative-coverage-trump
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://www.foxnews.com/media/jen-psaki-admits-msnbcs-liberal-viewers-expect-negative-coverage-trump
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://www.foxbusiness.com/energy/solar-energy-installations-continue-grow-united-states
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://www.foxbusiness.com/energy/solar-energy-installations-continue-grow-united-states
+2025-04-22 14:45:53,939 - INFO - Found article URL: https://www.foxnews.com/opinion/un-marks-holocaust-remembrance-day-redefining-holocaust-comparing-israelis-nazis
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/opinion/un-marks-holocaust-remembrance-day-redefining-holocaust-comparing-israelis-nazis
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/politics/democrats-el-salvador-trip-lampooned-senate-gop-group-faux-tourism-ad-bienvenidos
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/politics/democrats-el-salvador-trip-lampooned-senate-gop-group-faux-tourism-ad-bienvenidos
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/media/kimmel-mocks-dhs-sec-kristi-noem-getting-robbed-her-being-crime-victim-embarrassing
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/media/kimmel-mocks-dhs-sec-kristi-noem-getting-robbed-her-being-crime-victim-embarrassing
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/media/elizabeth-warren-squirms-when-pressed-about-defending-bidens-mental-fitness-podcast-interview
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/media/elizabeth-warren-squirms-when-pressed-about-defending-bidens-mental-fitness-podcast-interview
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/politics/rubio-overhauling-bloated-state-department-sweeping-reform
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/politics/rubio-overhauling-bloated-state-department-sweeping-reform
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/sports/jets-gm-darren-mougey-dodges-aaron-rodgers-questions-after-quarterbacks-scathing-claims-final-meeting
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/sports/jets-gm-darren-mougey-dodges-aaron-rodgers-questions-after-quarterbacks-scathing-claims-final-meeting
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/sports/vikings-aaron-jones-downplays-age-recalls-trying-get-older-women-when-younger
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/sports/vikings-aaron-jones-downplays-age-recalls-trying-get-older-women-when-younger
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/entertainment/josh-duhamels-doomsday-cabin-away-from-hollywood-allows-his-kids-kids
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/entertainment/josh-duhamels-doomsday-cabin-away-from-hollywood-allows-his-kids-kids
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/entertainment/prince-williams-public-dig-meghan-markle-prince-harry-shows-doesnt-care-what-think-experts
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/entertainment/prince-williams-public-dig-meghan-markle-prince-harry-shows-doesnt-care-what-think-experts
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/entertainment/dick-van-dyke-ignored-warnings-about-46-year-age-gap-wife-arlene-silver
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/entertainment/dick-van-dyke-ignored-warnings-about-46-year-age-gap-wife-arlene-silver
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/category/topic/anti-semitism
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/category/topic/anti-semitism
+2025-04-22 14:45:53,940 - INFO - Found article URL: https://www.foxnews.com/politics/democrats-identity-crisis-youth-revolt-rocks-party-after-trump-comeback
+2025-04-22 14:45:53,941 - INFO - Found article URL: https://www.foxnews.com/politics/democrats-identity-crisis-youth-revolt-rocks-party-after-trump-comeback
+2025-04-22 14:45:53,941 - INFO - Found article URL: https://www.foxweather.com/extreme-weather/hawaii-volcano-kilauea-eruption-april-2025
+2025-04-22 14:45:53,941 - INFO - Found article URL: https://www.foxweather.com/extreme-weather/hawaii-volcano-kilauea-eruption-april-2025
+2025-04-22 14:45:53,941 - INFO - Found article URL: https://www.foxnews.com/entertainment/demi-moore-says-fame-put-her-through-wringer
+2025-04-22 14:45:53,941 - INFO - Found article URL: https://www.foxnews.com/entertainment/demi-moore-says-fame-put-her-through-wringer
+2025-04-22 14:45:53,941 - INFO - Found article URL: https://www.foxnews.com/travel/archaeologists-unexpectedly-uncover-hundreds-skeletons-medieval-church-beneath-university-campus
+2025-04-22 14:45:53,941 - INFO - Found article URL: https://www.foxnews.com/travel/archaeologists-unexpectedly-uncover-hundreds-skeletons-medieval-church-beneath-university-campus
+2025-04-22 14:45:53,941 - INFO - Found article URL: https://www.outkick.com/culture/tayvin-galanakis-dui-arrest-lawsuit-body-camera-footage
+2025-04-22 14:45:53,941 - INFO - Found article URL: https://www.outkick.com/culture/tayvin-galanakis-dui-arrest-lawsuit-body-camera-footage
+2025-04-22 14:45:53,941 - INFO - Found article URL: https://www.foxnews.com/sports/trump-rips-ridiculous-calls-new-york-high-school-change-native-american-mascot
+2025-04-22 14:45:53,941 - INFO - Found article URL: https://www.foxnews.com/sports/trump-rips-ridiculous-calls-new-york-high-school-change-native-american-mascot
+2025-04-22 14:45:53,941 - INFO - Found article URL: https://www.foxnews.com/politics/al-gore-compares-trump-admin-hitlers-third-reich
+2025-04-22 14:45:53,941 - INFO - Found article URL: https://www.foxnews.com/politics/al-gore-compares-trump-admin-hitlers-third-reich
+2025-04-22 14:45:53,941 - INFO - Found article URL: https://www.foxnews.com/media/colorados-totalitarian-transgenderism-bill-sparks-concerns-from-parents
+2025-04-22 14:45:53,941 - INFO - Found article URL: https://www.foxnews.com/media/colorados-totalitarian-transgenderism-bill-sparks-concerns-from-parents
+2025-04-22 14:45:53,941 - INFO - Found article URL: https://www.foxnews.com/travel/rare-colossal-baby-sea-creature-caught-camera-first-time
+2025-04-22 14:45:53,941 - INFO - Found article URL: https://www.foxnews.com/travel/rare-colossal-baby-sea-creature-caught-camera-first-time
+2025-04-22 14:45:53,941 - INFO - Found article URL: https://www.foxnews.com/food-drink/public-health-alert-issued-budget-friendly-mexican-meal-should-thrown-away
+2025-04-22 14:45:53,941 - INFO - Found article URL: https://www.foxnews.com/food-drink/public-health-alert-issued-budget-friendly-mexican-meal-should-thrown-away
+2025-04-22 14:45:53,941 - INFO - Found article URL: https://www.foxnews.com/health/stem-cell-therapy-parkinsons-shows-strong-promise-relieving-symptoms
+2025-04-22 14:45:53,942 - INFO - Found article URL: https://www.foxnews.com/health/stem-cell-therapy-parkinsons-shows-strong-promise-relieving-symptoms
+2025-04-22 14:45:53,942 - INFO - Found article URL: https://www.foxnews.com/category/tech/artificial-intelligence
+2025-04-22 14:45:53,942 - INFO - Found article URL: https://www.foxnews.com/category/tech/artificial-intelligence
+2025-04-22 14:45:53,942 - INFO - Found article URL: https://www.foxnews.com/food-drink
+2025-04-22 14:45:53,942 - INFO - Found article URL: https://www.foxnews.com/food-drink
+2025-04-22 14:45:53,942 - INFO - Found article URL: https://www.foxnews.com/travel
+2025-04-22 14:45:53,942 - INFO - Found article URL: https://www.foxnews.com/travel
+2025-04-22 14:45:53,942 - INFO - Found article URL: https://www.foxnews.com/health
+2025-04-22 14:45:53,942 - INFO - Found article URL: https://www.foxnews.com/health
+2025-04-22 14:45:53,942 - INFO - Found article URL: https://www.foxnews.com/media/fun-facts-animal-most-eyes-world-scallop
+2025-04-22 14:45:53,942 - INFO - Found article URL: https://www.foxnews.com/media/fun-facts-animal-most-eyes-world-scallop
+2025-04-22 14:45:53,942 - INFO - Found article URL: https://bit.ly/4hTv27u
+2025-04-22 14:45:53,942 - INFO - Found article URL: https://bit.ly/4hTv27u
+2025-04-22 14:45:53,942 - INFO - Found article URL: https://bit.ly/4hTv27u
+2025-04-22 14:45:53,942 - INFO - Found article URL: //www.outkick.com
+2025-04-22 14:45:53,942 - INFO - Found article URL: //www.outkick.com/analysis/rock-makes-wrestlemania-absence-worse-explanation-pat-mcafee
+2025-04-22 14:45:53,942 - INFO - Found article URL: //www.outkick.com/analysis/rock-makes-wrestlemania-absence-worse-explanation-pat-mcafee
+2025-04-22 14:45:53,942 - INFO - Found article URL: //www.outkick.com/culture/oakland-elects-mayor-who-thinks-50-minimum-wage-solve-inflation
+2025-04-22 14:45:53,942 - INFO - Fetching article: Oakland Elects Insane Mayor Who Thinks $50 Minimum Wage Will Solve Inflation
+2025-04-22 14:45:54,731 - INFO - Successfully processed article: Oakland Elects Insane Mayor Who Thinks $50 Minimum Wage Will Solve Inflation from Fox News
+2025-04-22 14:45:55,232 - INFO - Found article URL: //www.outkick.com/culture/oakland-elects-mayor-who-thinks-50-minimum-wage-solve-inflation
+2025-04-22 14:45:55,232 - INFO - Found article URL: //www.outkick.com/betting/2025-nba-playoffs-best-bets-odds-picks-tuesday-april-22
+2025-04-22 14:45:55,232 - INFO - Fetching article: Three Best Bets For 'Tourniquet Tuesday' In The 2025 NBA Playoffs
+2025-04-22 14:45:56,352 - INFO - Successfully processed article: Three Best Bets For 'Tourniquet Tuesday' In The 2025 NBA Playoffs from Fox News
+2025-04-22 14:45:56,853 - INFO - Found article URL: //www.outkick.com/betting/2025-nba-playoffs-best-bets-odds-picks-tuesday-april-22
+2025-04-22 14:45:56,853 - INFO - Found article URL: //www.outkick.com/sports/british-open-return-trump-turnberry-new-ra-message
+2025-04-22 14:45:56,853 - INFO - Fetching article: Golf Officials 'Would Love' To See Donald Trump Golf Course Host British Open Again
+2025-04-22 14:45:57,752 - INFO - Successfully processed article: Golf Officials 'Would Love' To See Donald Trump Golf Course Host British Open Again from Fox News
+2025-04-22 14:45:58,253 - INFO - Scraping from MSNBC...
+2025-04-22 14:45:58,560 - INFO - Retrieved 721486 bytes from MSNBC
+2025-04-22 14:45:58,666 - INFO - Found 0 potential article links on MSNBC
+2025-04-22 14:45:58,667 - INFO - Total articles collected: 10
+2025-04-22 14:45:58,667 - INFO - Fox News: 10
+2025-04-22 14:45:58,667 - INFO - MSNBC: 0
+2025-04-22 14:45:58,673 - INFO - Successfully inserted 10 articles into the database
