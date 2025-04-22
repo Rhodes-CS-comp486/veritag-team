@@ -1,72 +1,82 @@
-    [
-      {
-        "id": 1,
-        "username": "john_doe",
-        "email": "john.doe@example.com",
-        "password": "abc123",
-        "verified_code": "12345"
-      },
-      {
-        "id": 2,
-        "username": "jane_smith",
-        "email": "jane.smith@example.com",
-        "password": "xyz789",
-        "verified_code": "12345"
-      },
-      {
-        "id": 3,
-        "username": "bob_jones",
-        "email": "bob.jones@example.com",
-        "password": "pass12",
-        "verified_code": "12345"
-      },
-      {
-        "id": 4,
-        "username": "alice_w",
-        "email": "alice.w@example.com",
-        "password": "qwerty",
-        "verified_code": "12345"
-      },
-      {
-        "id": 5,
-        "username": "mike_89",
-        "email": "mike89@example.com",
-        "password": "mk321",
-        "verified_code": "12345"
-      },
-      {
-        "id": 6,
-        "username": "sarah_p",
-        "email": "sarah.p@example.com",
-        "password": "sp456",
-        "verified_code": "12345"
-      },
-      {
-        "id": 7,
-        "username": "tom_hanks",
-        "email": "tom.hanks@example.com",
-        "password": "th789",
-        "verified_code": "12345"
-      },
-      {
-        "id": 8,
-        "username": "emma_watson",
-        "email": "emma.watson@example.com",
-        "password": "ew101",
-        "verified_code": "12345"
-      },
-      {
-        "id": 9,
-        "username": "peter_parker",
-        "email": "peter.p@example.com",
-        "password": "pp222",
-        "verified_code": "12345"
-      },
-      {
-        "id": 10,
-        "username": "lisa_m",
-        "email": "lisa.m@example.com",
-        "password": "lm333",
-        "verified_code": "12345"
-      }
-    ]
+[
+  {
+    "id": 1,
+    "username": "john_doe",
+    "email": "john.doe@example.com",
+    "password": "abc123",
+    "verified_code": "12345",
+    "about_me": "Experienced IT consultant with a background in systems architecture and cloud infrastructure."
+  },
+  {
+    "id": 2,
+    "username": "jane_smith",
+    "email": "jane.smith@example.com",
+    "password": "xyz789",
+    "verified_code": "12345",
+    "about_me": "Marketing strategist specializing in digital campaigns and brand development."
+  },
+  {
+    "id": 3,
+    "username": "bob_jones",
+    "email": "bob.jones@example.com",
+    "password": "pass12",
+    "verified_code": "12345",
+    "about_me": "Full-stack developer with a passion for building scalable web applications and APIs."
+  },
+  {
+    "id": 4,
+    "username": "alice_w",
+    "email": "alice.w@example.com",
+    "password": "qwerty",
+    "verified_code": "12345",
+    "about_me": "UX/UI designer focused on creating user-centered digital experiences for SaaS products."
+  },
+  {
+    "id": 5,
+    "username": "mike_89",
+    "email": "mike89@example.com",
+    "password": "mk321",
+    "verified_code": "12345",
+    "about_me": "Operations manager with over 10 years of experience in logistics and supply chain optimization."
+  },
+  {
+    "id": 6,
+    "username": "sarah_p",
+    "email": "sarah.p@example.com",
+    "password": "sp456",
+    "verified_code": "12345",
+    "about_me": "Data analyst skilled in SQL, Python, and Tableau with a focus on business intelligence reporting."
+  },
+  {
+    "id": 7,
+    "username": "tom_hanks",
+    "email": "tom.hanks@example.com",
+    "password": "th789",
+    "verified_code": "12345",
+    "about_me": "Product manager with a strong foundation in agile methodologies and cross-functional leadership."
+  },
+  {
+    "id": 8,
+    "username": "emma_watson",
+    "email": "emma.watson@example.com",
+    "password": "ew101",
+    "verified_code": "12345",
+    "about_me": "Public relations specialist with experience in media communications and brand reputation management."
+  },
+  {
+    "id": 9,
+    "username": "peter_parker",
+    "email": "peter.p@example.com",
+    "password": "pp222",
+    "verified_code": "12345",
+    "about_me": "Junior software engineer with a strong foundation in JavaScript and front-end development."
+  },
+  {
+    "id": 10,
+    "username": "lisa_m",
+    "email": "lisa.m@example.com",
+    "password": "lm333",
+    "verified_code": "12345",
+    "about_me": "Finance professional specializing in budgeting, forecasting, and financial analysis."
+  }
+]

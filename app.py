@@ -43,7 +43,8 @@ def init_db():
                         username TEXT NOT NULL UNIQUE,
                         email TEXT NOT NULL UNIQUE,
                         password TEXT NOT NULL,
-                        verified_code TEXT NOT NULL)''')
+                        verified_code TEXT NOT NULL,
+                        about_me TEXT)''')
         db.execute('''CREATE TABLE IF NOT EXISTS comments
                        (id INTEGER PRIMARY KEY AUTOINCREMENT,
                         article_id TEXT NOT NULL,
@@ -187,10 +188,12 @@ def load_users_from_json():
     db = get_db()
     cursor = db.cursor()
     for user in users:
+        # Check if the user dictionary has an about_me key
+        about_me = user.get("about_me", "")
         cursor.execute(
-            '''INSERT OR IGNORE INTO users (id, username, email, password, verified_code) 
-               VALUES (?, ?, ?, ?, ?)''',
-            (user["id"], user["username"], user["email"], user["password"], user["verified_code"])
+            '''INSERT OR IGNORE INTO users (id, username, email, password, verified_code, about_me) 
+               VALUES (?, ?, ?, ?, ?, ?)''',
+            (user["id"], user["username"], user["email"], user["password"], user["verified_code"], about_me)
         )
     db.commit()
     db.close()
@@ -748,7 +751,8 @@ def profile():
     if 'user_id' in session:
         user_id = session['user_id']
 
-        user = db.execute('SELECT username, email, verified_code FROM users WHERE id = ?', (user_id,)).fetchone()
+        # Update this query to include about_me
+        user = db.execute('SELECT username, email, verified_code, about_me FROM users WHERE id = ?', (user_id,)).fetchone()
         if user:
             user_info = dict(user)
 
@@ -776,7 +780,20 @@ def profile():
                            avg_rating=round(avg_rating, 2),
                            followers=followers)
 
+@app.route('/update_about_me', methods=['POST'])
+def update_about_me():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
 
+    about_me = request.form.get('about_me', '')
+    user_id = session['user_id']
+
+    db = get_db()
+    db.execute('UPDATE users SET about_me = ? WHERE id = ?', (about_me, user_id))
+    db.commit()
+
+    flash('Your about me information has been updated!', 'success')
+    return redirect(url_for('profile'))
 
 if __name__ == '__main__':
     init_db()
