@@ -515,7 +515,7 @@ def verified_users():
     
     # Query to get verified users and their reviewed articles
     verified_users = db.execute('''
-        SELECT DISTINCT u.id, u.username 
+        SELECT DISTINCT u.id, u.username, u.about_me
         FROM users u 
         WHERE u.verified_code != ""
     ''').fetchall()
@@ -534,6 +534,7 @@ def verified_users():
         users_with_reviews.append({
             'id': user['id'],
             'username': user['username'],
+            'about_me': user['about_me'],
             'reviewed_articles': [dict(article) for article in reviewed_articles]
         })
 
