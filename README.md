@@ -11,7 +11,10 @@ Imported Flask framework to setup application routes to each html page
 Imported Flask extension ‘session’ for user logins to keep track of individual profiles
 Used SQLite Database for storing everything, website depends on this
 Designed HTML Templates for web pages 
-Format everything with Json files for returning structured data to the frontend (would be pulled with scraper)
+Format everything with Json files for returning structured data to the frontend (would be pulled with scraper).
 
 
+To run the mai file for the website, run app.py. On app.py, you will need to have these imports from flask: Flask, render_template, redirect, url_for, request, flash, jsonify, session. Along with those, you will need to have sqlite3, json, and flask sessions all downloaded to run app.py to get the link to our web page.
 To run, simply enter the link of the website. From there the top right corner will log you in to the various types of users. Hovering over an article will give you more information on it, and clicking on it will show you the whole thing with the reviews. You can click on the reviews or scroll down to see the article and the comments. Also on the main page where all the articles are, you can browse by category of article, see different users, and view your own profile.
+
+![img_1.png](img_1.png)

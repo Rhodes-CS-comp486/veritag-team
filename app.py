@@ -16,10 +16,12 @@ app.config['PERMANENT_SESSION_LIFETIME'] = 3600
 app.config['SESSION_FILE_DIR'] = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'sessions')
 Session(app)  # Initialize Flask-Session
 
+
 def get_db():
     conn = sqlite3.connect(DATABASE)
     conn.row_factory = sqlite3.Row
     return conn
+
 
 def init_db():
     with app.app_context():
@@ -80,7 +82,7 @@ def init_db():
                         FOREIGN KEY (comment_id) REFERENCES comments(id),
                         FOREIGN KEY (user_id) REFERENCES users(id)
                       )''')
-        
+
         db.execute('''CREATE TABLE IF NOT EXISTS following (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         follower_id INTEGER NOT NULL,
@@ -92,7 +94,7 @@ def init_db():
                         FOREIGN KEY (following_id) REFERENCES users(id)
                     )
                 ''')
-        
+
         db.commit()
         load_articles_from_json()
         load_reviews_from_json()
@@ -132,6 +134,7 @@ def load_reviews_from_json():
     db.commit()
     db.close()
 
+
 def load_articles_from_json():
     json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dev-articles.json')
     lorem_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'lorem.txt')
@@ -167,6 +170,7 @@ def load_articles_from_json():
     db.commit()
     db.close()
 
+
 def load_users_from_json():
     json_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dev-users.json')
 
@@ -198,6 +202,7 @@ def load_users_from_json():
     db.commit()
     db.close()
 
+
 def fix_ratings():
     db = get_db()
     cursor = db.cursor()
@@ -206,9 +211,11 @@ def fix_ratings():
     for article_id in article_ids:
         cursor.execute('SELECT AVG(overall_rating) FROM reviews WHERE article_id = ?', (article_id['article_id'],))
         avg_rating = cursor.fetchone()
-        cursor.execute('UPDATE articles SET rating = ? WHERE id = ?', (("{:.2f}".format(avg_rating[0]), article_id['article_id'])))
+        cursor.execute('UPDATE articles SET rating = ? WHERE id = ?',
+                       (("{:.2f}".format(avg_rating[0]), article_id['article_id'])))
     db.commit()
     db.close()
+
 
 def read_lorem_file(filename):
     with open(filename, "r", encoding="utf-8") as file:
@@ -218,9 +225,11 @@ def read_lorem_file(filename):
     long = lines[2].strip() if len(lines) > 2 else "Long placeholder."
     return short, medium, long
 
+
 @app.route('/')
 def index():
     return redirect(url_for('browse'))
+
 
 @app.route('/create_account', methods=['GET', 'POST'])
 def create_account():
@@ -244,7 +253,9 @@ def create_account():
             return redirect(url_for('create_account'))
     return render_template('create_account.html')
 
+
 VALID_VERIFICATION_CODES = ['12345']
+
 
 @app.route('/create_verified_account', methods=['GET', 'POST'])
 def create_verified_account():
@@ -269,9 +280,11 @@ def create_verified_account():
             return redirect(url_for('create_verified_account'))
     return render_template('create_verified_account.html')
 
+
 @app.route('/about')
 def about():
     return render_template('about.html')
+
 
 @app.route('/api/user')
 def get_user():
@@ -285,6 +298,7 @@ def get_user():
             })
         return jsonify({}), 404  # User not found in DB (shouldn't happen with valid session)
     return jsonify({}), 401  # Not logged in
+
 
 @app.route('/api/articles')
 def get_articles():
@@ -302,6 +316,7 @@ def get_articles():
     articles_list = [dict(article) for article in articles]
     return jsonify({"articles": articles_list})
 
+
 @app.route('/api/article/<int:article_id>', endpoint='article')
 def get_article(article_id):
     db = get_db()
@@ -309,6 +324,7 @@ def get_article(article_id):
     if article is None:
         return jsonify({"error": "Article not found"}), 404
     return jsonify(dict(article))
+
 
 @app.route('/api/article/<article_id>/comments', methods=['GET'])
 def get_comments(article_id):
@@ -329,6 +345,7 @@ def get_comments(article_id):
     ).fetchall()
     comments_list = [dict(comment) for comment in comments]
     return jsonify({"comments": comments_list})
+
 
 @app.route('/api/article/<article_id>/comments', methods=['POST'])
 def post_comment(article_id):
@@ -377,6 +394,7 @@ def post_comment(article_id):
     except sqlite3.Error as e:
         return jsonify({"error": "Failed to post comment: " + str(e)}), 500
 
+
 @app.route('/api/comment/<int:comment_id>/vote', methods=['POST'])
 def vote_comment(comment_id):
     if 'user_id' not in session:
@@ -408,9 +426,11 @@ def vote_comment(comment_id):
                 (vote_type, comment_id, user_id)
             )
             if vote_type == 'upvote':
-                db.execute('UPDATE comments SET upvotes = upvotes + 1, downvotes = downvotes - 1 WHERE id = ?', (comment_id,))
+                db.execute('UPDATE comments SET upvotes = upvotes + 1, downvotes = downvotes - 1 WHERE id = ?',
+                           (comment_id,))
             else:
-                db.execute('UPDATE comments SET upvotes = upvotes - 1, downvotes = downvotes + 1 WHERE id = ?', (comment_id,))
+                db.execute('UPDATE comments SET upvotes = upvotes - 1, downvotes = downvotes + 1 WHERE id = ?',
+                           (comment_id,))
     else:
         if vote_type is not None:
             # Add a new vote
@@ -427,6 +447,7 @@ def vote_comment(comment_id):
     updated_comment = db.execute('SELECT upvotes, downvotes FROM comments WHERE id = ?', (comment_id,)).fetchone()
     return jsonify({"upvotes": updated_comment['upvotes'], "downvotes": updated_comment['downvotes']})
 
+
 @app.route('/article/<article_id>')
 def article_page(article_id):
     db = get_db()
@@ -439,6 +460,7 @@ def article_page(article_id):
             is_verified = True
     return render_template('article.html', is_verified=is_verified, user_info=user_info)
 
+
 @app.route('/browse')
 def browse():
     db = get_db()
@@ -447,8 +469,10 @@ def browse():
         user = db.execute('SELECT username, email FROM users WHERE id = ?', (session['user_id'],)).fetchone()
         if user:
             user_info = dict(user)
-    articles = db.execute('SELECT id, title, source, author, length, category, summary, body, publication_date, rating FROM articles').fetchall()
+    articles = db.execute(
+        'SELECT id, title, source, author, length, category, summary, body, publication_date, rating FROM articles').fetchall()
     return render_template('browse.html', articles=articles, user_info=user_info)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -470,6 +494,7 @@ def login():
             flash('Invalid username or password.', 'error')
     return render_template('login.html', error=error)
 
+
 @app.route('/verified_login', methods=['GET', 'POST'])
 def verified_login():
     error = None
@@ -477,7 +502,8 @@ def verified_login():
         username = request.form['username']
         password = request.form['password']
         db = get_db()
-        user = db.execute('SELECT * FROM users WHERE username = ? AND password = ? AND verified_code != ""', (username, password)).fetchone()
+        user = db.execute('SELECT * FROM users WHERE username = ? AND password = ? AND verified_code != ""',
+                          (username, password)).fetchone()
         if user:
             session.permanent = True
             session['user_id'] = user['id']
@@ -490,11 +516,13 @@ def verified_login():
             flash('Invalid username, password, or not a verified account.', 'error')
     return render_template('verified_login.html', error=error)
 
+
 @app.route('/browse', methods=['POST', 'GET'])
 def browse_verified():
     db = get_db()
     user_info = None
-    articles = db.execute('SELECT id, title, source, author, length, category, summary, body, publication_date, rating FROM articles').fetchall()
+    articles = db.execute(
+        'SELECT id, title, source, author, length, category, summary, body, publication_date, rating FROM articles').fetchall()
     if 'user_id' in session:
         user = db.execute('SELECT username, email FROM users WHERE id = ?', (session['user_id'],)).fetchone()
         if user:
@@ -506,13 +534,13 @@ def browse_verified():
 def verified_users():
     db = get_db()
     user_info = None
-    
+
     # Get user info if logged in
     if 'user_id' in session:
         user = db.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],)).fetchone()
         if user:
             user_info = dict(user)
-    
+
     # Query to get verified users and their reviewed articles
     verified_users = db.execute('''
         SELECT DISTINCT u.id, u.username, u.about_me
@@ -540,23 +568,24 @@ def verified_users():
 
     return render_template('verified_users.html', verified_users=users_with_reviews, user_info=user_info)
 
+
 @app.route('/api/toggle_follow', methods=['POST'])
 def toggle_follow():
     if 'user_id' not in session:
         return jsonify({'success': False, 'message': 'Not logged in'}), 401
-    
+
     # Get request data
     data = request.get_json()
     following_id = data.get('following_id')
     action = data.get('action')
-    
+
     # Validate request data
     if not following_id or action not in ['follow', 'unfollow']:
         return jsonify({'success': False, 'message': 'Invalid request'}), 400
-    
+
     db = get_db()
     user_id = session.get('user_id')
-    
+
     try:
         if action == 'follow':
             # Check if already following to avoid duplicates
@@ -564,7 +593,7 @@ def toggle_follow():
                 'SELECT id FROM following WHERE follower_id = ? AND following_id = ?',
                 (user_id, following_id)
             ).fetchone()
-            
+
             if not existing:
                 # Create new follow relationship
                 db.execute(
@@ -572,7 +601,7 @@ def toggle_follow():
                     (user_id, following_id)
                 )
                 db.commit()
-        
+
         elif action == 'unfollow':
             # Delete existing follow relationship
             db.execute(
@@ -580,39 +609,41 @@ def toggle_follow():
                 (user_id, following_id)
             )
             db.commit()
-        
+
         return jsonify({'success': True})
-    
+
     except sqlite3.Error as e:
         return jsonify({'success': False, 'message': str(e)}), 500
+
 
 @app.route('/api/following')
 def get_following():
     user_id = session.get('user_id')
     if not user_id:
         return jsonify({'following': []})
-    
+
     db = get_db()
     # Get all users that the current user is following
     following = db.execute(
         'SELECT following_id FROM following WHERE follower_id = ?',
         (user_id,)
     ).fetchall()
-    
+
     following_ids = [follow['following_id'] for follow in following]
     return jsonify({'following': following_ids})
+
 
 @app.route('/categories')
 def categories():
     db = get_db()
     user_info = None
-    
+
     # Get user info if logged in
     if 'user_id' in session:
         user = db.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],)).fetchone()
         if user:
             user_info = dict(user)
-    
+
     response = get_articles()
     articles = json.loads(response.get_data(as_text=True))["articles"]
     categories = {}
@@ -622,6 +653,7 @@ def categories():
             categories[category] = []
         categories[category].append(article)
     return render_template('categories.html', categories=categories, user_info=user_info)
+
 
 @app.route('/article/<int:article_id>', endpoint='view_article')
 def view_article(article_id):
@@ -636,9 +668,11 @@ def view_article(article_id):
         return render_template('404.html'), 404
     return render_template('article.html', article=article, user_info=user_info)
 
+
 @app.route('/explore')
 def explore():
     return browse()
+
 
 @app.route('/db_contents')
 def db_contents():
@@ -649,11 +683,13 @@ def db_contents():
     db.close()
     return render_template('db_contents.html', users=users, articles=articles, comments=comments)
 
+
 @app.route('/logout')
 def logout():
     session.clear()
     flash('You have been logged out.', 'success')
     return redirect(url_for('index'))
+
 
 def get_article_by_id(article_id):
     db = get_db()
@@ -790,6 +826,7 @@ def profile():
                            avg_rating=round(avg_rating, 2),
                            followers=followers)
 
+
 @app.route('/update_about_me', methods=['POST'])
 def update_about_me():
     if 'user_id' not in session:
@@ -804,6 +841,7 @@ def update_about_me():
 
     flash('Your about me information has been updated!', 'success')
     return redirect(url_for('profile'))
+
 
 if __name__ == '__main__':
     init_db()
